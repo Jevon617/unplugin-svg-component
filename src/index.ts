@@ -2,7 +2,7 @@ import { createUnplugin } from 'unplugin'
 import type { Options } from './types'
 
 export default createUnplugin<Options | undefined>(options => ({
-  name: 'unplugin-starter',
+  name: 'unplugin-svg-component',
   transformInclude(id) {
     return id.endsWith('main.ts')
   },

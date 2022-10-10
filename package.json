@@ -1,17 +1,17 @@
 {
-  "name": "unplugin-starter",
+  "name": "unplugin-svg-component",
   "type": "module",
   "version": "0.1.0",
   "packageManager": "pnpm@7.1.1",
   "description": "Register global imports on demand for Vite and Webpack",
   "license": "MIT",
-  "homepage": "https://github.com/antfu/unplugin-starter#readme",
+  "homepage": "https://github.com/jevon617/unplugin-svg-component#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu/unplugin-starter.git"
+    "url": "git+https://github.com/jevon617/unplugin-svg-component.git"
   },
   "bugs": {
-    "url": "https://github.com/antfu/unplugin-starter/issues"
+    "url": "https://github.com/jevon617/unplugin-svg-component/issues"
   },
   "keywords": [
     "unplugin",
