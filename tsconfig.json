@@ -8,5 +8,6 @@
     "strict": true,
     "strictNullChecks": true,
     "resolveJsonModule": true
-  }
+  },
+  "include": ["svg-baker.d.ts"]
 }
