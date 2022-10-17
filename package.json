@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "packageManager": "pnpm@7.1.1",
-  "description": "Register global imports on demand for Vite and Webpack",
+  "description": "generate a vue component with svg files, and use this component with typescript intellisense.",
   "license": "MIT",
   "homepage": "https://github.com/jevon617/unplugin-svg-component#readme",
   "repository": {
