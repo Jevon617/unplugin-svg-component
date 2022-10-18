@@ -6,10 +6,14 @@ import { compileComponent, genDts } from './component'
 import createSvgSprite, { svgSymbols, symbolIds } from './sprite'
 import { LOAD_EVENT, MODULE_NAME, UPDATE_EVENT } from './constants'
 
+let virtualModuleCode = ''
 let TransformPluginContext
 
 export default createUnplugin<Options | undefined>(options => ({
   name: 'unplugin-svg-component',
+  async buildStart() {
+    virtualModuleCode = await createCode(options!, false)
+  },
   resolveId(id: string) {
     if (id === MODULE_NAME)
       return id
@@ -19,7 +23,7 @@ export default createUnplugin<Options | undefined>(options => ({
   },
   async load() {
     return {
-      code: await createCode(options!, false),
+      code: virtualModuleCode,
     }
   },
   vite: {
@@ -56,6 +60,7 @@ export default createUnplugin<Options | undefined>(options => ({
 async function createCode(options: Options, hmr: boolean) {
   const componentCode = compileComponent()
   await createSvgSprite(options)
+  const svgSpriteDomId = options.svgSpriteDomId || '__svg__icons__dom__'
 
   if (options?.dts)
     genDts(symbolIds, options.dtsDir || process.cwd())
@@ -78,7 +83,10 @@ async function createCode(options: Options, hmr: boolean) {
 
   const code = `
     ${componentCode}
-    var svgDom = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+    var svgDom = document.querySelector('#${svgSpriteDomId}') 
+      || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
     ${hmr ? hmrCode : ''}
     if (typeof window !== 'undefined') {
       function loadSvgs() {
@@ -86,7 +94,7 @@ async function createCode(options: Options, hmr: boolean) {
         svgDom.style.position = 'absolute';
         svgDom.style.width = '0';
         svgDom.style.height = '0';
-        svgDom.id = '__svg__icons__dom__';
+        svgDom.id = '${svgSpriteDomId}';
         svgDom.setAttribute('xmlns','http://www.w3.org/2000/svg');
         svgDom.setAttribute('xmlns:link','http://www.w3.org/1999/xlink');
         svgDom.innerHTML = ${JSON.stringify(Array.from(svgSymbols).join('\n'))};

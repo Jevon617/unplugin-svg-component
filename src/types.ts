@@ -1,7 +1,8 @@
 export interface Options {
   iconDir: string
   prefix?: string
-  dts?: Boolean
+  dts?: boolean
   dtsDir?: string
+  svgSpriteDomId?: string
 }
 
