@@ -1,8 +1,10 @@
-import fs from 'fs/promises'
 import path from 'path'
+import fs from 'fs/promises'
 import { compileTemplate } from '@vue/compiler-sfc'
-import { dts, template } from './code'
-export function compileComponent() {
+import type { Options } from '../types'
+import { dts, golbalDts, template } from './code'
+import { replace } from './utils'
+export function compileComponent(componentName: string) {
   let { code } = compileTemplate({
     source: template,
     id: '__svg-icon__',
@@ -12,7 +14,7 @@ export function compileComponent() {
   code = code.replace(/export/g, '')
   code += `
     \nexport default{
-      name: 'SvgIcon',
+      name: "${componentName}",
       props: {
         name: {
           type: String,
@@ -25,7 +27,13 @@ export function compileComponent() {
   return code
 }
 
-export function genDts(symbolIds: Set<string>, dtsDir: string) {
-  const processedDts = dts.replace(/\$svg_symbolIds/g, Array.from(symbolIds).join('" | "'))
-  fs.writeFile(path.resolve(dtsDir, 'svg-icon.d.ts'), processedDts)
+export function genDts(symbolIds: Set<string>, options: Options) {
+  fs.writeFile(
+    path.resolve(options.dtsDir!, './svg-icon.d.ts'),
+    replace(dts, symbolIds, options.componentName!),
+  )
+  fs.writeFile(
+    path.resolve(options.dtsDir!, './svg-icon-global.d.ts'),
+    replace(golbalDts, symbolIds, options.componentName!),
+  )
 }

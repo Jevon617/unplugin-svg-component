@@ -4,5 +4,6 @@ export interface Options {
   dts?: boolean
   dtsDir?: string
   svgSpriteDomId?: string
+  componentName?: string
 }
 

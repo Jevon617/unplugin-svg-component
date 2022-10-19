@@ -9,10 +9,23 @@ import { LOAD_EVENT, MODULE_NAME, UPDATE_EVENT } from './constants'
 let virtualModuleCode = ''
 let TransformPluginContext
 
+function resolveOptions(options: Options): Options {
+  const defaultOptions = {
+    componentName: 'SvgIcon',
+    dtsDir: process.cwd(),
+    svgSpriteDomId: '__svg__icons__dom__',
+  }
+  return {
+    ...defaultOptions,
+    ...options,
+  }
+}
+
 export default createUnplugin<Options | undefined>(options => ({
   name: 'unplugin-svg-component',
   async buildStart() {
-    virtualModuleCode = await createCode(options!, false)
+    options = resolveOptions(options!)
+    virtualModuleCode = await createCode(options, false)
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
@@ -58,12 +71,12 @@ export default createUnplugin<Options | undefined>(options => ({
 }))
 
 async function createCode(options: Options, hmr: boolean) {
-  const componentCode = compileComponent()
+  const componentCode = compileComponent(options.componentName!)
   await createSvgSprite(options)
   const svgSpriteDomId = options.svgSpriteDomId || '__svg__icons__dom__'
 
   if (options?.dts)
-    genDts(symbolIds, options.dtsDir || process.cwd())
+    genDts(symbolIds, options)
 
   const hmrCode = `
     if (import.meta.hot) {

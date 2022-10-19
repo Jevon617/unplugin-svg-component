@@ -6,7 +6,7 @@ import SvgIcon from 'virtual:svg-component'
   <div>
     test1
     <SvgIcon name="icon-card2" style="margin-right: 20px;" />
-    <SvgIcon name="common-icon-card" style="margin-right: 20px;" />
+    <SvgIcon name="icon-addUser" style="margin-right: 20px;" />
   </div>
 </template>
 
