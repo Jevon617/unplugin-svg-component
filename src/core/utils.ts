@@ -28,7 +28,7 @@ export function resolveOptions(options: Options): Options {
   const defaultOptions = {
     componentName: 'SvgIcon',
     dtsDir: process.cwd(),
-    svgSpriteDomId: '__svg__icons__dom__',
+    svgSpriteDomId: '__svg_sprite__dom__',
     componentStyle: 'width: 1em; height: 1em; fill:currentColor;',
   }
   return {
