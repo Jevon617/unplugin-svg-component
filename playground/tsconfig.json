@@ -13,6 +13,6 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true
   },
-  "include": ["*.ts", "*.d.ts", "*.tsx", "*.vue", "svg-icon.d.ts", "vite-env.d.ts"],
+  "include": ["*.ts", "*.d.ts", "*.tsx", "*.vue", "vite-env.d.ts", "typing"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

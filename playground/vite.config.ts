@@ -11,6 +11,11 @@ export default defineConfig({
     Unplugin({
       iconDir: path.resolve(__dirname, 'icons'),
       dts: true,
+      preserveColor: path.resolve(__dirname, 'icons/common'),
+      dtsDir: path.resolve(__dirname, 'typing'),
+      svgSpriteDomId: 'my-svg-id',
+      prefix: 'icon',
+      componentName: 'MySvgIcon',
     }),
   ],
 })

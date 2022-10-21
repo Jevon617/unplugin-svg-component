@@ -13,11 +13,11 @@ export const svgSymbolCache = new Map<string, { symbolId: string; svgSymbol: str
 
 export default async function createSvgSprite(options: Options) {
   resetGlobalData()
-  const { iconDir, prefix = '' } = options
+  const { iconDir } = options
   const svgNames = fg.sync(['**/*.svg'], { cwd: iconDir })
 
   for (const svgName of svgNames) {
-    const { svgSymbol, symbolId } = await createSymbol(svgName, iconDir, prefix)
+    const { svgSymbol, symbolId } = await createSymbol(svgName, options)
     symbolIds.add(symbolId)
     svgSymbols.add(svgSymbol)
   }
@@ -30,11 +30,20 @@ function resetGlobalData() {
   svgCompiler = new SvgCompiler()
 }
 
-export async function createSymbol(svgName: string, iconDir: string, prefix: string) {
+export async function createSymbol(svgName: string, options: Options) {
+  const { iconDir, prefix = '', preserveColor } = options
+
   const svgPath = path.resolve(iconDir, svgName)
   const svgContent = await fs.readFile(svgPath)
   const symbolId = createSymbolId(svgName, prefix)
-  const OptimizedSvgContent = await optimizeSvg(svgContent)
+
+  let isPreserveColor = false
+  if (typeof preserveColor === 'string')
+    isPreserveColor = svgPath.startsWith(preserveColor)
+  else if (typeof preserveColor === 'object')
+    isPreserveColor = preserveColor.test(svgPath)
+
+  const OptimizedSvgContent = await optimizeSvg(svgContent, isPreserveColor)
   const svgSymbol = (await svgCompiler.addSymbol({
     path: svgPath,
     content: OptimizedSvgContent,
@@ -47,16 +56,21 @@ export async function createSymbol(svgName: string, iconDir: string, prefix: str
   }
 }
 
-async function optimizeSvg(source: Buffer) {
+async function optimizeSvg(source: Buffer, keepColor: boolean) {
   const { data: OptimizedSvgContent } = await optimize(source) as OptimizedSvg
-  return OptimizedSvgContent
-    .replace(/stroke="[a-zA-Z#0-9]*"/g, 'stroke="currentColor"')
-    .replace(/fill="[a-zA-Z#0-9]*"/g, (p: string) => {
-      if (p.includes('none'))
-        return p
-      else
-        return 'fill="currentColor"'
-    })
+  if (keepColor) {
+    return OptimizedSvgContent
+  }
+  else {
+    return OptimizedSvgContent
+      .replace(/stroke="[a-zA-Z#0-9]*"/g, 'stroke="currentColor"')
+      .replace(/fill="[a-zA-Z#0-9]*"/g, (p: string) => {
+        if (p.includes('none'))
+          return p
+        else
+          return 'fill="currentColor"'
+      })
+  }
 }
 
 function createSymbolId(svgName: string, prefix: string) {

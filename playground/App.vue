@@ -4,8 +4,10 @@ import { useRouter } from 'vue-router'
 
 <template>
   <div>
-    <SvgIcon name="icon-addUser" style="margin-right: 20px;" />
-    <SvgIcon name="icon-card2" style="margin-right: 20px;" />
+    <MySvgIcon name="icon-common-logo" style="margin-right: 20px;" />
+    <MySvgIcon name="icon-logo" style="margin-right: 20px;" />
+    <MySvgIcon name="icon-icon-addUser" style="margin-right: 20px;" />
+    <MySvgIcon name="icon-icon-card2" style="margin-right: 20px;" />
   </div>
 </template>
 

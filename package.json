@@ -84,9 +84,25 @@
     "start": "esno src/index.ts",
     "test": "vitest"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@vue/compiler-sfc": "^3.2.40",
+    "vue-template-compiler": "^2.6.12",
+    "vue-template-es2015-compiler": "^1.9.0"
+  },
+  "peerDependenciesMeta": {
+    "@vue/compiler-sfc": {
+      "optional": true
+    },
+    "vue-template-compiler": {
+      "optional": true
+    },
+    "vue-template-es2015-compiler": {
+      "optional": true
+    }
+  },
+  "dependencies": {
     "fast-glob": "^3.2.12",
+    "local-pkg": "^0.4.2",
     "svg-baker": "^1.7.0",
     "svgo": "^2.8.0",
     "unplugin": "^0.9.6"

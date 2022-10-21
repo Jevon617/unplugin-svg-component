@@ -5,5 +5,6 @@ export interface Options {
   dtsDir?: string
   svgSpriteDomId?: string
   componentName?: string
+  preserveColor?: string | RegExp
 }
 

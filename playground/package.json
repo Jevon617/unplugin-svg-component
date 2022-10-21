@@ -5,6 +5,7 @@
     "build": "vite build"
   },
   "devDependencies": {
+    "@vue/compiler-sfc": "^3.2.41",
     "vite": "^3.1.4",
     "vite-plugin-inspect": "^0.7.4"
   }

@@ -2,7 +2,7 @@ import { createUnplugin } from 'unplugin'
 import type { ViteDevServer } from 'vite'
 import type { Options } from '../types'
 import watchIconDir from './watcher'
-import { compileComponent, genDts } from './component'
+import { compileComponent, genDts } from './compiler'
 import createSvgSprite, { svgSymbols, symbolIds } from './sprite'
 import { LOAD_EVENT, MODULE_NAME, UPDATE_EVENT } from './constants'
 
@@ -71,7 +71,7 @@ export default createUnplugin<Options | undefined>(options => ({
 }))
 
 async function createCode(options: Options, hmr: boolean) {
-  const componentCode = compileComponent(options.componentName!)
+  const componentCode = await compileComponent(options.componentName!)
   await createSvgSprite(options)
   const svgSpriteDomId = options.svgSpriteDomId || '__svg__icons__dom__'
 

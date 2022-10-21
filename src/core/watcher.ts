@@ -1,14 +1,14 @@
 import type { ViteDevServer } from 'vite'
 import type { Options } from '../types'
 import { debounce } from './utils'
-import { genDts as updateDts } from './component'
+import { genDts as updateDts } from './compiler'
 import { LOAD_EVENT, UPDATE_EVENT } from './constants'
 import { createSymbol, svgSymbolCache, svgSymbols, symbolIds } from './sprite'
 
 export default function watchIconDir(options: Options, server: ViteDevServer) {
   const delay = 200
   const { watcher } = server
-  const { iconDir, prefix, dts, dtsDir = process.cwd() } = options
+  const { iconDir, dts } = options
 
   const updateDtsDebounce = debounce(updateDts, delay)
   const notifySpriteReloadDebounce = debounce((svgSymbols: Set<string>, server: ViteDevServer) => {
@@ -32,11 +32,11 @@ export default function watchIconDir(options: Options, server: ViteDevServer) {
     if (!isSvgFile(path))
       return
     const svgName = genSvgName(path)
-    const { svgSymbol, symbolId } = await createSymbol(svgName, iconDir, prefix!)
+    const { svgSymbol, symbolId } = await createSymbol(svgName, options)
     symbolIds.add(symbolId)
     svgSymbols.add(svgSymbol)
     if (dts)
-      updateDtsDebounce(symbolIds, dtsDir)
+      updateDtsDebounce(symbolIds, options)
     notifySpriteReloadDebounce(svgSymbols, server)
   }
 
@@ -48,7 +48,7 @@ export default function watchIconDir(options: Options, server: ViteDevServer) {
     symbolIds.delete(symbolId)
     svgSymbols.delete(svgSymbol)
     if (dts)
-      updateDtsDebounce(symbolIds, dtsDir)
+      updateDtsDebounce(symbolIds, options)
     notifySpriteReloadDebounce(svgSymbols, server)
   }
 
@@ -57,7 +57,7 @@ export default function watchIconDir(options: Options, server: ViteDevServer) {
       return
     const svgName = genSvgName(path)
     const { svgSymbol: oldSvgSymbol, symbolId } = svgSymbolCache.get(svgName)!
-    const { svgSymbol: newSvgSymbol } = await createSymbol(svgName, iconDir, prefix!)
+    const { svgSymbol: newSvgSymbol } = await createSymbol(svgName, options)
     svgSymbols.delete(oldSvgSymbol)
     svgSymbols.add(newSvgSymbol)
     notifySpriteUpdateDebounce(symbolId, newSvgSymbol)

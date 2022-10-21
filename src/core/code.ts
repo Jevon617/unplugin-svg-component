@@ -5,16 +5,15 @@ export const template = `
 `
 export const dts = `
 declare module 'virtual:svg-component' {
-  import type { PropType } from 'vue';
   const $component_name: import("vue").DefineComponent<{
       name: {
-          type: PropType<"$svg_symbolIds">;
+          type: import("vue").PropType<"$svg_symbolIds">;
           default: string;
           required: true;
       };
   }, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
       name: {
-          type: PropType<"$svg_symbolIds">;
+          type: import("vue").PropType<"$svg_symbolIds">;
           default: string;
           required: true;
       };
@@ -28,17 +27,16 @@ declare module 'virtual:svg-component' {
 export const golbalDts = `
 import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
-  import type { PropType } from 'vue';
   export interface GlobalComponents {
     $component_name: import("vue").DefineComponent<{
         name: {
-            type: PropType<"$svg_symbolIds">;
+            type: import("vue").PropType<"$svg_symbolIds">;
             default: string;
             required: true;
         };
     }, {}, unknown, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<import("vue").ExtractPropTypes<{
         name: {
-            type: PropType<"$svg_symbolIds">;
+            type: import("vue").PropType<"$svg_symbolIds">;
             default: string;
             required: true;
         };
