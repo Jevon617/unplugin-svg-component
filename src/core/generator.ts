@@ -4,18 +4,18 @@ import { getPackageInfo, importModule } from 'local-pkg'
 import type { Options } from '../types'
 import { dts, golbalDts, template } from './snippets'
 import { replace } from './utils'
-import createSvgSprite, { svgSymbols, symbolIds } from './sprite'
+import createSvgSprite from './sprite'
 import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
 export async function genModuleCode(options: Options, hmr: boolean) {
   const component = await genComponent(options)
   const svgSpriteDomId = options.svgSpriteDomId
 
+  const { symbolIds, symbols, symbolCache } = await createSvgSprite(options)
   await createSvgSprite(options)
-
   const xmlns = `xmlns="${XMLNS}"`
   const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
-  const symbolHtml = Array.from(svgSymbols).join('')
+  const symbolHtml = Array.from(symbols).join('')
     .replace(new RegExp(xmlns, 'g'), '')
     .replace(new RegExp(xmlnsLink, 'g'), '')
 
@@ -63,7 +63,12 @@ export async function genModuleCode(options: Options, hmr: boolean) {
       }
     }
    `
-  return code
+  return {
+    symbolCache,
+    symbolIds,
+    symbols,
+    code,
+  }
 }
 
 export function genDts(symbolIds: Set<string>, options: Options) {

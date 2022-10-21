@@ -6,31 +6,37 @@ import SvgCompiler from 'svg-baker'
 import type { OptimizedSvg } from 'svgo'
 import type { Options } from '../types'
 
-let svgCompiler = new SvgCompiler()
-export const symbolIds = new Set<string>()
-export const svgSymbols = new Set<string>()
-export const svgSymbolCache = new Map<string, { symbolId: string; svgSymbol: string }>()
-
 export default async function createSvgSprite(options: Options) {
-  resetGlobalData()
   const { iconDir } = options
+  const symbols = new Set<string>()
+  const symbolIds = new Set<string>()
+  const symbolCache = new Map<string, { symbolId: string; svgSymbol: string }>()
+  const svgCompiler = new SvgCompiler()
+
   const svgNames = fg.sync(['**/*.svg'], { cwd: iconDir })
 
   for (const svgName of svgNames) {
-    const { svgSymbol, symbolId } = await createSymbol(svgName, options)
+    const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler)
     symbolIds.add(symbolId)
-    svgSymbols.add(svgSymbol)
+    symbols.add(svgSymbol)
+  }
+
+  return {
+    symbols,
+    symbolIds,
+    symbolCache,
   }
 }
 
-function resetGlobalData() {
-  symbolIds.clear()
-  svgSymbols.clear()
-  svgSymbolCache.clear()
-  svgCompiler = new SvgCompiler()
-}
-
-export async function createSymbol(svgName: string, options: Options) {
+export async function createSymbol(
+  svgName: string,
+  options: Options,
+  symbolCache: Map<string, {
+    symbolId: string
+    svgSymbol: string
+  }>,
+  svgCompiler,
+) {
   const { iconDir, prefix = '', preserveColor } = options
 
   const svgPath = path.resolve(iconDir, svgName)
@@ -49,7 +55,7 @@ export async function createSymbol(svgName: string, options: Options) {
     content: OptimizedSvgContent,
     id: symbolId,
   })).render()
-  svgSymbolCache.set(svgName, { svgSymbol, symbolId })
+  symbolCache.set(svgName, { svgSymbol, symbolId })
   return {
     svgSymbol,
     symbolId,

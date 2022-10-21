@@ -6,14 +6,15 @@ import { genModuleCode } from './generator'
 import { MODULE_NAME } from './constants'
 import { resolveOptions } from './utils'
 
-let virtualModuleCode = ''
+let moduleCode = ''
 let transformPluginContext
 
 const unplugin = createUnplugin<Options>(options => ({
   name: 'unplugin-svg-component',
   async buildStart() {
     options = resolveOptions(options)
-    virtualModuleCode = await genModuleCode(options, false)
+    const { code } = await genModuleCode(options, false)
+    moduleCode = code
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
@@ -24,7 +25,7 @@ const unplugin = createUnplugin<Options>(options => ({
   },
   async load() {
     return {
-      code: virtualModuleCode,
+      code: moduleCode,
     }
   },
   vite: {
@@ -33,11 +34,10 @@ const unplugin = createUnplugin<Options>(options => ({
       transformPluginContext = this
     },
     configureServer(server: ViteDevServer) {
-      watchIconDir(options, server)
-
       server.middlewares.use(async (req, res, next) => {
         if (req.url === `/@id/${MODULE_NAME}`) {
-          const code = await genModuleCode(options, true)
+          const { code, symbols, symbolCache, symbolIds } = await genModuleCode(options, true)
+          watchIconDir(options, server, symbols, symbolIds, symbolCache)
 
           const importAnalysisTransform = server.config.plugins.find(
             plugin => plugin.name === 'vite:import-analysis',
