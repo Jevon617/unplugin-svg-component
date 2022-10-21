@@ -1,3 +1,5 @@
+import type { Options } from '../types'
+
 export function debounce(fn: (...args: any) => void, delay: number) {
   let timer: NodeJS.Timeout
 
@@ -20,4 +22,17 @@ export function replace(dts: string, symbolIds: Set<string>, componentName: stri
     /\$component_name/g,
     componentName,
   )
+}
+
+export function resolveOptions(options: Options): Options {
+  const defaultOptions = {
+    componentName: 'SvgIcon',
+    dtsDir: process.cwd(),
+    svgSpriteDomId: '__svg__icons__dom__',
+    componentStyle: 'width: 1em; height: 1em; fill:currentColor;',
+  }
+  return {
+    ...defaultOptions,
+    ...options,
+  }
 }

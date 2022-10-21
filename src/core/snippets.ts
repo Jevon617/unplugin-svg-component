@@ -1,5 +1,9 @@
 export const template = `
-  <svg style="width: 1em; height: 1em; fill:currentColor ">
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    style="$component_style"
+  >
     <use :xlink:href="'#' + name" />
   </svg>
 `

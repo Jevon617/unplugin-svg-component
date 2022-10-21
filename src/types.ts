@@ -6,5 +6,6 @@ export interface Options {
   svgSpriteDomId?: string
   componentName?: string
   preserveColor?: string | RegExp
+  componentStyle?: string
 }
 

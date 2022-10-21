@@ -1,7 +1,7 @@
 import type { ViteDevServer } from 'vite'
 import type { Options } from '../types'
 import { debounce } from './utils'
-import { genDts as updateDts } from './compiler'
+import { genDts as updateDts } from './generator'
 import { LOAD_EVENT, UPDATE_EVENT } from './constants'
 import { createSymbol, svgSymbolCache, svgSymbols, symbolIds } from './sprite'
 
@@ -26,6 +26,10 @@ export default function watchIconDir(options: Options, server: ViteDevServer) {
 
   function isSvgFile(path: string) {
     return path.startsWith(iconDir) && path.endsWith('.svg')
+  }
+
+  function genSvgName(path: string) {
+    return path.replace(`${iconDir}`, '').slice(1).replace(/\\/g, '/')
   }
 
   async function handleIconAdd(path: string) {
@@ -61,10 +65,6 @@ export default function watchIconDir(options: Options, server: ViteDevServer) {
     svgSymbols.delete(oldSvgSymbol)
     svgSymbols.add(newSvgSymbol)
     notifySpriteUpdateDebounce(symbolId, newSvgSymbol)
-  }
-
-  function genSvgName(path: string) {
-    return path.replace(`${iconDir}`, '').slice(1).replace(/\\/g, '/')
   }
 }
 
