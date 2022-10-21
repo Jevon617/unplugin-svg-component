@@ -5,13 +5,19 @@ import type { Options } from '../types'
 import { dts, golbalDts, template } from './snippets'
 import { replace } from './utils'
 import createSvgSprite, { svgSymbols, symbolIds } from './sprite'
-import { LOAD_EVENT, UPDATE_EVENT } from './constants'
+import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
 export async function genModuleCode(options: Options, hmr: boolean) {
   const component = await genComponent(options)
   const svgSpriteDomId = options.svgSpriteDomId
 
   await createSvgSprite(options)
+
+  const xmlns = `xmlns="${XMLNS}"`
+  const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
+  const symbolHtml = Array.from(svgSymbols).join('')
+    .replace(new RegExp(xmlns, 'g'), '')
+    .replace(new RegExp(xmlnsLink, 'g'), '')
 
   if (options?.dts)
     genDts(symbolIds, options)
@@ -24,7 +30,7 @@ export async function genModuleCode(options: Options, hmr: boolean) {
 
       import.meta.hot.on("${UPDATE_EVENT}", ({symbolId, newSvgSymbol}) => {
         var oldSymbolDom = svgDom.querySelector('#' + symbolId)
-        var tempDom = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        var tempDom = document.createElementNS('${XMLNS}', 'svg');
         tempDom.innerHTML = newSvgSymbol
         var newSymbolDom = tempDom.children[0]
         svgDom.replaceChild(newSymbolDom, oldSymbolDom)
@@ -35,7 +41,7 @@ export async function genModuleCode(options: Options, hmr: boolean) {
     ${component}
 
     var svgDom = document.querySelector('#${svgSpriteDomId}') 
-      || document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      || document.createElementNS('${XMLNS}', 'svg');
 
     ${hmr ? hmrCode : ''}
     if (typeof window !== 'undefined') {
@@ -45,9 +51,9 @@ export async function genModuleCode(options: Options, hmr: boolean) {
         svgDom.style.width = '0';
         svgDom.style.height = '0';
         svgDom.id = '${svgSpriteDomId}';
-        svgDom.setAttribute('xmlns','http://www.w3.org/2000/svg');
-        svgDom.setAttribute('xmlns:link','http://www.w3.org/1999/xlink');
-        svgDom.innerHTML = ${JSON.stringify(Array.from(svgSymbols).join('\n'))};
+        svgDom.setAttribute('xmlns','${XMLNS}');
+        svgDom.setAttribute('xmlns:link','${XMLNS_LINK}');
+        svgDom.innerHTML = ${JSON.stringify(symbolHtml)};
         body.append(svgDom)
       }
       if(document.readyState === 'loading') {
