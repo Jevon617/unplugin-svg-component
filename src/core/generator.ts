@@ -12,7 +12,6 @@ export async function genModuleCode(options: Options, hmr: boolean) {
   const svgSpriteDomId = options.svgSpriteDomId
 
   const { symbolIds, symbols, symbolCache } = await createSvgSprite(options)
-  await createSvgSprite(options)
   const xmlns = `xmlns="${XMLNS}"`
   const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
   const symbolHtml = Array.from(symbols).join('')

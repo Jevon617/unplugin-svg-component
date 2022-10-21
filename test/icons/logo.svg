@@ -1,0 +1,21 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="logo" clip-path="url(#clip0_29_28278)">
+<rect width="24" height="24" fill="white"/>
+<circle id="Ellipse 23" cx="12" cy="12" r="12" fill="white"/>
+<g id="Frame" clip-path="url(#clip1_29_28278)">
+<path id="Vector" d="M9.80805 17.7999H14.3332L11.0403 8.73376H6.51514L9.80805 17.7999Z" fill="#9CC5FF"/>
+<path id="Vector_2" d="M16.3747 17.7999H20.8999L17.6054 8.73376H13.0818L16.3747 17.7999Z" fill="#9CC5FF"/>
+<path id="Vector_3" d="M12.6652 4.19995H8.14009L6.82324 7.82704H11.3468L12.6652 4.19995Z" fill="#296DFF"/>
+<path id="Vector_4" d="M7.72511 17.7999H3.19995L6.49286 8.73376H11.018L7.72511 17.7999Z" fill="#296DFF"/>
+<path id="Vector_5" d="M14.3125 17.7999H9.78735L13.0819 8.73376H17.6054L14.3125 17.7999Z" fill="#296DFF"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_29_28278">
+<rect width="24" height="24" fill="white"/>
+</clipPath>
+<clipPath id="clip1_29_28278">
+<rect width="17.7" height="13.6" fill="white" transform="translate(3.19995 4.19995)"/>
+</clipPath>
+</defs>
+</svg>
