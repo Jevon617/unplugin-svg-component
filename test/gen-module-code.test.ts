@@ -1,10 +1,10 @@
 import path from 'path'
 import { expect, test } from 'vitest'
-import createSvgSprite from '../src/core/sprite'
+import { genModuleCode } from '../src/core/generator'
 
 test('createSprite', async () => {
-  const { symbolIds } = await createSvgSprite({
+  const { code } = await genModuleCode({
     iconDir: path.resolve(__dirname, './icons'),
-  })
-  expect(symbolIds).matchSnapshot()
+  }, true)
+  expect(code).matchSnapshot()
 })
