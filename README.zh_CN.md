@@ -1,15 +1,14 @@
 # unplugin-svg-component
-**English** | [中文](./README.zh_CN.md)
+[English](./README.md) | **中文**
 
-UnpluginSvgComponent inspired by [vite-plugin-icons](https://github.com/vbenjs/vite-plugin-svg-icons), 
-it will generate a Vue component with SVG files, and use this component with typescript Intellisense.
+UnpluginSvgComponent 启发于[vite-plugin-icons](https://github.com/vbenjs/vite-plugin-svg-icons), 通过本地的svg文件生成一个vue组件, 并支持typescript智能提示, 热更新.
 
-## Features
-* Use svg component with typescript intellisense
-* HMR for svg file
+## 功能
+1. 智能提示svg文件名称
+2. 热更新支持
 ![image](./images/intellisense.jpg)
 
-## Installation 
+## 安装 
 
 ```shell
 yarn add unplugin-svg-component -D
@@ -19,7 +18,7 @@ npm i unplugin-svg-component -D
 pnpm install unplugin-svg-component -D
 ```
 
-## Usage
+## 使用
 
 ```ts
 // vite.config.ts
@@ -33,8 +32,8 @@ export default defineConfig({
       svgSpriteDomId: '__svg_sprite__dom__',
       componentName: 'SvgIcon',
       componentStyle: 'width: 1em; height: 1em; fill:currentColor;',
-      // Usually, the plugin will set SVG's fill and stroke with 'currentColor',
-      // use this option to preserve its original color.
+      // 通常, 插件会把fill, stroke的值替换为'currentColor',
+      // 你可以使用这个选项来控制是否保留原来的颜色。
       preserveColor: /logo\.svg$/,
     }),
   ],
@@ -46,7 +45,7 @@ import SvgIcon from 'virtual:svg-component'
 app.component(SvgIcon.name, SvgIcon)
 ```
 
-## Typescript
+## Typescript 支持
 ```json
 // tsconfig.json
 {
