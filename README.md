@@ -42,7 +42,7 @@ export default defineConfig({
 ```
 ```ts
 // main.ts
-import SvgIcon from 'virtual:svg-component'
+import SvgIcon from '~virtual/svg-component'
 app.component(SvgIcon.name, SvgIcon)
 ```
 
