@@ -49,17 +49,15 @@ export default defineConfig({
 <details>
 <summary>Vue-cli config</summary><br>
 
-```ts
-const path = require('path')
+```js
+// vue.config.js
 const { defineConfig } = require('@vue/cli-service')
 const UnpluginSvgComponent = require('unplugin-svg-component/webpack').default
+
 module.exports = defineConfig({
   configureWebpack: {
     plugins: [
-      UnpluginSvgComponent({
-        iconDir: path.resolve(__dirname, './src/icons'),
-        dts: false
-      })
+      UnpluginSvgComponent({ /* options */ })
     ]
   }
 })
@@ -69,18 +67,49 @@ module.exports = defineConfig({
 <details>
 <summary>Webpack config</summary><br>
 
-```ts
-const path = require('path')
+```js
+// webpack.config.js
 const UnpluginSvgComponent = require('unplugin-svg-component/webpack').default
-module.exports = defineConfig({
-  configureWebpack: {
-    plugins: [
-      UnpluginSvgComponent({
-        iconDir: path.resolve(__dirname, './src/icons'),
-        dts: false
-      })
-    ]
-  }
+
+module.exports = {
+  /* ... */
+  plugins: [
+    UnpluginSvgComponent({ /* options */ }),
+  ],
+}
+```
+<br></details>
+
+<details>
+<summary>Rollup config</summary><br>
+
+```js
+// rollup.config.js
+import UnpluginSvgComponent from 'unplugin-svg-component/rollup'
+
+export default {
+  plugins: [
+    UnpluginSvgComponent({ /* options */ }),
+  ],
+}
+```
+<br></details>
+
+<details>
+<summary>Esbuild config</summary><br>
+
+```js
+// esbuild.config.js
+import { build } from 'esbuild'
+import UnpluginSvgComponent from 'unplugin-svg-component/esbuild'
+
+build({
+  /* ... */
+  plugins: [
+    UnpluginSvgComponent({
+      /* options */
+    }),
+  ],
 })
 ```
 <br></details>
@@ -101,4 +130,4 @@ app.component(SvgIcon.name, SvgIcon)
 ```
 
 ## License
-MIT License © 2022 Jevon617
+MIT License © 2022-PRESENT [Jevon617](https://github.com/Jevon617)
