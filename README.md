@@ -1,12 +1,13 @@
 # unplugin-svg-component
 **English** | [中文](./README.zh_CN.md)
 
-UnpluginSvgComponent inspired by [vite-plugin-icons](https://github.com/vbenjs/vite-plugin-svg-icons), 
+UnpluginSvgComponent inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons), 
 it will generate a Vue component with SVG files, and use this component with typescript Intellisense.
 
 ## Features
 * Use svg component with typescript intellisense
 * HMR for svg file
+
 ![image](./images/intellisense.jpg)
 
 ## Installation 
