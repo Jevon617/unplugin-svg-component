@@ -1,7 +1,7 @@
 # unplugin-svg-component
 [English](./README.md) | **中文**
 
-UnpluginSvgComponent 启发于[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons), 通过本地的svg文件生成一个vue组件, 并支持typescript智能提示, 热更新.
+UnpluginSvgComponent 启发于[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons), 通过本地的svg文件生成一个vue组件, 通过该组件使用svg图标, 并支持typescript智能提示svg文件名称, 热更新等功能.
 
 ## 功能
 1. 智能提示svg文件名称
