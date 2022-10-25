@@ -1,5 +1,7 @@
 import { createUnplugin } from 'unplugin'
 import type { ViteDevServer } from 'vite'
+import genEtag from 'etag'
+import cors from 'cors'
 import type { Options } from '../types'
 import watchIconDir from './watcher'
 import { genModuleCode } from './generator'
@@ -34,6 +36,7 @@ const unplugin = createUnplugin<Options>(options => ({
       transformPluginContext = this
     },
     configureServer(server: ViteDevServer) {
+      server.middlewares.use(cors({ origin: '*' }))
       server.middlewares.use(async (req, res, next) => {
         if (req.url === `/@id/${MODULE_NAME}`) {
           const { code, symbols, symbolCache, symbolIds } = await genModuleCode(options, true)
@@ -46,10 +49,21 @@ const unplugin = createUnplugin<Options>(options => ({
           const transformResult = await importAnalysisTransform.apply(
             transformPluginContext, [code, MODULE_NAME, { ssr: false }],
           )
-          res.statusCode = 200
-          res.setHeader('Content-Type', 'application/javascript')
-          res.setHeader('Cache-Control', 'no-cache')
-          res.end(transformResult.code)
+
+          const etag = genEtag(transformResult.code, { weak: true })
+          const noneMatch = req.headers['if-none-match'] || req.headers['If-None-Match']
+
+          if (noneMatch === etag || noneMatch === `W/${etag}` || `W/${noneMatch}` === etag) {
+            res.statusCode = 304
+            res.end()
+          }
+          else {
+            res.setHeader('ETag', etag)
+            res.setHeader('Content-Type', 'application/javascript')
+            res.setHeader('Cache-Control', 'no-cache')
+            res.statusCode = 200
+            res.end(transformResult.code)
+          }
         }
         else {
           next()

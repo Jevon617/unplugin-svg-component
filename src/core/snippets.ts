@@ -1,3 +1,5 @@
+import { MODULE_NAME } from './constants'
+
 export const template = `
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -8,7 +10,7 @@ export const template = `
   </svg>
 `
 export const dts = `
-declare module 'virtual:svg-component' {
+declare module '${MODULE_NAME}' {
   const $component_name: import("vue").DefineComponent<{
       name: {
           type: import("vue").PropType<"$svg_symbolIds">;

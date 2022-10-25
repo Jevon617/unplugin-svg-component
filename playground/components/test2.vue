@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import SvgIcon1 from 'virtual:svg-component'
+import SvgIcon1 from '~virtual/svg-component'
 </script>
 
 <template>

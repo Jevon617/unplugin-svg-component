@@ -21,6 +21,9 @@ pnpm install unplugin-svg-component -D
 
 ## Usage
 
+<details>
+<summary>Vite config</summary><br>
+
 ```ts
 // vite.config.ts
 import UnpluginSvgComponent from 'unplugin-svg-component/vite'
@@ -40,6 +43,49 @@ export default defineConfig({
   ],
 })
 ```
+<br></details>
+
+
+<details>
+<summary>Vue-cli config</summary><br>
+
+```ts
+const path = require('path')
+const { defineConfig } = require('@vue/cli-service')
+const UnpluginSvgComponent = require('unplugin-svg-component/webpack').default
+module.exports = defineConfig({
+  configureWebpack: {
+    plugins: [
+      UnpluginSvgComponent({
+        iconDir: path.resolve(__dirname, './src/icons'),
+        dts: false
+      })
+    ]
+  }
+})
+```
+<br></details>
+
+<details>
+<summary>Webpack config</summary><br>
+
+```ts
+const path = require('path')
+const UnpluginSvgComponent = require('unplugin-svg-component/webpack').default
+module.exports = defineConfig({
+  configureWebpack: {
+    plugins: [
+      UnpluginSvgComponent({
+        iconDir: path.resolve(__dirname, './src/icons'),
+        dts: false
+      })
+    ]
+  }
+})
+```
+<br></details>
+
+
 ```ts
 // main.ts
 import SvgIcon from '~virtual/svg-component'

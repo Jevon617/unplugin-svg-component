@@ -101,6 +101,8 @@
     }
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "etag": "^1.8.1",
     "fast-glob": "^3.2.12",
     "local-pkg": "^0.4.2",
     "svg-baker": "^1.7.0",
