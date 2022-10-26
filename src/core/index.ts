@@ -1,7 +1,9 @@
+import cors from 'cors'
+import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
 import type { ViteDevServer } from 'vite'
-import genEtag from 'etag'
-import cors from 'cors'
+import type { TransformPluginContext } from 'rollup'
+
 import type { Options } from '../types'
 import watchIconDir from './watcher'
 import { genModuleCode } from './generator'
@@ -9,7 +11,7 @@ import { MODULE_NAME } from './constants'
 import { resolveOptions } from './utils'
 
 let moduleCode = ''
-let transformPluginContext
+let transformPluginContext: TransformPluginContext
 
 const unplugin = createUnplugin<Options>(options => ({
   name: 'unplugin-svg-component',

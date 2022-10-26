@@ -2,13 +2,13 @@ import path from 'path'
 import { defineConfig } from 'vite'
 import Inspect from 'vite-plugin-inspect'
 import vue from '@vitejs/plugin-vue'
-import Unplugin from '../dist/vite'
+import UnpluginSvgComponent from 'unplugin-svg-component/vite'
 
 export default defineConfig({
   plugins: [
     vue(),
     Inspect(),
-    Unplugin({
+    UnpluginSvgComponent({
       iconDir: path.resolve(__dirname, 'icons'),
       dts: true,
       preserveColor: path.resolve(__dirname, 'icons/common'),

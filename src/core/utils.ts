@@ -1,3 +1,4 @@
+import { resolveModule } from 'local-pkg'
 import type { Options } from '../types'
 
 export function debounce(fn: (...args: any) => void, delay: number) {
@@ -35,4 +36,8 @@ export function resolveOptions(options: Options): Options {
     ...defaultOptions,
     ...options,
   }
+}
+
+export function resolve(name: string) {
+  return resolveModule(name, { paths: [process.cwd()] }) || name
 }

@@ -77,8 +77,10 @@
     "dev": "tsup --watch src",
     "build:fix": "esno scripts/postbuild.ts",
     "lint": "eslint .",
-    "play": "npm -C playground run dev",
-    "play:build": "npm -C playground run build",
+    "play:vite": "npm -C examples/vite run dev",
+    "play:webpack": "npm -C examples/webpack run dev",
+    "play:rollup": "npm -C examples/rollup run dev",
+    "play:esbuild": "npm -C examples/esbuild run dev",
     "prepublishOnly": "npm run build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
@@ -111,7 +113,9 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.27.0",
+    "@types/cors": "^2.8.12",
     "@types/debug": "^4.1.7",
+    "@types/etag": "^1.8.1",
     "@types/node": "^18.8.0",
     "@types/svgo": "^2.6.4",
     "@vitejs/plugin-vue": "^3.1.2",
@@ -127,7 +131,6 @@
     "vite": "^3.1.4",
     "vitest": "^0.23.4",
     "vue": "^3.2.40",
-    "vue-router": "^4.1.5",
     "vue-tsc": "^1.0.7",
     "webpack": "^5.74.0"
   }

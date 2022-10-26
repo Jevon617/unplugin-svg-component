@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import { getPackageInfo, importModule } from 'local-pkg'
 import type { Options } from '../types'
 import { dts, golbalDts, template } from './snippets'
-import { replace } from './utils'
+import { replace, resolve } from './utils'
 import createSvgSprite from './sprite'
 import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
@@ -112,7 +112,8 @@ async function genComponent(options: Options) {
 }
 
 async function compileVue3Template(template: string): Promise<string> {
-  const { compileTemplate } = await importModule('@vue/compiler-sfc')
+  const compilePath = resolve('@vue/compiler-sfc')
+  const { compileTemplate } = await importModule(compilePath)
   const { code } = compileTemplate({
     source: template,
     id: '__svg-component__',
@@ -122,8 +123,11 @@ async function compileVue3Template(template: string): Promise<string> {
 }
 
 async function compileVue2Template(template: string): Promise<string> {
-  const { compile } = await importModule('vue-template-compiler')
-  const transpile = (await importModule('vue-template-es2015-compiler')).default
+  const compilePath = resolve('vue-template-compiler')
+  const transpilePath = resolve('vue-template-es2015-compiler')
+
+  const { compile } = await importModule(compilePath)
+  const transpile = (await importModule(transpilePath)).default
 
   const { render } = compile(template)
   const toFunction = (code: string): string => {
@@ -137,7 +141,7 @@ async function compileVue2Template(template: string): Promise<string> {
 
 async function getVueVersion() {
   try {
-    const result = await getPackageInfo('vue')
+    const result = await getPackageInfo('vue', { paths: [process.cwd()] })
     if (!result)
       return null
     return result.version.startsWith('2.') ? 'vue2' : 'vue3'
