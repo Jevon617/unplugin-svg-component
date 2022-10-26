@@ -8,8 +8,8 @@ module.exports = defineConfig({
     plugins: [
       UnpluginSvgComponent({
         iconDir: path.resolve(__dirname, './src/icons'),
-        dts: false,
         componentName: 'MySvgIcon',
+        preserveColor: /vue\.svg$/,
       }),
     ],
   },
