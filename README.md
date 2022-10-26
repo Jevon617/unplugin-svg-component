@@ -1,12 +1,14 @@
 # unplugin-svg-component
 **English** | [中文](./README.zh_CN.md)
 
-UnpluginSvgComponent inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons), 
-it will generate a Vue component with SVG files,  use the SVG icon through the component, and support typescript intelligent prompt SVG file name, and hot update.
+UnpluginSvgComponent inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons).
+
+It will generate a Vue component through SVG files,  use the SVG icon through the component.
 
 ## Features
-* Use svg component with typescript intellisense
-* HMR for svg file
+
+* **intelligent** When using components, the name of the SVG file will be prompted with Typescript
+* **HMR** HMR for svg file
 
 ![image](./images/intellisense.jpg)
 
@@ -27,20 +29,11 @@ pnpm install unplugin-svg-component -D
 
 ```ts
 // vite.config.ts
+import { defineConfig } from 'vite'
 import UnpluginSvgComponent from 'unplugin-svg-component/vite'
 export default defineConfig({
   plugins: [
-    UnpluginSvgComponent({
-      iconDir: path.resolve(__dirname, 'icons'),
-      dts: true,
-      dtsDir: process.cwd(),
-      svgSpriteDomId: '__svg_sprite__dom__',
-      componentName: 'SvgIcon',
-      componentStyle: 'width: 1em; height: 1em; fill:currentColor;',
-      // Usually, the plugin will set SVG's fill and stroke with 'currentColor',
-      // use this option to preserve its original color.
-      preserveColor: /logo\.svg$/,
-    }),
+    UnpluginSvgComponent({ /* options */ }),
   ],
 })
 ```
@@ -120,6 +113,25 @@ build({
 // main.ts
 import SvgIcon from '~virtual/svg-component'
 app.component(SvgIcon.name, SvgIcon)
+```
+
+
+
+## Plugin Configuration
+
+```ts
+UnpluginSvgComponent({
+  iconDir: path.resolve(__dirname, 'icons'),
+  dts: false, // default
+  dtsDir: process.cwd(), // default
+  svgSpriteDomId: '__svg_sprite__dom__', // default
+  componentName: 'SvgIcon', // default
+  componentStyle: 'width: 1em; height: 1em; fill:currentColor;', // default
+  // Usually, the plugin will set SVG's fill and stroke with 'currentColor',
+  // use this option to preserve its original color.
+  preserveColor: /logo\.svg$/,
+  prefix: '' // default
+})
 ```
 
 ## Typescript
