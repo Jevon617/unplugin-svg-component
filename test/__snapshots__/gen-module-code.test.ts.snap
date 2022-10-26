@@ -2,8 +2,22 @@
 
 exports[`createSprite 1`] = `
 "
-    var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('svg',{staticStyle:{},attrs:{\\"xmlns\\":\\"http://www.w3.org/2000/svg\\",\\"xmlns:xlink\\":\\"http://www.w3.org/1999/xlink\\"}},[_c('use',{attrs:{\\"xlink:href\\":'#' + _vm.name}})])}
+    import { createElementVNode as _createElementVNode, openBlock as _openBlock, createElementBlock as _createElementBlock } from \\"vue\\"
 
+const _hoisted_1 = {
+  xmlns: \\"http://www.w3.org/2000/svg\\",
+  \\"xmlns:xlink\\": \\"http://www.w3.org/1999/xlink\\",
+  style: {}
+}
+const _hoisted_2 = [\\"xlink:href\\"]
+
+ function render(_ctx, _cache) {
+  return (_openBlock(), _createElementBlock(\\"svg\\", _hoisted_1, [
+    _createElementVNode(\\"use\\", {
+      \\"xlink:href\\": '#' + _ctx.name
+    }, null, 8 /* PROPS */, _hoisted_2)
+  ]))
+}
     
 export default{
       name: \\"SvgIcon\\",
