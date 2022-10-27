@@ -137,6 +137,7 @@ UnpluginSvgComponent({
       nameArr.unshift(prefix)
     return nameArr.join('-').replace(/\.svg$/, '')
   }, // default, format symbolId
+  optimizeOptions: undefined // default, svgo optimize options
 })
 ```
 

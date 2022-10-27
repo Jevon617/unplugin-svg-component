@@ -22,6 +22,7 @@ export default defineConfig({
           nameArr.unshift(prefix)
         return nameArr.join('-').replace(/\.svg$/, '')
       },
+      optimizeOptions: undefined,
     }),
   ],
 })

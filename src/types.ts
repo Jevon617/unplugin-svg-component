@@ -1,3 +1,5 @@
+import type { OptimizeOptions } from 'svgo'
+
 export interface Options {
   iconDir: string
   prefix?: string
@@ -8,5 +10,6 @@ export interface Options {
   preserveColor?: string | RegExp
   componentStyle?: string
   symbolIdFormatter?: (name: string, prefix: string) => string
+  optimizeOptions?: OptimizeOptions
 }
 

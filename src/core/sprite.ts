@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import fg from 'fast-glob'
 import { optimize } from 'svgo'
 import SvgCompiler from 'svg-baker'
-import type { OptimizedSvg } from 'svgo'
+import type { OptimizeOptions, OptimizedSvg } from 'svgo'
 import type { Options } from '../types'
 
 export default async function createSvgSprite(options: Options) {
@@ -37,7 +37,7 @@ export async function createSymbol(
   }>,
   svgCompiler,
 ) {
-  const { iconDir, prefix = '', preserveColor, symbolIdFormatter } = options
+  const { iconDir, prefix = '', preserveColor, symbolIdFormatter, optimizeOptions } = options
 
   const svgPath = path.resolve(iconDir, svgName)
   const svgContent = await fs.readFile(svgPath)
@@ -49,7 +49,7 @@ export async function createSymbol(
   else if (typeof preserveColor === 'object')
     isPreserveColor = preserveColor.test(svgPath)
 
-  const OptimizedSvgContent = await optimizeSvg(svgContent, isPreserveColor)
+  const OptimizedSvgContent = await optimizeSvg(svgContent, isPreserveColor, optimizeOptions)
   const svgSymbol = (await svgCompiler.addSymbol({
     path: svgPath,
     content: OptimizedSvgContent,
@@ -62,8 +62,8 @@ export async function createSymbol(
   }
 }
 
-async function optimizeSvg(source: Buffer, preserveColor: boolean) {
-  const { data: optimizedSvgContent } = await optimize(source) as OptimizedSvg
+async function optimizeSvg(source: Buffer, preserveColor: boolean, optimizeOptions?: OptimizeOptions) {
+  const { data: optimizedSvgContent } = await optimize(source, optimizeOptions) as OptimizedSvg
   if (preserveColor) {
     return optimizedSvgContent
   }
