@@ -1,18 +1,18 @@
 # unplugin-svg-component
+
 [English](./README.md) | **中文**
 
-unplugin-svg-component 启发于[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons)。
+[![NPM Version][npm-image]][npm-url]
+[![Downloads Stats][npm-downloads]][npm-url]
 
-它将本地的svg文件生成为一个vue组件, 通过该组件结合svg文件的名称使用svg图标。
+> unplugin-svg-component 启发于[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons),它将本地的svg文件生成为一个vue组件, 通过该组件结合svg文件的名称使用svg图标。
+
+![image](./images/intellisense.jpg)
 
 ## 功能
 
 * **智能提示** 使用组件时, 配合 Typescript 会提示出 svg 文件名称
 * **热更新** svg文件的增删改操作, 都会实时显示于页面上, 无需刷新浏览器
-
-## 效果
-
-![image](./images/intellisense.jpg)
 
 ## 安装 
 
@@ -146,5 +146,22 @@ UnpluginSvgComponent({
 }
 ```
 
+## Contributing
+
+1. Fork (<https://github.com/Jevon617/unplugin-svg-component/fork>)
+2. 新建一个分支 (`git checkout -b feature/fooBar`)
+3. 提交你的代码 (`git commit -am 'Add some fooBar'`)
+4. 提交到你的远程分支 (`git push origin feature/fooBar`)
+5. 提交PR
+
 ## License
 MIT License © 2022-PRESENT [Jevon617](https://github.com/Jevon617)
+
+
+<!-- Markdown link & img dfn's -->
+[npm-image]: https://img.shields.io/npm/v/unplugin-svg-component.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/unplugin-svg-component
+[npm-downloads]: https://img.shields.io/npm/dm/unplugin-svg-component.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
+[wiki]: https://github.com/yourname/yourproject/wiki

@@ -1,16 +1,19 @@
 # unplugin-svg-component
+
 **English** | [中文](./README.zh_CN.md)
 
-unplugin-svg-component inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons).
+[![NPM Version][npm-image]][npm-url]
+[![Downloads Stats][npm-downloads]][npm-url]
 
-It will generate a Vue component through SVG files,  use the SVG icon through the component.
+> unplugin-svg-component inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons), it will generate a Vue component through SVG files,  use the SVG icon through the component.
+
+![image](./images/intellisense.jpg)
 
 ## Features
 
 * **intelligent** When using components, the name of the SVG file will be prompted with Typescript
 * **HMR** HMR for svg file
 
-![image](./images/intellisense.jpg)
 
 ## Installation 
 
@@ -149,5 +152,22 @@ UnpluginSvgComponent({
 }
 ```
 
+## Contributing
+
+1. Fork it (<https://github.com/Jevon617/unplugin-svg-component/fork>)
+2. Create your feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Pull Request
+
 ## License
 MIT License © 2022-PRESENT [Jevon617](https://github.com/Jevon617)
+
+
+<!-- Markdown link & img dfn's -->
+[npm-image]: https://img.shields.io/npm/v/unplugin-svg-component.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/unplugin-svg-component
+[npm-downloads]: https://img.shields.io/npm/dm/unplugin-svg-component.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
+[wiki]: https://github.com/yourname/yourproject/wiki
