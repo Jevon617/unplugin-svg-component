@@ -127,7 +127,13 @@ UnpluginSvgComponent({
   componentStyle: 'width: 1em; height: 1em; fill:currentColor;', // 默认值
   // 通常, 插件会把svg文件的fill, stroke属性替换为'currentColor', 使用这个属性可以让插件保留svg原来的颜色
   preserveColor: /logo\.svg$/,
-  prefix: 'icon'
+  prefix: '',
+  symbolIdFormatter: (svgName: string, prefix: string): string => {
+    const nameArr = svgName.split('/')
+    if (prefix)
+      nameArr.unshift(prefix)
+    return nameArr.join('-').replace(/\.svg$/, '')
+  }, // 默认值, 自定义symbolId的格式
 })
 ```
 

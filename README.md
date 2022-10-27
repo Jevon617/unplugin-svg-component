@@ -1,7 +1,7 @@
 # unplugin-svg-component
 **English** | [中文](./README.zh_CN.md)
 
-UnpluginSvgComponent inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons).
+unplugin-svg-component inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons).
 
 It will generate a Vue component through SVG files,  use the SVG icon through the component.
 
@@ -130,11 +130,17 @@ UnpluginSvgComponent({
   // Usually, the plugin will set SVG's fill and stroke with 'currentColor',
   // use this option to preserve its original color.
   preserveColor: /logo\.svg$/,
-  prefix: '' // default
+  prefix: '', // default
+  symbolIdFormatter: (svgName: string, prefix: string): string => {
+    const nameArr = svgName.split('/')
+    if (prefix)
+      nameArr.unshift(prefix)
+    return nameArr.join('-').replace(/\.svg$/, '')
+  }, // default, format symbolId
 })
 ```
 
-## Typescript
+## Typescript support
 ```json
 // tsconfig.json
 {

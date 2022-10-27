@@ -16,6 +16,12 @@ export default defineConfig({
       svgSpriteDomId: 'my-svg-id',
       prefix: 'icon',
       componentName: 'MySvgIcon',
+      symbolIdFormatter: (svgName: string, prefix: string): string => {
+        const nameArr = svgName.split('/')
+        if (prefix)
+          nameArr.unshift(prefix)
+        return nameArr.join('-').replace(/\.svg$/, '')
+      },
     }),
   ],
 })

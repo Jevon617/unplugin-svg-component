@@ -37,11 +37,11 @@ export async function createSymbol(
   }>,
   svgCompiler,
 ) {
-  const { iconDir, prefix = '', preserveColor } = options
+  const { iconDir, prefix = '', preserveColor, symbolIdFormatter } = options
 
   const svgPath = path.resolve(iconDir, svgName)
   const svgContent = await fs.readFile(svgPath)
-  const symbolId = createSymbolId(svgName, prefix)
+  const symbolId = symbolIdFormatter ? symbolIdFormatter(svgName, prefix) : createSymbolId(svgName, prefix)
 
   let isPreserveColor = false
   if (typeof preserveColor === 'string')
@@ -62,13 +62,13 @@ export async function createSymbol(
   }
 }
 
-async function optimizeSvg(source: Buffer, keepColor: boolean) {
-  const { data: OptimizedSvgContent } = await optimize(source) as OptimizedSvg
-  if (keepColor) {
-    return OptimizedSvgContent
+async function optimizeSvg(source: Buffer, preserveColor: boolean) {
+  const { data: optimizedSvgContent } = await optimize(source) as OptimizedSvg
+  if (preserveColor) {
+    return optimizedSvgContent
   }
   else {
-    return OptimizedSvgContent
+    return optimizedSvgContent
       .replace(/stroke="[a-zA-Z#0-9]*"/g, 'stroke="currentColor"')
       .replace(/fill="[a-zA-Z#0-9]*"/g, (p: string) => {
         if (p.includes('none'))

@@ -7,5 +7,6 @@ export interface Options {
   componentName?: string
   preserveColor?: string | RegExp
   componentStyle?: string
+  symbolIdFormatter?: (name: string, prefix: string) => string
 }
 
