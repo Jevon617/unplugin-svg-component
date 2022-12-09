@@ -1,14 +1,15 @@
 import path from 'path'
 import fs from 'fs/promises'
-import { getPackageInfo, importModule } from 'local-pkg'
+import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
 import type { Options } from '../types'
-import { dts, golbalDts, template } from './snippets'
-import { replace } from './utils'
+import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
+import { replace, transformStyleStrToObject } from './utils'
 import createSvgSprite from './sprite'
 import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
 export async function genModuleCode(options: Options, hmr: boolean) {
-  const component = await genComponent(options)
+  const isVueProject = detectProjectType(options)
+  const component = await genComponent(options, isVueProject)
   const svgSpriteDomId = options.svgSpriteDomId
 
   const { symbolIds, symbols, symbolCache } = await createSvgSprite(options)
@@ -19,7 +20,7 @@ export async function genModuleCode(options: Options, hmr: boolean) {
     .replace(new RegExp(xmlnsLink, 'g'), '')
 
   if (options?.dts)
-    genDts(symbolIds, options)
+    genDts(symbolIds, options, isVueProject)
 
   const hmrCode = `
     if (import.meta.hot) {
@@ -70,18 +71,32 @@ export async function genModuleCode(options: Options, hmr: boolean) {
   }
 }
 
-export function genDts(symbolIds: Set<string>, options: Options) {
-  fs.writeFile(
-    path.resolve(options.dtsDir!, './svg-component.d.ts'),
-    replace(dts, symbolIds, options.componentName!),
-  )
-  fs.writeFile(
-    path.resolve(options.dtsDir!, './svg-component-global.d.ts'),
-    replace(golbalDts, symbolIds, options.componentName!),
-  )
+export function genDts(symbolIds: Set<string>, options: Options, isVueProject: boolean) {
+  if (isVueProject) {
+    fs.writeFile(
+      path.resolve(options.dtsDir!, './svg-component.d.ts'),
+      replace(dts, symbolIds, options.componentName!),
+    )
+    fs.writeFile(
+      path.resolve(options.dtsDir!, './svg-component-global.d.ts'),
+      replace(golbalDts, symbolIds, options.componentName!),
+    )
+  }
+  else {
+    fs.writeFile(
+      path.resolve(options.dtsDir!, './svg-component.d.ts'),
+      replace(reactDts, symbolIds, options.componentName!),
+    )
+  }
 }
 
-async function genComponent(options: Options) {
+async function genComponent(options: Options, isVueProject: boolean) {
+  const { componentStyle, componentName } = options
+  if (!isVueProject) {
+    return reactTemplate.replace(/\$component_name/, componentName!)
+      .replace(/\$component_style/, JSON.stringify(transformStyleStrToObject(componentStyle!)))
+  }
+
   const vueVerison = await getVueVersion()
   if (!vueVerison)
     return 'export default {}'
@@ -91,7 +106,6 @@ async function genComponent(options: Options) {
     vue3: compileVue3Template,
   }
 
-  const { componentStyle, componentName } = options
   const processedTemplate = template.replace(/\$component_style/, componentStyle!)
 
   let code = await compilers[vueVerison](processedTemplate)
@@ -146,3 +160,21 @@ async function getVueVersion() {
   }
 }
 
+function detectProjectType(options: Options) {
+  if (options.projectType) {
+    return options.projectType === 'vue'
+  }
+  else {
+    try {
+      if (isPackageExists('vue'))
+        return true
+      else if (isPackageExists('react'))
+        return false
+      else
+        throw new Error('[unpluign-svg-component] can\'t detect your project type, please set options.projectType.')
+    }
+    catch {
+      throw new Error('[unpluign-svg-component] can\'t detect your project type, please set options.projectType.')
+    }
+  }
+}

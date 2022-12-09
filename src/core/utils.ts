@@ -36,3 +36,11 @@ export function resolveOptions(options: Options): Options {
     ...options,
   }
 }
+
+export function transformStyleStrToObject(styleStr: string): Record<string, string> {
+  return styleStr.replace(/;$/, '').split(';').reduce((ruleMap, ruleString) => {
+    const rulePair = ruleString.split(':')
+    ruleMap[rulePair[0].trim()] = rulePair[1].trim()
+    return ruleMap
+  }, {})
+}

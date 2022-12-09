@@ -53,3 +53,22 @@ declare module '@vue/runtime-core' {
 }
 `
 
+export const reactTemplate = `
+import React from 'react';
+
+export default function $component_name({name}) {
+  return React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    xmlnsXlink: "http://www.w3.org/1999/xlink",
+    style: $component_style
+  }, React.createElement("use", {
+    xlinkHref: "#" + name
+  }));
+}
+`
+export const reactDts = `
+declare module '${MODULE_NAME}' {
+  const $component_name: ({name}: {name: "$svg_symbolIds"})=> JSX.Element;
+  export default $component_name;
+}
+`

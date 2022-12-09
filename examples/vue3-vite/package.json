@@ -10,9 +10,8 @@
     "@vue/compiler-sfc": "^3.2.41",
     "@vue/runtime-core": "^3.2.41",
     "unplugin-svg-component": "workspace:*",
-    "vite": "^3.1.4",
+    "vite": "^3.2.3",
     "vite-plugin-inspect": "^0.7.4",
     "vue": "^3.2.41"
-
   }
 }
