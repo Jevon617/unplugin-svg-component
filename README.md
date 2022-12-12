@@ -128,12 +128,12 @@ app.component(SvgIcon.name, SvgIcon)
 ### React
 ```tsx
 // App.tsx
-import MySvgIcon from '~virtual/svg-component'
+import SvgIcon from '~virtual/svg-component'
 
 function App() {
   return (
     <div className="logo">
-      <MySvgIcon name='icon-react'></MySvgIcon>
+      <SvgIcon name='icon-react'></SvgIcon>
     </div>
   )
 }
@@ -154,7 +154,7 @@ function App() {
 | symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [code](./src/core/utils.ts/#L33)               | the symbolId's formatter            |
 | optimizeOptions       | `SvgoOptions` | -          | svgo optimize [Options](https://github.com/svg/svgo) |
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | Customize the ID of the svgDom                      |
-| vueVersion            | `2 | 3 | auto`             | auto                                           | Vue version                                         |
+| vueVersion            | `2 \| 3 \| auto`           | auto                                           | Vue version                                         |
 
 
 ## Typescript support

@@ -128,12 +128,12 @@ app.component(SvgIcon.name, SvgIcon)
 ### React
 ```tsx
 // App.tsx
-import MySvgIcon from '~virtual/svg-component'
+import SvgIcon from '~virtual/svg-component'
 
 function App() {
   return (
     <div className="logo">
-      <MySvgIcon name='icon-react'></MySvgIcon>
+      <SvgIcon name='icon-react'></SvgIcon>
     </div>
   )
 }
@@ -154,7 +154,7 @@ function App() {
 | symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [code](./src/core/utils.ts/#L33)               | 可以通过这个参数来设置symbolId的格式       |
 | optimizeOptions       | `SvgoOptions` | -          |  [svgo 的优化参数](https://github.com/svg/svgo) |
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | 自定义生成的svg元素的id                                  |
-| vueVersion            | `2 | 3 | auto`             | auto                                           | Vue 版本, 默认会自动检测                                  |
+| vueVersion            | `2 \| 3 \| auto`           | auto                                           | Vue 版本, 默认会自动检测                                  |
 
 
 ## Typescript 支持
