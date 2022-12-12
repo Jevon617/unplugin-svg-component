@@ -30,6 +30,12 @@ export function resolveOptions(options: Options): Options {
     dtsDir: process.cwd(),
     svgSpriteDomId: '__svg_sprite__dom__',
     componentStyle: 'width: 1em; height: 1em; fill:currentColor;',
+    symbolIdFormatter(svgName: string, prefix: string) {
+      const nameArr = svgName.split('/')
+      if (prefix)
+        nameArr.unshift(prefix)
+      return nameArr.join('-').replace(/\.svg$/, '')
+    },
   }
   return {
     ...defaultOptions,

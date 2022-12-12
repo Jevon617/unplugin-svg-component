@@ -41,7 +41,7 @@ export async function createSymbol(
 
   const svgPath = path.resolve(iconDir, svgName)
   const svgContent = await fs.readFile(svgPath)
-  const symbolId = symbolIdFormatter ? symbolIdFormatter(svgName, prefix) : createSymbolId(svgName, prefix)
+  const symbolId = symbolIdFormatter!(svgName, prefix)
 
   let isPreserveColor = false
   if (typeof preserveColor === 'string')
@@ -77,11 +77,4 @@ async function optimizeSvg(source: Buffer, preserveColor: boolean, optimizeOptio
           return 'fill="currentColor"'
       })
   }
-}
-
-function createSymbolId(svgName: string, prefix: string) {
-  const nameArr = svgName.split('/')
-  if (prefix)
-    nameArr.unshift(prefix)
-  return nameArr.join('-').replace(/\.svg$/, '')
 }
