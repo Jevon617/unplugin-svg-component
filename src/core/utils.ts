@@ -25,9 +25,10 @@ export function replace(dts: string, symbolIds: Set<string>, componentName: stri
 }
 
 export function resolveOptions(options: Options): Options {
-  const defaultOptions = {
+  const defaultOptions: Partial<Options> = {
     componentName: 'SvgIcon',
     dtsDir: process.cwd(),
+    projectType: 'auto',
     svgSpriteDomId: '__svg_sprite__dom__',
     componentStyle: 'width: 1em; height: 1em; fill:currentColor;',
     symbolIdFormatter(svgName: string, prefix: string) {
