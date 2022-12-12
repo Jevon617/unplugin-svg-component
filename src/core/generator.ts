@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs/promises'
 import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
-import type { Options } from '../types'
+import type { Options, VueVersion } from '../types'
 import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
 import { replace, transformStyleStrToObject } from './utils'
 import createSvgSprite from './sprite'
@@ -91,13 +91,13 @@ export function genDts(symbolIds: Set<string>, options: Options, isVueProject: b
 }
 
 async function genComponent(options: Options, isVueProject: boolean) {
-  const { componentStyle, componentName } = options
+  const { componentStyle, componentName, vueVersion } = options
   if (!isVueProject) {
     return reactTemplate.replace(/\$component_name/, componentName!)
       .replace(/\$component_style/, JSON.stringify(transformStyleStrToObject(componentStyle!)))
   }
 
-  const vueVerison = await getVueVersion()
+  const vueVerison = await getVueVersion(vueVersion!)
   if (!vueVerison)
     return 'export default {}'
 
@@ -148,23 +148,25 @@ async function compileVue2Template(template: string): Promise<string> {
   return code
 }
 
-async function getVueVersion() {
-  try {
-    const result = await getPackageInfo('vue')
-    if (!result)
+async function getVueVersion(vueVerison: VueVersion) {
+  if (vueVerison === 'auto') {
+    try {
+      const result = await getPackageInfo('vue')
+      if (!result)
+        return null
+      return result.version.startsWith('2.') ? 'vue2' : 'vue3'
+    }
+    catch {
       return null
-    return result.version.startsWith('2.') ? 'vue2' : 'vue3'
+    }
   }
-  catch {
-    return null
+  else {
+    return `vue${vueVerison}`
   }
 }
 
 function detectProjectType(options: Options) {
-  if (options.projectType) {
-    return options.projectType === 'vue'
-  }
-  else {
+  if (options.projectType === 'auto') {
     try {
       if (isPackageExists('vue'))
         return true
@@ -176,5 +178,8 @@ function detectProjectType(options: Options) {
     catch {
       throw new Error('[unpluign-svg-component] can\'t detect your project type, please set options.projectType.')
     }
+  }
+  else {
+    return options.projectType === 'vue'
   }
 }

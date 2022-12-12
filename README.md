@@ -154,6 +154,8 @@ function App() {
 | symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [code](./src/core/utils.ts/#L33)               | the symbolId's formatter            |
 | optimizeOptions       | `SvgoOptions` | -          | svgo optimize [Options](https://github.com/svg/svgo) |
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | Customize the ID of the svgDom                      |
+| vueVersion            | `2 | 3 | auto`             | auto                                           | Vue version                                         |
+
 
 ## Typescript support
 ```json

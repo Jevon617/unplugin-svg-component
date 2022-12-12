@@ -12,5 +12,7 @@ export interface Options {
   symbolIdFormatter?: (name: string, prefix: string) => string
   optimizeOptions?: OptimizeOptions
   projectType?: 'vue' | 'react' | 'auto'
+  vueVersion?: VueVersion
 }
 
+export type VueVersion = 2 | 3 | 'auto'
