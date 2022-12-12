@@ -7,12 +7,21 @@
 
 > unplugin-svg-component 启发于[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons),它将本地的svg文件生成为一个vue组件, 通过该组件结合svg文件的名称使用svg图标。
 
+## 智能提示效果
+
+### Vue
 ![image](./images/intellisense.jpg)
+
+### React
+![image](./images/intellisense-react.jpg)
+
 
 ## 功能
 
-* **智能提示** 使用组件时, 配合 Typescript 会提示出 svg 文件名称
-* **热更新** svg文件的增删改操作, 都会实时显示于页面上, 无需刷新浏览器
+* **智能提示**: 使用组件时, 配合 Typescript 会提示出 svg 文件名称
+* **热更新**: svg文件的增删改操作, 都会实时显示于页面上, 无需刷新浏览器
+* **Vue & React 支持**: 自动检测项目类型
+
 
 ## 安装 
 
@@ -109,34 +118,43 @@ build({
 ```
 <br></details>
 
+### Vue
 ```ts
 // main.ts
 import SvgIcon from '~virtual/svg-component'
 app.component(SvgIcon.name, SvgIcon)
 ```
 
+### React
+```tsx
+// App.tsx
+import MySvgIcon from '~virtual/svg-component'
+
+function App() {
+  return (
+    <div className="logo">
+      <MySvgIcon name='icon-react'></MySvgIcon>
+    </div>
+  )
+}
+```
+
 ## 插件配置
 
-```ts
-UnpluginSvgComponent({
-  iconDir: path.resolve(__dirname, 'icons'),
-  dts: false, // 默认值
-  dtsDir: process.cwd(), // 默认值
-  svgSpriteDomId: '__svg_sprite__dom__', // 默认值
-  componentName: 'SvgIcon', // 默认值
-  componentStyle: 'width: 1em; height: 1em; fill:currentColor;', // 默认值
-  // 通常, 插件会把svg文件的fill, stroke属性替换为'currentColor', 使用这个属性可以让插件保留svg原来的颜色
-  preserveColor: /logo\.svg$/,
-  prefix: '', // 默认值
-  symbolIdFormatter: (svgName: string, prefix: string): string => {
-    const nameArr = svgName.split('/')
-    if (prefix)
-      nameArr.unshift(prefix)
-    return nameArr.join('-').replace(/\.svg$/, '')
-  }, // 默认值, 自定义symbolId的格式
-  optimizeOptions: undefined // 默认值, svgo 优化配置
-})
-```
+| 属性                   | 类型                        | 默认值                                          | 描述                                                |
+| -----------           | ----------------------     | ---------------------                          | ------------                                        |
+| iconDir               | `string`                   | -                                              | 图标文件夹位置                                         |
+| projectType           | `vue \| react \| auto`     | auto                                           | 项目类型, 默认会自动检测                                |
+| dts                   | `boolean`                  | -                                              | 是否生成d.ts文件                                       |
+| dtsDir                | `string`                   | -                                              | d.ts文件位置                                           |
+| prefix                | `string`                   | -                                              | symbolId的前缀                                         |
+| componentName         | `string`                   | SvgIcon                                        | 生成的组件名称                                          |
+| componentStyle        | `string`                   | width: 1em; height: 1em; fill:currentColor;    | 组件的行内样式                                          |
+| preserveColor         |`RegExp`                    | -                                              | 通常, 插件会把svg标签内的fill, stroke属性替换成currentColor, 可以通过此属性保留它们原来的颜色  |
+| symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [code](./src/core/utils.ts/#L33)               | 可以通过这个参数来设置symbolId的格式       |
+| optimizeOptions       | `SvgoOptions` | -          |  [svgo 的优化参数](https://github.com/svg/svgo) |
+| svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | 自定义生成的svg元素的id                                  |
+
 
 ## Typescript 支持
 ```json

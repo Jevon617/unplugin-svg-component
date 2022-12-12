@@ -7,13 +7,20 @@
 
 > unplugin-svg-component inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons), it will generate a Vue component through SVG files,  use the SVG icon through the component.
 
+## IDE Intelligent
+
+### Vue
 ![image](./images/intellisense.jpg)
+
+### React
+![image](./images/intellisense-react.jpg)
+
 
 ## Features
 
-* **intelligent** When using components, the name of the SVG file will be prompted with Typescript
-* **HMR** HMR for svg file
-
+* **intelligent**: When using components, the name of the SVG file will be prompted with Typescript
+* **HMR**: HMR for svg file
+* **Vue & React**: Support Vue&React and automatically detect project types.
 
 ## Installation 
 
@@ -111,38 +118,42 @@ build({
 ```
 <br></details>
 
-
+### Vue
 ```ts
 // main.ts
 import SvgIcon from '~virtual/svg-component'
 app.component(SvgIcon.name, SvgIcon)
 ```
 
+### React
+```tsx
+// App.tsx
+import MySvgIcon from '~virtual/svg-component'
 
+function App() {
+  return (
+    <div className="logo">
+      <MySvgIcon name='icon-react'></MySvgIcon>
+    </div>
+  )
+}
+```
 
 ## Plugin Configuration
 
-```ts
-UnpluginSvgComponent({
-  iconDir: path.resolve(__dirname, 'icons'),
-  dts: false, // default
-  dtsDir: process.cwd(), // default
-  svgSpriteDomId: '__svg_sprite__dom__', // default
-  componentName: 'SvgIcon', // default
-  componentStyle: 'width: 1em; height: 1em; fill:currentColor;', // default
-  // Usually, the plugin will set SVG's fill and stroke with 'currentColor',
-  // use this option to preserve its original color.
-  preserveColor: /logo\.svg$/,
-  prefix: '', // default
-  symbolIdFormatter: (svgName: string, prefix: string): string => {
-    const nameArr = svgName.split('/')
-    if (prefix)
-      nameArr.unshift(prefix)
-    return nameArr.join('-').replace(/\.svg$/, '')
-  }, // default, format symbolId
-  optimizeOptions: undefined // default, svgo optimize options
-})
-```
+| Parameter             | Type                       | Default                                        | Description                                         |
+| -----------           | ----------------------     | ---------------------                          | ------------                                        |
+| iconDir               | `string`                   | -                                              | the icon folder of the Sprite image                 |
+| projectType           | `vue \| react \| auto`     | auto                                           | the project type, detect automatically              |
+| dts                   | `boolean`                  | -                                              | whether generate d.ts file                          |
+| dtsDir                | `string`                   | -                                              | d.ts location                                       |
+| prefix                | `string`                   | -                                              | symbolId prefix                                     |
+| componentName         | `string`                   | SvgIcon                                        | the name of component                               |
+| componentStyle        | `string`                   | width: 1em; height: 1em; fill:currentColor;    | the style of component                              |
+| preserveColor         |`RegExp`                    | -                                              | usually, the plugin will set SVG's fill and stroke with 'currentColor', use this option to preserve its original color.  |
+| symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [code](./src/core/utils.ts/#L33)               | the symbolId's formatter            |
+| optimizeOptions       | `SvgoOptions` | -          | svgo optimize [Options](https://github.com/svg/svgo) |
+| svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | Customize the ID of the svgDom                      |
 
 ## Typescript support
 ```json
