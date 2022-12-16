@@ -5,7 +5,7 @@
 [![NPM Version][npm-image]][npm-url]
 [![Downloads Stats][npm-downloads]][npm-url]
 
-> unplugin-svg-component 启发于[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons),它将本地的svg文件生成为一个vue组件, 通过该组件结合svg文件的名称使用svg图标。
+> unplugin-svg-component 启发于[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons),它将本地的svg文件生成为一个 vue/react 组件, 通过该组件结合svg文件的名称使用svg图标。
 
 ## 智能提示效果
 

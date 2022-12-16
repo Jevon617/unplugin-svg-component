@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.4.1",
   "packageManager": "pnpm@7.1.1",
-  "description": "generate a vue component through svg files, supporting svg file HMR and typescript intelligence prompt.",
+  "description": "generate a vue/react component through svg files, supporting svg file HMR and typescript intelligence prompt.",
   "license": "MIT",
   "homepage": "https://github.com/jevon617/unplugin-svg-component#readme",
   "repository": {
@@ -14,6 +14,8 @@
     "url": "https://github.com/jevon617/unplugin-svg-component/issues"
   },
   "keywords": [
+    "svg",
+    "svg-sprite",
     "unplugin",
     "vite",
     "webpack",

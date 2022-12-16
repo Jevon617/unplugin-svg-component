@@ -5,7 +5,7 @@
 [![NPM Version][npm-image]][npm-url]
 [![Downloads Stats][npm-downloads]][npm-url]
 
-> unplugin-svg-component inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons), it will generate a Vue component through SVG files,  use the SVG icon through the component.
+> unplugin-svg-component inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons), it will generate a Vue/React component through SVG files,  use the SVG icon through the component.
 
 ## IDE Intelligent
 
