@@ -150,7 +150,7 @@ function App() {
 | prefix                | `string`                   | -                                              | symbolId的前缀                                         |
 | componentName         | `string`                   | SvgIcon                                        | 生成的组件名称                                          |
 | componentStyle        | `string`                   | width: 1em; height: 1em; fill:currentColor;    | 组件的行内样式                                          |
-| preserveColor         |`RegExp`                    | -                                              | 通常, 插件会把svg标签内的fill, stroke属性替换成currentColor, 可以通过此属性保留它们原来的颜色  |
+| preserveColor         |`RegExp`                    | -                                              | 通常, 插件会把svg标签内的fill, stroke属性替换成currentColor, 此属性会对每个svg路径进行正则匹配, 匹配成功的svg则不会替换currentColor, 而是保留原有的颜色.   |
 | symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [code](./src/core/utils.ts/#L33)               | 可以通过这个参数来设置symbolId的格式       |
 | optimizeOptions       | `SvgoOptions` | -          |  [svgo 的优化参数](https://github.com/svg/svgo) |
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | 自定义生成的svg元素的id                                  |

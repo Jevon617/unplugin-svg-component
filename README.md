@@ -150,7 +150,7 @@ function App() {
 | prefix                | `string`                   | -                                              | symbolId prefix                                     |
 | componentName         | `string`                   | SvgIcon                                        | the name of component                               |
 | componentStyle        | `string`                   | width: 1em; height: 1em; fill:currentColor;    | the style of component                              |
-| preserveColor         |`RegExp`                    | -                                              | usually, the plugin will set SVG's fill and stroke with 'currentColor', use this option to preserve its original color.  |
+| preserveColor         |`RegExp`                    | -                                              | usually, the plugin will set SVG's fill and stroke with 'currentColor', this option will perform regular matching on each SVG path, the successfully matched SVG will not do the replacement, but retain the original color.  |
 | symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [code](./src/core/utils.ts/#L33)               | the symbolId's formatter            |
 | optimizeOptions       | `SvgoOptions` | -          | svgo optimize [Options](https://github.com/svg/svgo) |
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | Customize the ID of the svgDom                      |
