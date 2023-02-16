@@ -108,7 +108,8 @@
     "local-pkg": "^0.4.2",
     "svg-baker": "^1.7.0",
     "svgo": "^2.8.0",
-    "unplugin": "^0.9.6"
+    "unplugin": "^0.9.6",
+    "unplugin-svg-component": "workspace:0.4.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.27.0",

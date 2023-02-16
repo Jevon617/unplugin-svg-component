@@ -33,11 +33,13 @@ const unplugin = createUnplugin<Options>(options => ({
     }
   },
   vite: {
-    async load(_, ssr) {
-      if (ssr?.ssr)
-        return null
-      return {
-        code: moduleCode,
+    async load(id, ssr) {
+      if (id === MODULE_NAME) {
+        if (ssr?.ssr)
+          return null
+        return {
+          code: moduleCode,
+        }
       }
     },
     transform(this) {
