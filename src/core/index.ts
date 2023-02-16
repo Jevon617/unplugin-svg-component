@@ -34,7 +34,7 @@ const unplugin = createUnplugin<Options>(options => ({
   },
   vite: {
     async load(_, ssr) {
-      if (ssr)
+      if (ssr?.ssr)
         return null
       return {
         code: moduleCode,

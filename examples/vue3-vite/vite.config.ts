@@ -23,6 +23,7 @@ export default defineConfig({
         return nameArr.join('-').replace(/\.svg$/, '')
       },
       optimizeOptions: undefined,
+      vueVersion: 3,
     }),
   ],
 })
