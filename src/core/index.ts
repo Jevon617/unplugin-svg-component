@@ -33,6 +33,13 @@ const unplugin = createUnplugin<Options>(options => ({
     }
   },
   vite: {
+    async load(_, ssr) {
+      if (ssr)
+        return null
+      return {
+        code: moduleCode,
+      }
+    },
     transform(this) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       transformPluginContext = this
