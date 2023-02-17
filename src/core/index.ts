@@ -35,10 +35,8 @@ const unplugin = createUnplugin<Options>(options => ({
   vite: {
     async load(id, ssr) {
       if (id === MODULE_NAME) {
-        if (ssr?.ssr)
-          return null
         return {
-          code: moduleCode,
+          code: ssr?.ssr ? 'export default {}' : moduleCode,
         }
       }
     },
