@@ -167,7 +167,7 @@ function App() {
 
 ## Best Practices
 
-You can refer to[examples](./examples) as required. Note that the configuration in examples is the default configuration.
+You can refer to [examples](./examples) as required. Note that the configuration in examples is the default configuration.
 
 ## Contributing
 
