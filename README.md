@@ -165,6 +165,10 @@ function App() {
 }
 ```
 
+## Best Practices
+
+You can refer to[examples](./examples) as required. Note that the configuration in examples is the default configuration.
+
 ## Contributing
 
 1. Fork it (<https://github.com/Jevon617/unplugin-svg-component/fork>)

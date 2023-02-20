@@ -147,7 +147,7 @@ function App() {
 | projectType           | `vue \| react \| auto`     | auto                                           | 项目类型, 默认会自动检测                                |
 | dts                   | `boolean`                  | -                                              | 是否生成d.ts文件                                       |
 | dtsDir                | `string`                   | -                                              | d.ts文件位置                                           |
-| prefix                | `string`                   | -                                              | symbolId的前缀                                         |
+| prefix                | `string`                   | -                                              | 给每个svg name加上前缀,使用时记得加上这个前缀                                        |
 | componentName         | `string`                   | SvgIcon                                        | 生成的组件名称                                          |
 | componentStyle        | `string`                   | width: 1em; height: 1em; fill:currentColor;    | 组件的行内样式                                          |
 | preserveColor         |`RegExp`                    | -                                              | 通常, 插件会把svg标签内的fill, stroke属性替换成currentColor, 此属性会对每个svg路径进行正则匹配, 匹配成功的svg则不会替换currentColor, 而是保留原有的颜色.   |
@@ -164,6 +164,10 @@ function App() {
   "include": ["svg-component.d.ts", "svg-component-global.d.ts"]
 }
 ```
+
+## 最佳实践
+
+可以根据需求参考[examples](./examples), 注意 examples 中的配置都是默认配置.
 
 ## Contributing
 
