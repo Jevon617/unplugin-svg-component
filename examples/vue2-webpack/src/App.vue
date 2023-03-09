@@ -12,6 +12,8 @@ export default {
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <MySvgIcon name="vue" />
+    <MySvgIcon name="icon-card2" />
+    <MySvgIcon name="icon-barCode" />
   </div>
 </template>
 

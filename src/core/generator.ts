@@ -7,19 +7,20 @@ import { replace, transformStyleStrToObject } from './utils'
 import createSvgSprite from './sprite'
 import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
-export async function genModuleCode(options: Options, hmr: boolean) {
+export async function genModuleCode(options: Options, usedSvgNames: string[] | string, hmr: boolean) {
   const isVueProject = detectProjectType(options)
   const component = await genComponent(options, isVueProject)
   const svgSpriteDomId = options.svgSpriteDomId
 
-  const { symbolIds, symbols, symbolCache } = await createSvgSprite(options)
+  const { symbolIds, symbols, symbolCache } = await createSvgSprite(options, usedSvgNames)
   const xmlns = `xmlns="${XMLNS}"`
   const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
   const symbolHtml = Array.from(symbols).join('')
     .replace(new RegExp(xmlns, 'g'), '')
     .replace(new RegExp(xmlnsLink, 'g'), '')
 
-  if (options?.dts)
+  // only generate dts in serve
+  if (options?.dts && !Array.isArray(usedSvgNames))
     genDts(symbolIds, options, isVueProject)
 
   const hmrCode = `
@@ -148,7 +149,7 @@ async function compileVue2Template(template: string): Promise<string> {
   return code
 }
 
-async function getVueVersion(vueVerison: VueVersion) {
+async function getVueVersion(vueVerison: VueVersion): Promise<'vue2' | 'vue3' | null > {
   if (vueVerison === 'auto') {
     try {
       const result = await getPackageInfo('vue')

@@ -9,5 +9,5 @@
     "strictNullChecks": true,
     "resolveJsonModule": true
   },
-  "include": ["svg-baker.d.ts"]
+  "exclude": ["examples", "dist"]
 }

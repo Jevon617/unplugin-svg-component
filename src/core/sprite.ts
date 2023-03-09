@@ -6,7 +6,7 @@ import SvgCompiler from 'svg-baker'
 import type { OptimizeOptions, OptimizedSvg } from 'svgo'
 import type { Options } from '../types'
 
-export default async function createSvgSprite(options: Options) {
+export default async function createSvgSprite(options: Options, usedIcons: string[] | string) {
   const { iconDir } = options
   const symbols = new Set<string>()
   const symbolIds = new Set<string>()
@@ -14,11 +14,12 @@ export default async function createSvgSprite(options: Options) {
   const svgCompiler = new SvgCompiler()
 
   const svgNames = fg.sync(['**/*.svg'], { cwd: iconDir })
-
   for (const svgName of svgNames) {
-    const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler)
-    symbolIds.add(symbolId)
-    symbols.add(svgSymbol)
+    const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, usedIcons)
+    if (svgSymbol) {
+      symbolIds.add(symbolId)
+      symbols.add(svgSymbol)
+    }
   }
 
   return {
@@ -35,13 +36,21 @@ export async function createSymbol(
     symbolId: string
     svgSymbol: string
   }>,
-  svgCompiler,
+  svgCompiler: any,
+  usedIcons: string[] | string,
 ) {
   const { iconDir, prefix = '', preserveColor, symbolIdFormatter, optimizeOptions } = options
 
   const svgPath = path.resolve(iconDir, svgName)
   const svgContent = await fs.readFile(svgPath)
   const symbolId = symbolIdFormatter!(svgName, prefix)
+
+  if (Array.isArray(usedIcons) && !usedIcons.includes(symbolId)) {
+    return {
+      svgSymbol: null,
+      symbolId: '',
+    }
+  }
 
   let isPreserveColor = false
   if (typeof preserveColor === 'string')

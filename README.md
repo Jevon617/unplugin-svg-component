@@ -21,6 +21,8 @@
 * **intelligent**: When using components, the name of the SVG file will be prompted with Typescript
 * **HMR**: HMR for svg file
 * **Vue & React**: Support Vue&React and automatically detect project types.
+* **Tree-shaking**: Only bundle the icons you really use since **v0.5.0**.
+
 
 ## Installation 
 
@@ -151,10 +153,11 @@ function App() {
 | componentName         | `string`                   | SvgIcon                                        | the name of component                               |
 | componentStyle        | `string`                   | width: 1em; height: 1em; fill:currentColor;    | the style of component                              |
 | preserveColor         |`RegExp`                    | -                                              | usually, the plugin will set SVG's fill and stroke with 'currentColor', this option will perform regular matching on each SVG path, the successfully matched SVG will not do the replacement, but retain the original color.  |
-| symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [code](./src/core/utils.ts/#L33)               | the symbolId's formatter            |
+| symbolIdFormatter     | `(svgName:string, prefix: string)=>string` | [look this way](./src/core/utils.ts/#L33)               | the symbolId's formatter            |
 | optimizeOptions       | `SvgoOptions` | -          | svgo optimize [Options](https://github.com/svg/svgo) |
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | Customize the ID of the svgDom                      |
 | vueVersion            | `2 \| 3 \| auto`           | auto                                           | Vue version                                         |
+| scanGlob            | `string[]`           | [look this way](./src/core/utils.ts/#L41)                        |  the glob pattern used in tree-shaking                                          |
 
 
 ## Typescript support

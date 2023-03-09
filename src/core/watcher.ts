@@ -3,7 +3,7 @@ import SvgCompiler from 'svg-baker'
 import type { Options } from '../types'
 import { debounce } from './utils'
 import { genDts as updateDts } from './generator'
-import { LOAD_EVENT, UPDATE_EVENT } from './constants'
+import { LOAD_EVENT, UPDATE_EVENT, USED_SVG_NAMES_FLAG } from './constants'
 import { createSymbol } from './sprite'
 
 let isWatched = false
@@ -52,7 +52,7 @@ export default function watchIconDir(
     if (!isSvgFile(path))
       return
     const svgName = genSvgName(path)
-    const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler)
+    const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, USED_SVG_NAMES_FLAG)
     symbolIds.add(symbolId)
     symbols.add(svgSymbol)
     if (dts)
@@ -77,7 +77,7 @@ export default function watchIconDir(
       return
     const svgName = genSvgName(path)
     const { svgSymbol: oldSvgSymbol, symbolId } = symbolCache.get(svgName)!
-    const { svgSymbol: newSvgSymbol } = await createSymbol(svgName, options, symbolCache, svgCompiler)
+    const { svgSymbol: newSvgSymbol } = await createSymbol(svgName, options, symbolCache, svgCompiler, USED_SVG_NAMES_FLAG)
     symbols.delete(oldSvgSymbol)
     symbols.add(newSvgSymbol)
     notifySpriteUpdateDebounce(symbolId, newSvgSymbol)

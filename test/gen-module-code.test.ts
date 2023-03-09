@@ -15,6 +15,6 @@ test('createSprite', async () => {
         nameArr.unshift(prefix)
       return nameArr.join('-').replace(/\.svg$/, '')
     },
-  }, true)
+  }, 'all', true)
   expect(code).matchSnapshot()
 })

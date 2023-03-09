@@ -19,8 +19,9 @@
 ## 功能
 
 * **智能提示**: 使用组件时, 配合 Typescript 会提示出 svg 文件名称
-* **热更新**: svg文件的增删改操作, 都会实时显示于页面上, 无需刷新浏览器
+* **热更新**: svg 文件的增删改操作, 都会实时显示于页面上, 无需刷新浏览器
 * **Vue & React 支持**: 自动检测项目类型
+* **Tree-shaking**: 从**v0.5.0**版本开始, 生产环境只会打包你用到的 svg 图标
 
 
 ## 安装 
@@ -155,6 +156,7 @@ function App() {
 | optimizeOptions       | `SvgoOptions` | -          |  [svgo 的优化参数](https://github.com/svg/svgo) |
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | 自定义生成的svg元素的id                                  |
 | vueVersion            | `2 \| 3 \| auto`           | auto                                           | Vue 版本, 默认会自动检测                                  |
+| scanGlob            | `string[]`           | [code](./src/core/utils.ts/#L41)                       | 用于 tree-shaking 的模式匹配路径 |
 
 
 ## Typescript 支持

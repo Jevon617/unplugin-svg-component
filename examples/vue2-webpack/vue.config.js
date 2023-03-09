@@ -10,6 +10,7 @@ module.exports = defineConfig({
         iconDir: path.resolve(__dirname, './src/icons'),
         componentName: 'MySvgIcon',
         preserveColor: /vue\.svg$/,
+        vueVersion: 2,
       }),
     ],
   },

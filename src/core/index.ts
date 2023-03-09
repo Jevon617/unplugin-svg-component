@@ -1,24 +1,29 @@
 import cors from 'cors'
 import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
-import type { ViteDevServer } from 'vite'
-import type { TransformPluginContext } from 'rollup'
-
 import type { Options } from '../types'
 import watchIconDir from './watcher'
 import { genModuleCode } from './generator'
-import { MODULE_NAME } from './constants'
+import { MODULE_NAME, USED_SVG_NAMES_FLAG } from './constants'
 import { resolveOptions } from './utils'
+import scanUsedSvgNames from './scan'
 
+let isBuild = false
 let moduleCode = ''
-let transformPluginContext: TransformPluginContext
+let transformPluginContext: any
+let usedSvgNames: string[] | string = []
 
 const unplugin = createUnplugin<Options>(options => ({
   name: 'unplugin-svg-component',
   async buildStart() {
     options = resolveOptions(options)
-    const { code } = await genModuleCode(options, false)
-    moduleCode = code
+    // only scan used icons in build
+    if (isBuild)
+      usedSvgNames = await scanUsedSvgNames(options)
+    else
+      usedSvgNames = USED_SVG_NAMES_FLAG
+
+    moduleCode = (await genModuleCode(options, usedSvgNames, false)).code
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
@@ -28,27 +33,28 @@ const unplugin = createUnplugin<Options>(options => ({
     return id === MODULE_NAME
   },
   async load() {
-    return {
-      code: moduleCode,
-    }
+    return moduleCode
+  },
+  webpack(compiler) {
+    isBuild = compiler.options.mode === 'production'
   },
   vite: {
+    async configResolved(config) {
+      isBuild = config.command === 'build'
+    },
     async load(id, ssr) {
-      if (id === MODULE_NAME) {
-        return {
-          code: ssr?.ssr ? 'export default {}' : moduleCode,
-        }
-      }
+      if (id === MODULE_NAME)
+        return ssr?.ssr ? 'export default {}' : moduleCode
     },
     transform(this) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       transformPluginContext = this
     },
-    configureServer(server: ViteDevServer) {
+    configureServer(server) {
       server.middlewares.use(cors({ origin: '*' }))
       server.middlewares.use(async (req, res, next) => {
         if (req.url === `/@id/${MODULE_NAME}`) {
-          const { code, symbols, symbolCache, symbolIds } = await genModuleCode(options, true)
+          const { code, symbols, symbolCache, symbolIds } = await genModuleCode(options, usedSvgNames, true)
           watchIconDir(options, server, symbols, symbolIds, symbolCache)
 
           const importAnalysisTransform = server.config.plugins.find(
@@ -80,6 +86,7 @@ const unplugin = createUnplugin<Options>(options => ({
       })
     },
   },
+
 }))
 
 export * from '../types'

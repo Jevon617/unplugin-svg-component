@@ -3,11 +3,11 @@ import type { Options } from '../types'
 export function debounce(fn: (...args: any) => void, delay: number) {
   let timer: NodeJS.Timeout
 
-  return function (...args) {
+  return function (...args: any[]) {
     if (timer)
       clearTimeout(timer)
-
     timer = setTimeout(() => {
+      // @ts-expect-error: this
       fn.apply(this, args)
       clearTimeout(timer)
     }, delay)
@@ -38,6 +38,15 @@ export function resolveOptions(options: Options): Options {
         nameArr.unshift(prefix)
       return nameArr.join('-').replace(/\.svg$/, '')
     },
+    scanGlob: [
+      '**/*.html',
+      '**/*.pug',
+      '**/*.vue',
+      '**/*.js',
+      '**/*.ts',
+      '**/*.tsx',
+      '**/*.jsx',
+    ],
   }
   return {
     ...defaultOptions,
@@ -46,7 +55,7 @@ export function resolveOptions(options: Options): Options {
 }
 
 export function transformStyleStrToObject(styleStr: string): Record<string, string> {
-  return styleStr.replace(/;$/, '').split(';').reduce((ruleMap, ruleString) => {
+  return styleStr.replace(/;$/, '').split(';').reduce((ruleMap: Record<string, string>, ruleString) => {
     const rulePair = ruleString.split(':')
     ruleMap[rulePair[0].trim()] = rulePair[1].trim()
     return ruleMap

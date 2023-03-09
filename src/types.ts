@@ -13,6 +13,7 @@ export interface Options {
   optimizeOptions?: OptimizeOptions
   projectType?: 'vue' | 'react' | 'auto'
   vueVersion?: VueVersion
+  scanGlob?: string[]
 }
 
 export type VueVersion = 2 | 3 | 'auto'
