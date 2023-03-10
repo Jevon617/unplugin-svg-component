@@ -31,8 +31,8 @@ declare module '${MODULE_NAME}' {
 `
 
 export const golbalDts = `
-import '@vue/runtime-core'
-declare module '@vue/runtime-core' {
+import 'vue'
+declare module 'vue' {
   export interface GlobalComponents {
     $component_name: import("vue").DefineComponent<{
         name: {
