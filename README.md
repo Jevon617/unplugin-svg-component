@@ -158,6 +158,7 @@ function App() {
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | Customize the ID of the svgDom                      |
 | vueVersion            | `2 \| 3 \| auto`           | auto                                           | Vue version                                         |
 | scanGlob            | `string[]`           | [look this way](./src/core/utils.ts/#L41)                        |  the glob pattern used in tree-shaking                                          |
+| scanStrategy            | `text \| component`       | component                        |  the scan strategy used in tree-shaking                                          |
 
 
 ## Typescript support
