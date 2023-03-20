@@ -157,7 +157,9 @@ function App() {
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | 自定义生成的svg元素的id                                  |
 | vueVersion            | `2 \| 3 \| auto`           | auto                                           | Vue 版本, 默认会自动检测                                  |
 | scanGlob            | `string[]`           | [code](./src/core/utils.ts/#L41)                       | 用于 tree-shaking 的模式匹配路径 |
+| scanStrategy            | `text \| component`           | component                       | 用于 tree-shaking 的模式匹配策略 |
 
+> 提示: 如果你使用 `scanStrategy: 'text'`, 你应该尽可能的保证图标名称的独特性，以此避免增加构建后的文件大小。
 
 ## Typescript 支持
 ```json

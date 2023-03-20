@@ -47,6 +47,7 @@ export function resolveOptions(options: Options): Options {
       '**/*.tsx',
       '**/*.jsx',
     ],
+    scanStrategy: 'component'
   }
   return {
     ...defaultOptions,
