@@ -158,9 +158,7 @@ function App() {
 | svgSpriteDomId        | `string`                   | __svg_sprite__dom__                            | Customize the ID of the svgDom                      |
 | vueVersion            | `2 \| 3 \| auto`           | auto                                           | Vue version                                         |
 | scanGlob            | `string[]`           | [look this way](./src/core/utils.ts/#L41)                        |  the glob pattern used in tree-shaking                                          |
-| scanStrategy            | `text \| component`       | component                        |  the scan strategy used in tree-shaking                                          |
-
-> Tip: if you use `scanStrategy: 'text'`, you should keep the icon name unique as much as possible to avoid increase the build size.
+| scanStrategy            | `text \| component`       | component                        |  the strategy used for tree-shaking will not be bundled into the final bundle if it is not successfully matched. The `text` option indicates matching by svg name, so you should ensure the uniqueness of your svg name (you can consider customizing it with the 'symbolIdFormatter' option) to avoid erroneous tree-shaking, while the default value of the 'component' option indicates matching by component as a whole.                                          |
 
 ## Typescript support
 ```json
