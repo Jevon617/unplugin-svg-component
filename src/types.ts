@@ -14,7 +14,7 @@ export interface Options {
   projectType?: 'vue' | 'react' | 'auto'
   vueVersion?: VueVersion
   scanGlob?: string[]
-  scanStrategy?: 'text' | 'component'
+  scanStrategy?: 'text' | 'component' | ((code: string[], options: Options) => string[])
 }
 
 export type VueVersion = 2 | 3 | 'auto'

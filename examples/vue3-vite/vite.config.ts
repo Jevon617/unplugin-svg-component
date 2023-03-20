@@ -24,7 +24,7 @@ export default defineConfig({
       },
       optimizeOptions: undefined,
       vueVersion: 3,
-      scanStrategy: 'text',
+      scanStrategy: 'component',
     }),
   ],
 })

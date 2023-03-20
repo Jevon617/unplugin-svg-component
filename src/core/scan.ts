@@ -6,15 +6,6 @@ import type { Options } from '../types'
 export default async function scanUsedSvgNames(options: Options) {
   const { componentName, scanGlob, iconDir, scanStrategy, symbolIdFormatter, prefix } = options
 
-  const allSvgNames = fg.sync(['**/*.svg'], { cwd: iconDir })
-    .map(n => symbolIdFormatter!(n, prefix!))
-    .sort((a, b) => b.length - a.length)
-
-  const svgNameRE = new RegExp(`(${allSvgNames.join('|')})`, 'gm')
-
-  const svgCompnentRE = new RegExp(
-    `\\<\\s*${componentName}[^\\<]+name=[\\"\\'](\\S+)[\\"\\'][^\\<]*\\/\\>`, 'g',
-  )
   const filenames = await fg(scanGlob!, {
     onlyFiles: true,
     ignore: [
@@ -26,15 +17,38 @@ export default async function scanUsedSvgNames(options: Options) {
     ],
   })
 
-  const scanExecutors = filenames.map(async (f) => {
+  const code = await Promise.all(filenames.map(async (f) => {
     const code = await fs.readFile(path.resolve(process.cwd(), f), 'utf-8')
+    return code
+  }))
 
-    if (scanStrategy === 'component')
-      return Array.from(code.matchAll(svgCompnentRE)).map(match => match[1])
-    else
-      return [...(code.match(svgNameRE) || [])]
-  })
+  function internalScanStrategy() {
+    let svgNameMatches = []
 
-  const svgNames = await Promise.all(scanExecutors)
-  return svgNames.flat()
+    if (scanStrategy === 'component') {
+      const svgCompnentRE = new RegExp(
+        `\\<\\s*${componentName}[^\\<]+name=[\\"\\'](\\S+)[\\"\\'][^\\<]*\\/\\>`, 'g',
+      )
+      svgNameMatches = code.map((c) => {
+        return Array.from(c.matchAll(svgCompnentRE)).map(match => match[1])
+      })
+    }
+    else {
+      const allSvgNames = fg.sync(['**/*.svg'], { cwd: iconDir })
+        .map(n => symbolIdFormatter!(n, prefix!))
+        .sort((a, b) => b.length - a.length)
+
+      const svgNameRE = new RegExp(`(${allSvgNames.join('|')})`, 'gm')
+
+      svgNameMatches = code.map((c) => {
+        return [...(c.match(svgNameRE) || [])]
+      })
+    }
+    return svgNameMatches.flat()
+  }
+
+  if (typeof scanStrategy === 'function')
+    return scanStrategy(code, options)
+  else
+    return internalScanStrategy()
 }
