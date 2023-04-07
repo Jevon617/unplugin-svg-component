@@ -7,10 +7,10 @@ import { replace, transformStyleStrToObject } from './utils'
 import createSvgSprite from './sprite'
 import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
-export async function genModuleCode(options: Options, usedSvgNames: string[] | string, hmr: boolean) {
+export async function genCode(options: Options, usedSvgNames: string[] | string, hmr: boolean) {
   const isVueProject = detectProjectType(options)
-  const component = await genComponent(options, isVueProject)
-  const svgSpriteDomId = options.svgSpriteDomId
+  const componentCode = await genComponent(options, isVueProject)
+  const { svgSpriteDomId } = options
 
   const { symbolIds, symbols, symbolCache } = await createSvgSprite(options, usedSvgNames)
   const xmlns = `xmlns="${XMLNS}"`
@@ -25,6 +25,7 @@ export async function genModuleCode(options: Options, usedSvgNames: string[] | s
 
   const hmrCode = `
     if (import.meta.hot) {
+      var svgDom = document.querySelector('#${svgSpriteDomId}') 
       import.meta.hot.on("${LOAD_EVENT}", ({svgSymbolHtml}) => {
         svgDom.innerHTML = svgSymbolHtml
       })
@@ -38,37 +39,28 @@ export async function genModuleCode(options: Options, usedSvgNames: string[] | s
       })
     }
   `
+
+  const svgSpriteDomStr = `
+    <svg 
+      id="${svgSpriteDomId}"
+      xmlns="${XMLNS}" 
+      xmlns:link="${XMLNS_LINK}" 
+      style="position: absolute; width: 0px; height: 0px;">
+      ${symbolHtml}
+    </svg>
+  `
+
   const code = `
-    ${component}
-
-    var svgDom = document.querySelector('#${svgSpriteDomId}') 
-      || document.createElementNS('${XMLNS}', 'svg');
-
+    ${componentCode}
     ${hmr ? hmrCode : ''}
-    if (typeof window !== 'undefined') {
-      function loadSvgs() {
-        var body = document.body;
-        svgDom.style.position = 'absolute';
-        svgDom.style.width = '0';
-        svgDom.style.height = '0';
-        svgDom.id = '${svgSpriteDomId}';
-        svgDom.setAttribute('xmlns','${XMLNS}');
-        svgDom.setAttribute('xmlns:link','${XMLNS_LINK}');
-        svgDom.innerHTML = ${JSON.stringify(symbolHtml)};
-        body.append(svgDom)
-      }
-      if(document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadSvgs);
-      } else {
-        loadSvgs()
-      }
-    }
    `
   return {
     symbolCache,
     symbolIds,
     symbols,
     code,
+    componentCode,
+    svgSpriteDomStr,
   }
 }
 

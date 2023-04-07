@@ -1,6 +1,6 @@
 
-import '@vue/runtime-core'
-declare module '@vue/runtime-core' {
+import 'vue'
+declare module 'vue' {
   export interface GlobalComponents {
     MySvgIcon: import("vue").DefineComponent<{
         name: {

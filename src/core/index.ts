@@ -3,18 +3,19 @@ import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
 import type { Options } from '../types'
 import watchIconDir from './watcher'
-import { genModuleCode } from './generator'
-import { MODULE_NAME, USED_SVG_NAMES_FLAG } from './constants'
+import { genCode } from './generator'
+import { MODULE_NAME, PLUGIN_NAME, USED_SVG_NAMES_FLAG } from './constants'
 import { resolveOptions } from './utils'
 import scanUsedSvgNames from './scan'
 
 let isBuild = false
-let moduleCode = ''
+let componentCode = ''
+let svgSpriteDomStr = ''
 let transformPluginContext: any
 let usedSvgNames: string[] | string = []
 
 const unplugin = createUnplugin<Options>(options => ({
-  name: 'unplugin-svg-component',
+  name: PLUGIN_NAME,
   async buildStart() {
     options = resolveOptions(options)
     // only scan used icons in build
@@ -23,7 +24,9 @@ const unplugin = createUnplugin<Options>(options => ({
     else
       usedSvgNames = USED_SVG_NAMES_FLAG
 
-    moduleCode = (await genModuleCode(options, usedSvgNames, false)).code
+    const res = await genCode(options, usedSvgNames, false)
+    componentCode = res.componentCode
+    svgSpriteDomStr = res.svgSpriteDomStr
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
@@ -33,18 +36,28 @@ const unplugin = createUnplugin<Options>(options => ({
     return id === MODULE_NAME
   },
   async load() {
-    return moduleCode
+    return componentCode
   },
   webpack(compiler) {
     isBuild = compiler.options.mode === 'production'
+    compiler.hooks.emit.tapAsync(PLUGIN_NAME, (compilation, callback) => {
+      const assets = compilation.assets as any
+      const originHtml = assets['index.html']._value
+      const transformedHtml = originHtml.replace(/<\/body>/, `${svgSpriteDomStr}</body>`)
+      assets['index.html'] = {
+        source() {
+          return transformedHtml
+        },
+        size() {
+          return transformedHtml.length
+        },
+      }
+      callback()
+    })
   },
   vite: {
     async configResolved(config) {
       isBuild = config.command === 'build'
-    },
-    async load(id, ssr) {
-      if (id === MODULE_NAME)
-        return ssr?.ssr ? 'export default {}' : moduleCode
     },
     transform(this) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -53,8 +66,8 @@ const unplugin = createUnplugin<Options>(options => ({
     configureServer(server) {
       server.middlewares.use(cors({ origin: '*' }))
       server.middlewares.use(async (req, res, next) => {
-        if (req.url === `/@id/${MODULE_NAME}`) {
-          const { code, symbols, symbolCache, symbolIds } = await genModuleCode(options, usedSvgNames, true)
+        if (req.url?.endsWith(`/@id/${MODULE_NAME}`)) {
+          const { code, symbols, symbolCache, symbolIds } = await genCode(options, usedSvgNames, true)
           watchIconDir(options, server, symbols, symbolIds, symbolCache)
 
           const importAnalysisTransform = server.config.plugins.find(
@@ -85,8 +98,12 @@ const unplugin = createUnplugin<Options>(options => ({
         }
       })
     },
+    transformIndexHtml(html) {
+      if (html.includes(options.svgSpriteDomId!))
+        return html
+      return html.replace(/<\/body>/, `${svgSpriteDomStr}</body>`)
+    },
   },
-
 }))
 
 export * from '../types'

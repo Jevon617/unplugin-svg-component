@@ -1,9 +1,9 @@
 import path from 'path'
 import { expect, test } from 'vitest'
-import { genModuleCode } from '../src/core/generator'
+import { genCode } from '../src/core/generator'
 
 test('createSprite', async () => {
-  const { code } = await genModuleCode({
+  const { code } = await genCode({
     projectType: 'vue',
     vueVersion: 3,
     iconDir: path.resolve(__dirname, './icons'),
