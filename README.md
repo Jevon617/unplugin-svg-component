@@ -22,7 +22,7 @@
 * **HMR**: HMR for svg file
 * **Vue & React**: Support Vue&React and automatically detect project types.
 * **Tree-shaking**: Only bundle the icons you really use since **v0.5.0**.
-* **SSR**: support SSR since **v0.6.0**.
+* **SSR**: Support SSR since **v0.6.0**.
 
 
 
