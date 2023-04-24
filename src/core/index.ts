@@ -9,7 +9,7 @@ import { resolveOptions } from './utils'
 import scanUsedSvgNames from './scan'
 
 let isBuild = false
-let componentCode = ''
+let code = ''
 let svgSpriteDomStr = ''
 let transformPluginContext: any
 let usedSvgNames: string[] | string = []
@@ -19,13 +19,13 @@ const unplugin = createUnplugin<Options>(options => ({
   async buildStart() {
     options = resolveOptions(options)
     // only scan used icons in build
-    if (isBuild)
+    if (isBuild && options.treeShaking)
       usedSvgNames = await scanUsedSvgNames(options)
     else
       usedSvgNames = USED_SVG_NAMES_FLAG
 
     const res = await genCode(options, usedSvgNames, false)
-    componentCode = res.componentCode
+    code = res.code
     svgSpriteDomStr = res.svgSpriteDomStr
   },
   resolveId(id: string) {
@@ -36,7 +36,7 @@ const unplugin = createUnplugin<Options>(options => ({
     return id === MODULE_NAME
   },
   async load() {
-    return componentCode
+    return code
   },
   webpack(compiler) {
     isBuild = compiler.options.mode === 'production'

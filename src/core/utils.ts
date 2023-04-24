@@ -41,6 +41,7 @@ export function resolveOptions(options: Options): Options {
         nameArr.unshift(prefix)
       return nameArr.join('-').replace(/\.svg$/, '')
     },
+    treeShaking: true,
     scanGlob: [
       '**/*.html',
       '**/*.pug',

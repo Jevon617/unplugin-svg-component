@@ -25,6 +25,7 @@ export default defineConfig({
       optimizeOptions: undefined,
       vueVersion: 3,
       scanStrategy: 'component',
+      treeShaking: true,
     }),
   ],
 })
