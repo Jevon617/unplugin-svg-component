@@ -1,6 +1,13 @@
 import './App.css'
-import MySvgIcon from '~virtual/svg-component'
+import type { SvgName } from '~virtual/svg-component'
 
+import MySvgIcon, { svgNames } from '~virtual/svg-component'
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const test: SvgName = 'icon-react'
+
+// eslint-disable-next-line no-console
+console.log(svgNames)
 function App() {
   return (
     <div className="logo">

@@ -71,6 +71,8 @@ export default function $component_name({name}) {
 export const reactDts = `
 declare module '${MODULE_NAME}' {
   const $component_name: ({name}: {name: "$svg_symbolIds"})=> JSX.Element;
+  export const svgNames: ["$svg_names"];
+  export type SvgName = "$svg_symbolIds";
   export default $component_name;
 }
 `

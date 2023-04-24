@@ -143,6 +143,16 @@ function App() {
 }
 ```
 
+### Get `svgNames` / type `SvgName`
+
+```ts
+// all svg icon name
+import { svgNames } from '~virtual/svg-component'
+
+// type SvgName = "icon-icon-addUser" | "icon-icon-barCode"
+import type { SvgName } from '~virtual/svg-component'
+```
+
 ## Plugin Configuration
 
 | Parameter             | Type                       | Default                                        | Description                                         |

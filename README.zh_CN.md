@@ -142,6 +142,15 @@ function App() {
 }
 ```
 
+### 获取`svgNames` / 类型 `SvgName`
+```ts
+// all svg icon name
+import { svgNames } from '~virtual/svg-component'
+
+// type SvgName = "icon-icon-addUser" | "icon-icon-barCode"
+import type { SvgName } from '~virtual/svg-component'
+```
+
 ## 插件配置
 
 | 属性                   | 类型                        | 默认值                                          | 描述                                                |
