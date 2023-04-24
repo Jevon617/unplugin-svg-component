@@ -21,6 +21,9 @@ export function replace(dts: string, symbolIds: Set<string>, componentName: stri
   ).replace(
     /\$component_name/g,
     componentName,
+  ).replace(
+    /\$svg_names/g,
+    Array.from(symbolIds).join('" , "'),
   )
 }
 

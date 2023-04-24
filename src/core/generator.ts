@@ -24,21 +24,25 @@ export async function genCode(options: Options, usedSvgNames: string[] | string,
     genDts(symbolIds, options, isVueProject)
 
   const hmrCode = `
-    if (import.meta.hot) {
-      var svgDom = document.querySelector('#${svgSpriteDomId}') 
-      import.meta.hot.on("${LOAD_EVENT}", ({svgSymbolHtml}) => {
-        svgDom.innerHTML = svgSymbolHtml
-      })
+if (import.meta.hot) {
+  var svgDom = document.querySelector('#${svgSpriteDomId}') 
+  import.meta.hot.on("${LOAD_EVENT}", ({svgSymbolHtml}) => {
+    svgDom.innerHTML = svgSymbolHtml
+  })
 
-      import.meta.hot.on("${UPDATE_EVENT}", ({symbolId, newSvgSymbol}) => {
-        var oldSymbolDom = svgDom.querySelector('#' + symbolId)
-        var tempDom = document.createElementNS('${XMLNS}', 'svg');
-        tempDom.innerHTML = newSvgSymbol
-        var newSymbolDom = tempDom.children[0]
-        svgDom.replaceChild(newSymbolDom, oldSymbolDom)
-      })
-    }
-  `
+  import.meta.hot.on("${UPDATE_EVENT}", ({symbolId, newSvgSymbol}) => {
+    var oldSymbolDom = svgDom.querySelector('#' + symbolId)
+    var tempDom = document.createElementNS('${XMLNS}', 'svg');
+    tempDom.innerHTML = newSvgSymbol
+    var newSymbolDom = tempDom.children[0]
+    svgDom.replaceChild(newSymbolDom, oldSymbolDom)
+  })
+}
+`
+
+  const symbolIdsCode = `
+export const svgNames = ["${[...symbolIds].join('","')}"]
+`
 
   const svgSpriteDomStr = `
     <svg 
@@ -52,6 +56,7 @@ export async function genCode(options: Options, usedSvgNames: string[] | string,
 
   const code = `
     ${componentCode}
+    ${symbolIdsCode}
     ${hmr ? hmrCode : ''}
    `
   return {
@@ -104,17 +109,16 @@ async function genComponent(options: Options, isVueProject: boolean) {
   let code = await compilers[vueVerison](processedTemplate)
 
   code += `
-    \nexport default{
-      name: "${componentName}",
-      props: {
-        name: {
-          type: String,
-          required: true
-        }
-      },
-      render
+\nexport default{
+  name: "${componentName}",
+  props: {
+    name: {
+      type: String,
+      required: true
     }
-  `
+  },
+  render
+}`
   return code
 }
 

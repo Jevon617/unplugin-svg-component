@@ -15,5 +15,7 @@ declare module '~virtual/svg-component' {
   }>>, {
       name: "icon-icon-addUser" | "icon-icon-barCode" | "icon-icon-card2" | "icon-common-icon-add" | "icon-common-icon-add3" | "icon-common-icon-addUser" | "icon-common-icon-addUsers" | "icon-common-icon-addx" | "icon-common-icon-apple" | "icon-common-icon-banner" | "icon-common-logo";
   }>;
+  export const svgNames: ["icon-icon-addUser" , "icon-icon-barCode" , "icon-icon-card2" , "icon-common-icon-add" , "icon-common-icon-add3" , "icon-common-icon-addUser" , "icon-common-icon-addUsers" , "icon-common-icon-addx" , "icon-common-icon-apple" , "icon-common-icon-banner" , "icon-common-logo"];
+  export type SvgName = "icon-icon-addUser" | "icon-icon-barCode" | "icon-icon-card2" | "icon-common-icon-add" | "icon-common-icon-add3" | "icon-common-icon-addUser" | "icon-common-icon-addUsers" | "icon-common-icon-addx" | "icon-common-icon-apple" | "icon-common-icon-banner" | "icon-common-logo";
   export default MySvgIcon;
 }

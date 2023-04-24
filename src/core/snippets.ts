@@ -26,6 +26,8 @@ declare module '${MODULE_NAME}' {
   }>>, {
       name: "$svg_symbolIds";
   }>;
+  export const svgNames: ["$svg_names"];
+  export type SvgName = "$svg_symbolIds";
   export default $component_name;
 }
 `
