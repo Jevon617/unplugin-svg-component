@@ -13,7 +13,7 @@ export interface Options {
   optimizeOptions?: OptimizeOptions
   projectType?: 'vue' | 'react' | 'auto'
   vueVersion?: VueVersion
-  treeShaking: boolean
+  treeShaking?: boolean
   scanGlob?: string[]
   scanStrategy?: 'text' | 'component' | ((code: string[], options: Options) => string[])
 }
