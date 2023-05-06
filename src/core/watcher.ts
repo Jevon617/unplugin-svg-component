@@ -83,4 +83,3 @@ export default function watchIconDir(
     notifySpriteUpdateDebounce(symbolId, newSvgSymbol)
   }
 }
-

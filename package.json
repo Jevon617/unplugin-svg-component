@@ -78,7 +78,7 @@
     "build": "tsup",
     "dev": "tsup --watch src",
     "build:fix": "esno scripts/postbuild.ts",
-    "lint": "eslint .",
+    "lint": "eslint ./src",
     "play:vite": "pnpm --filter vite-demo run dev ",
     "prepublishOnly": "npm run build",
     "release": "bumpp && npm publish",
