@@ -123,8 +123,9 @@ async function genComponent(options: Options, isVueProject: boolean) {
 
 async function compileVueTemplate(template: string, vueVerison: string): Promise<string> {
   const pkgInfo = await getPackageInfo('@vue/compiler-sfc')
-  if (pkgInfo?.version[0] !== vueVerison.slice(-1))
-    throw new Error(`The current major version of @vue/compiler-sfc(${pkgInfo?.version[0]}.x.x) is not matching the major version of Vue(${vueVerison.slice(-1)}.x.x).`)
+  if (!pkgInfo || pkgInfo?.version[0] !== vueVerison.slice(-1))
+    throw new Error(`Cannot find module \'@vue/compiler-sfc@${vueVerison.slice(-1)}.x.x\'. Please install it.`)
+
   const pkg = await importModule('@vue/compiler-sfc')
   const { compileTemplate } = pkg
   const { code } = compileTemplate({

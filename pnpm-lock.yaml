@@ -10,6 +10,7 @@ importers:
       '@types/etag': ^1.8.1
       '@types/node': ^18.16.4
       '@types/svgo': ^2.6.4
+      '@vue/compiler-sfc': ^3.2.47
       bumpp: ^8.2.1
       cors: ^2.8.5
       debug: ^4.3.4
@@ -39,6 +40,7 @@ importers:
       '@types/etag': 1.8.1
       '@types/node': 18.16.4
       '@types/svgo': 2.6.4
+      '@vue/compiler-sfc': 3.2.47
       bumpp: 8.2.1
       debug: 4.3.4
       eslint: 8.39.0
