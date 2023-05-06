@@ -86,20 +86,7 @@
     "test": "vitest"
   },
   "peerDependencies": {
-    "@vue/compiler-sfc": "^3.2.40",
-    "vue-template-compiler": "^2.6.12",
-    "vue-template-es2015-compiler": "^1.9.0"
-  },
-  "peerDependenciesMeta": {
-    "@vue/compiler-sfc": {
-      "optional": true
-    },
-    "vue-template-compiler": {
-      "optional": true
-    },
-    "vue-template-es2015-compiler": {
-      "optional": true
-    }
+    "@vue/compiler-sfc": ">=2.7.0 <=3.2.47"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -8,6 +8,7 @@ export function debounce(fn: (...args: any) => void, delay: number) {
       clearTimeout(timer)
     timer = setTimeout(() => {
       // @ts-expect-error: this
+      // eslint-disable-next-line @typescript-eslint/no-invalid-this
       fn.apply(this, args)
       clearTimeout(timer)
     }, delay)

@@ -1,5 +1,5 @@
-import path from 'path'
-import fs from 'fs/promises'
+import path from 'node:path'
+import fs from 'node:fs/promises'
 import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
 import type { Options, VueVersion } from '../types'
 import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
@@ -99,14 +99,13 @@ async function genComponent(options: Options, isVueProject: boolean) {
   if (!vueVerison)
     return 'export default {}'
 
-  const compilers = {
-    vue2: compileVue2Template,
-    vue3: compileVue3Template,
-  }
+  const tempTemplate = vueVerison === 'vue3'
+    ? template.replace('v-on="$listeners"', '')
+    : template
 
-  const processedTemplate = template.replace(/\$component_style/, componentStyle!)
+  const processedTemplate = tempTemplate.replace(/\$component_style/, componentStyle!)
 
-  let code = await compilers[vueVerison](processedTemplate)
+  let code = await compileVueTemplate(processedTemplate, vueVerison)
 
   code += `
 \nexport default{
@@ -122,27 +121,18 @@ async function genComponent(options: Options, isVueProject: boolean) {
   return code
 }
 
-async function compileVue3Template(template: string): Promise<string> {
-  const { compileTemplate } = await importModule('@vue/compiler-sfc')
+async function compileVueTemplate(template: string, vueVerison: string): Promise<string> {
+  const pkgInfo = await getPackageInfo('@vue/compiler-sfc')
+  if (pkgInfo?.version[0] !== vueVerison.slice(-1))
+    throw new Error(`The current major version of @vue/compiler-sfc(${pkgInfo?.version[0]}.x.x) is not matching the major version of Vue(${vueVerison.slice(-1)}.x.x).`)
+  const pkg = await importModule('@vue/compiler-sfc')
+  const { compileTemplate } = pkg
   const { code } = compileTemplate({
     source: template,
     id: '__svg-component__',
     filename: 'virtual:svg-component.vue',
   })
   return code.replace(/export/g, '')
-}
-
-async function compileVue2Template(template: string): Promise<string> {
-  const { compile } = await importModule('vue-template-compiler')
-  const transpile = (await importModule('vue-template-es2015-compiler')).default
-  const { render } = compile(template)
-  const toFunction = (code: string): string => {
-    return `function () {${code}}`
-  }
-  const res = transpile(`var __render__ = ${toFunction(render as any)}\n`, {})
-  const code = res.replace(/\s__(render|staticRenderFns)__\s/g, ' $1 ')
-
-  return code
 }
 
 async function getVueVersion(vueVerison: VueVersion): Promise<'vue2' | 'vue3' | null > {

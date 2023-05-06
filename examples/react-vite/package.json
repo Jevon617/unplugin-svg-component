@@ -1,7 +1,6 @@
 {
   "name": "react",
   "type": "module",
-  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

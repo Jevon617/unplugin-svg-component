@@ -1,5 +1,5 @@
-import path from 'path'
-import fs from 'fs/promises'
+import path from 'node:path'
+import fs from 'node:fs/promises'
 import fg from 'fast-glob'
 import { optimize } from 'svgo'
 import SvgCompiler from 'svg-baker'
@@ -71,6 +71,7 @@ export async function createSymbol(
   }
 }
 
+// eslint-disable-next-line n/prefer-global/buffer
 async function optimizeSvg(source: Buffer, preserveColor: boolean, optimizeOptions?: OptimizeOptions) {
   const { data: optimizedSvgContent } = await optimize(source, optimizeOptions) as OptimizedSvg
   if (preserveColor) {

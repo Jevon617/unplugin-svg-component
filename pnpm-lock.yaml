@@ -68,26 +68,38 @@ importers:
       unplugin-svg-component: link:../..
       vite: 3.2.5
 
+  examples/vue2-vite:
+    specifiers:
+      '@vitejs/plugin-vue2': ^2.2.0
+      '@vue/compiler-sfc': ^2.7.0
+      unplugin-svg-component: workspace:*
+      vite: ^3.2.3
+      vue: ^2.7.14
+    devDependencies:
+      '@vitejs/plugin-vue2': 2.2.0_vite@3.2.5+vue@2.7.14
+      '@vue/compiler-sfc': 2.7.14
+      unplugin-svg-component: link:../..
+      vite: 3.2.5
+      vue: 2.7.14
+
   examples/vue2-webpack:
     specifiers:
       '@babel/core': ^7.12.16
       '@vue/cli-plugin-babel': ~5.0.0
       '@vue/cli-service': ~5.0.0
+      '@vue/compiler-sfc': ^2.7.0
       core-js: ^3.8.3
       unplugin-svg-component: workspace:*
       vue: ^2.6.14
-      vue-template-compiler: ^2.7.13
-      vue-template-es2015-compiler: ^1.9.0
     dependencies:
       core-js: 3.28.0
       vue: 2.7.14
     devDependencies:
       '@babel/core': 7.20.12
       '@vue/cli-plugin-babel': 5.0.8_vfrs7jxtjuumwvfadksxpk7hby
-      '@vue/cli-service': 5.0.8_3vxek7nnw77fnzqahcoxmafvnm
+      '@vue/cli-service': 5.0.8_4r2fywy46pkb5e5bsf7746yn7m
+      '@vue/compiler-sfc': 2.7.14
       unplugin-svg-component: link:../..
-      vue-template-compiler: 2.7.14
-      vue-template-es2015-compiler: 1.9.1
 
   examples/vue3-vite:
     specifiers:
@@ -2283,6 +2295,17 @@ packages:
       vue: 3.2.47
     dev: true
 
+  /@vitejs/plugin-vue2/2.2.0_vite@3.2.5+vue@2.7.14:
+    resolution: {integrity: sha512-1km7zEuZ/9QRPvzXSjikbTYGQPG86Mq1baktpC4sXqsXlb02HQKfi+fl8qVS703JM7cgm24Ga9j+RwKmvFn90A==}
+    engines: {node: ^14.18.0 || >= 16.0.0}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0
+      vue: ^2.7.0-0
+    dependencies:
+      vite: 3.2.5
+      vue: 2.7.14
+    dev: true
+
   /@vitest/expect/0.31.0:
     resolution: {integrity: sha512-Jlm8ZTyp6vMY9iz9Ny9a0BHnCG4fqBa8neCF6Pk/c/6vkUk49Ls6UBlgGAU82QnzzoaUs9E/mUhq/eq9uMOv/g==}
     dependencies:
@@ -2487,7 +2510,7 @@ packages:
     dependencies:
       '@babel/core': 7.20.12
       '@vue/babel-preset-app': 5.0.8_dof6ucvk3udqnpfayd5uczwvxe
-      '@vue/cli-service': 5.0.8_3vxek7nnw77fnzqahcoxmafvnm
+      '@vue/cli-service': 5.0.8_4r2fywy46pkb5e5bsf7746yn7m
       '@vue/cli-shared-utils': 5.0.8
       babel-loader: 8.3.0_la66t7xldg4uecmyawueag5wkm
       thread-loader: 3.0.4_webpack@5.75.0
@@ -2508,7 +2531,7 @@ packages:
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0 || ^5.0.0-0
     dependencies:
-      '@vue/cli-service': 5.0.8_3vxek7nnw77fnzqahcoxmafvnm
+      '@vue/cli-service': 5.0.8_4r2fywy46pkb5e5bsf7746yn7m
       '@vue/cli-shared-utils': 5.0.8
     transitivePeerDependencies:
       - encoding
@@ -2519,10 +2542,10 @@ packages:
     peerDependencies:
       '@vue/cli-service': ^3.0.0 || ^4.0.0 || ^5.0.0-0
     dependencies:
-      '@vue/cli-service': 5.0.8_3vxek7nnw77fnzqahcoxmafvnm
+      '@vue/cli-service': 5.0.8_4r2fywy46pkb5e5bsf7746yn7m
     dev: true
 
-  /@vue/cli-service/5.0.8_3vxek7nnw77fnzqahcoxmafvnm:
+  /@vue/cli-service/5.0.8_4r2fywy46pkb5e5bsf7746yn7m:
     resolution: {integrity: sha512-nV7tYQLe7YsTtzFrfOMIHc5N2hp5lHG2rpYr0aNja9rNljdgcPZLyQRb2YRivTHqTv7lI962UXFURcpStHgyFw==}
     engines: {node: ^12.0.0 || >= 14.0.0}
     hasBin: true
@@ -2562,7 +2585,7 @@ packages:
       '@vue/cli-plugin-vuex': 5.0.8_@vue+cli-service@5.0.8
       '@vue/cli-shared-utils': 5.0.8
       '@vue/component-compiler-utils': 3.3.0
-      '@vue/vue-loader-v15': /vue-loader/15.10.1_y5o36p7qrshhm4v7l6yk7rwfsu
+      '@vue/vue-loader-v15': /vue-loader/15.10.1_fxcgrrlws65jeno5qa4wlljt4e
       '@vue/web-component-wrapper': 1.3.0
       acorn: 8.8.2
       acorn-walk: 8.2.0
@@ -2599,9 +2622,8 @@ packages:
       ssri: 8.0.1
       terser-webpack-plugin: 5.3.6_webpack@5.75.0
       thread-loader: 3.0.4_webpack@5.75.0
-      vue-loader: 17.0.1_vue@2.7.14+webpack@5.75.0
+      vue-loader: 17.0.1_3w3mfv4lojkhslia7fw4xoexcy
       vue-style-loader: 4.1.3
-      vue-template-compiler: 2.7.14
       webpack: 5.75.0
       webpack-bundle-analyzer: 4.8.0
       webpack-chain: 6.5.1
@@ -4254,10 +4276,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       time-zone: 1.0.0
-    dev: true
-
-  /de-indent/1.0.2:
-    resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
     dev: true
 
   /debug/2.6.9:
@@ -9571,7 +9589,7 @@ packages:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
     dev: true
 
-  /vue-loader/15.10.1_y5o36p7qrshhm4v7l6yk7rwfsu:
+  /vue-loader/15.10.1_fxcgrrlws65jeno5qa4wlljt4e:
     resolution: {integrity: sha512-SaPHK1A01VrNthlix6h1hq4uJu7S/z0kdLUb6klubo738NeQoLbS6V9/d8Pv19tU0XdQKju3D1HSKuI8wJ5wMA==}
     peerDependencies:
       '@vue/compiler-sfc': ^3.0.8
@@ -9587,13 +9605,13 @@ packages:
       vue-template-compiler:
         optional: true
     dependencies:
+      '@vue/compiler-sfc': 2.7.14
       '@vue/component-compiler-utils': 3.3.0
       css-loader: 6.7.3_webpack@5.75.0
       hash-sum: 1.0.2
       loader-utils: 1.4.2
       vue-hot-reload-api: 2.3.4
       vue-style-loader: 4.1.3
-      vue-template-compiler: 2.7.14
       webpack: 5.75.0
     transitivePeerDependencies:
       - arc-templates
@@ -9651,7 +9669,7 @@ packages:
       - whiskers
     dev: true
 
-  /vue-loader/17.0.1_vue@2.7.14+webpack@5.75.0:
+  /vue-loader/17.0.1_3w3mfv4lojkhslia7fw4xoexcy:
     resolution: {integrity: sha512-/OOyugJnImKCkAKrAvdsWMuwoCqGxWT5USLsjohzWbMgOwpA5wQmzQiLMzZd7DjhIfunzAGIApTOgIylz/kwcg==}
     peerDependencies:
       '@vue/compiler-sfc': '*'
@@ -9663,6 +9681,7 @@ packages:
       vue:
         optional: true
     dependencies:
+      '@vue/compiler-sfc': 2.7.14
       chalk: 4.1.2
       hash-sum: 2.0.0
       loader-utils: 2.0.4
@@ -9675,13 +9694,6 @@ packages:
     dependencies:
       hash-sum: 1.0.2
       loader-utils: 1.4.2
-    dev: true
-
-  /vue-template-compiler/2.7.14:
-    resolution: {integrity: sha512-zyA5Y3ArvVG0NacJDkkzJuPQDF8RFeRlzV2vLeSnhSpieO6LK2OVbdLPi5MPPs09Ii+gMO8nY4S3iKQxBxDmWQ==}
-    dependencies:
-      de-indent: 1.0.2
-      he: 1.2.0
     dev: true
 
   /vue-template-es2015-compiler/1.9.1:

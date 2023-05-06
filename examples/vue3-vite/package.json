@@ -1,6 +1,5 @@
 {
-  "name": "vite-demo",
-  "private": true,
+  "name": "vue3-vite",
   "scripts": {
     "dev": "vite",
     "build": "vite build"

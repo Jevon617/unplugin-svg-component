@@ -1,4 +1,4 @@
-const path = require('path')
+const path = require('node:path')
 const { defineConfig } = require('@vue/cli-service')
 const UnpluginSvgComponent = require('unplugin-svg-component/webpack').default
 
