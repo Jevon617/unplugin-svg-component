@@ -2,7 +2,8 @@
   "name": "playground",
   "type": "module",
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "postinstall": "npx playwright install"
   },
   "dependencies": {
     "@playwright/test": "^1.33.0",
