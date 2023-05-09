@@ -57,4 +57,4 @@ jobs:
         run: nr test
 
       - name: E2E Test
-      run: nr test:e2e
+        run: nr test:e2e
