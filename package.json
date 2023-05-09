@@ -79,11 +79,12 @@
     "dev": "tsup --watch src",
     "build:fix": "esno scripts/postbuild.ts",
     "lint": "eslint ./src",
-    "play:vite": "pnpm --filter vite-demo run dev ",
+    "play:vite": "pnpm -C examples/vue3-vite dev",
     "prepublishOnly": "npm run build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "test:e2e": "pnpm -C playground test"
   },
   "peerDependencies": {
     "@vue/compiler-sfc": ">=2.7.0 <=3.2.47"
@@ -111,6 +112,7 @@
     "esno": "^0.16.3",
     "tsup": "^6.7.0",
     "typescript": "^4.9.5",
-    "vitest": "^0.31.0"
+    "vitest": "^0.31.0",
+    "vue": "^3.2.47"
   }
 }

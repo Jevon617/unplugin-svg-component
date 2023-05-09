@@ -55,3 +55,6 @@ jobs:
 
       - name: Test
         run: nr test
+
+      - name: E2E Test
+      run: nr test:e2e
