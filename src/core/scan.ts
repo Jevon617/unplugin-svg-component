@@ -2,6 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import fg from 'fast-glob'
 import type { Options } from '../types'
+import { tranfromToKebabCase } from './utils'
 
 export default async function scanUsedSvgNames(options: Options) {
   const { componentName, scanGlob, iconDir, scanStrategy, symbolIdFormatter, prefix } = options
@@ -27,10 +28,10 @@ export default async function scanUsedSvgNames(options: Options) {
 
     if (scanStrategy === 'component') {
       const svgCompnentRE = new RegExp(
-        `\\<\\s*${componentName}[^\\<]+name=[\\"\\'](\\S+)[\\"\\'][^\\<]*\\/\\>`, 'g',
+        `\\<\\s*(${tranfromToKebabCase(componentName!)}|${componentName})[^\\<]+name=[\\"\\'](\\S+)[\\"\\'][^\\<]*\\/\\>`, 'g',
       )
       svgNameMatches = code.map((c) => {
-        return Array.from(c.matchAll(svgCompnentRE)).map(match => match[1])
+        return Array.from(c.matchAll(svgCompnentRE)).map(match => match[2])
       })
     }
     else {

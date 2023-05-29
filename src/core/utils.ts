@@ -67,3 +67,16 @@ export function transformStyleStrToObject(styleStr: string): Record<string, stri
     return ruleMap
   }, {})
 }
+
+export function tranfromToKebabCase(str: string) {
+  const arr = str.trim().split('')
+  const result = arr.map((item, index) => {
+    if (index === 0)
+      return `${item.toLowerCase()}`
+    else if (item.toUpperCase() === item)
+      return `-${item.toLowerCase()}`
+    else
+      return item
+  }).join('')
+  return result
+}
