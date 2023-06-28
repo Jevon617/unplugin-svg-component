@@ -8,8 +8,8 @@ import createSvgSprite from './sprite'
 import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
 export async function genCode(options: Options, usedSvgNames: string[] | string, hmr: boolean) {
-  const isVueProject = detectProjectType(options)
-  const componentCode = await genComponent(options, isVueProject)
+  const isVue = isVueProject(options)
+  const componentCode = await genComponent(options)
   const { svgSpriteDomId } = options
 
   const { symbolIds, symbols, symbolCache } = await createSvgSprite(options, usedSvgNames)
@@ -21,7 +21,7 @@ export async function genCode(options: Options, usedSvgNames: string[] | string,
 
   // only generate dts in serve
   if (options?.dts && !Array.isArray(usedSvgNames))
-    genDts(symbolIds, options, isVueProject)
+    genDts(symbolIds, options)
 
   const hmrCode = `
 if (import.meta.hot) {
@@ -69,8 +69,9 @@ export const svgNames = ["${[...symbolIds].join('","')}"]
   }
 }
 
-export function genDts(symbolIds: Set<string>, options: Options, isVueProject: boolean) {
-  if (isVueProject) {
+export function genDts(symbolIds: Set<string>, options: Options) {
+  const isVue = isVueProject(options)
+  if (isVue) {
     fs.writeFile(
       path.resolve(options.dtsDir!, './svg-component.d.ts'),
       replace(dts, symbolIds, options.componentName!),
@@ -88,9 +89,10 @@ export function genDts(symbolIds: Set<string>, options: Options, isVueProject: b
   }
 }
 
-async function genComponent(options: Options, isVueProject: boolean) {
+async function genComponent(options: Options) {
+  const isVue = isVueProject(options)
   const { componentStyle, componentName, vueVersion } = options
-  if (!isVueProject) {
+  if (!isVue) {
     return reactTemplate.replace(/\$component_name/, componentName!)
       .replace(/\$component_style/, JSON.stringify(transformStyleStrToObject(componentStyle!)))
   }
@@ -153,7 +155,7 @@ async function getVueVersion(vueVerison: VueVersion): Promise<'vue2' | 'vue3' | 
   }
 }
 
-function detectProjectType(options: Options) {
+function isVueProject(options: Options) {
   if (options.projectType === 'auto') {
     try {
       if (isPackageExists('vue'))

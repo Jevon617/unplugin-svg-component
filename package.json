@@ -87,7 +87,7 @@
     "test:e2e": "pnpm -C playground test"
   },
   "peerDependencies": {
-    "@vue/compiler-sfc": ">=2.7.0 <=3.2.47"
+    "@vue/compiler-sfc": ">=2.7.0"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -99,20 +99,20 @@
     "unplugin": "^0.10.2"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.38.5",
+    "@antfu/eslint-config": "^0.39.5",
     "@types/cors": "^2.8.13",
-    "@types/debug": "^4.1.7",
+    "@types/debug": "^4.1.8",
     "@types/etag": "^1.8.1",
-    "@types/node": "^18.16.4",
+    "@types/node": "^18.16.18",
     "@types/svgo": "^2.6.4",
-    "@vue/compiler-sfc": "^3.2.47",
+    "@vue/compiler-sfc": "^3.3.4",
     "bumpp": "^8.2.1",
     "debug": "^4.3.4",
-    "eslint": "^8.39.0",
+    "eslint": "^8.43.0",
     "esno": "^0.16.3",
     "tsup": "^6.7.0",
     "typescript": "^4.9.5",
-    "vitest": "^0.31.0",
-    "vue": "^3.2.47"
+    "vitest": "^0.32.2",
+    "vue": "^3.3.4"
   }
 }
