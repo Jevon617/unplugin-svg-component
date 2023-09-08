@@ -1,3 +1,4 @@
+import { sep } from 'node:path'
 import type { ViteDevServer } from 'vite'
 import SvgCompiler from 'svg-baker'
 import type { Options } from '../types'
@@ -22,6 +23,7 @@ export default function watchIconDir(
   const { watcher } = server
   const { iconDir, dts } = options
   const svgCompiler = new SvgCompiler()
+  const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
 
   const updateDtsDebounce = debounce(updateDts, delay)
   const notifySpriteReloadDebounce = debounce((symbols: Set<string>, server: ViteDevServer) => {
@@ -40,46 +42,59 @@ export default function watchIconDir(
   }
   isWatched = true
 
-  function isSvgFile(path: string) {
-    return path.startsWith(iconDir) && path.endsWith('.svg')
+  function isSvgFile(path: string, dir: string) {
+    return path.startsWith(dir + sep) && path.endsWith('.svg')
   }
 
-  function genSvgName(path: string) {
-    return path.replace(`${iconDir}`, '').slice(1).replace(/\\/g, '/')
+  function genSvgName(path: string, dir: string) {
+    return path.replace(`${dir + sep}`, '').replace(/\\/g, '/')
   }
 
   async function handleIconAdd(path: string) {
-    if (!isSvgFile(path))
-      return
-    const svgName = genSvgName(path)
-    const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, USED_SVG_NAMES_FLAG)
-    symbolIds.add(symbolId)
-    symbols.add(svgSymbol)
+    for (let i = 0; i < iconDirs.length; i++) {
+      const dir = iconDirs[i]
+      if (!isSvgFile(path, dir))
+        continue
+
+      const svgName = genSvgName(path, dir)
+      const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, USED_SVG_NAMES_FLAG, dir)
+      symbolIds.add(symbolId)
+      symbols.add(svgSymbol)
+    }
+
     if (dts)
       updateDtsDebounce(symbolIds, options)
     notifySpriteReloadDebounce(symbols, server)
   }
 
   async function handleIconUnlink(path: string) {
-    if (!isSvgFile(path))
-      return
-    const svgName = genSvgName(path)
-    const { svgSymbol, symbolId } = symbolCache.get(svgName)!
-    symbolIds.delete(symbolId)
-    symbols.delete(svgSymbol)
+    for (let i = 0; i < iconDirs.length; i++) {
+      const dir = iconDirs[i]
+
+      if (!isSvgFile(path, dir))
+        continue
+
+      const svgName = genSvgName(path, dir)
+      const { svgSymbol, symbolId } = symbolCache.get(svgName)!
+      symbolIds.delete(symbolId)
+      symbols.delete(svgSymbol)
+    }
     if (dts)
       updateDtsDebounce(symbolIds, options)
     notifySpriteReloadDebounce(symbols, server)
   }
 
   async function handleIconChange(path: string) {
-    if (!isSvgFile(path))
-      return
-    const svgName = genSvgName(path)
-    const { svgSymbol: oldSvgSymbol, symbolId } = symbolCache.get(svgName)!
-    const { svgSymbol: newSvgSymbol } = await createSymbol(svgName, options, symbolCache, svgCompiler, USED_SVG_NAMES_FLAG)
-    symbols.delete(oldSvgSymbol)
-    symbols.add(newSvgSymbol)
-    notifySpriteUpdateDebounce(symbolId, newSvgSymbol)
+    for (let i = 0; i < iconDirs.length; i++) {
+      const dir = iconDirs[i]
+      if (!isSvgFile(path, dir))
+        continue
+      const svgName = genSvgName(path, dir)
+      const { svgSymbol: oldSvgSymbol, symbolId } = symbolCache.get(svgName)!
+      const { svgSymbol: newSvgSymbol } = await createSymbol(svgName, options, symbolCache, svgCompiler, USED_SVG_NAMES_FLAG, dir)
+      symbols.delete(oldSvgSymbol)
+      symbols.add(newSvgSymbol)
+      notifySpriteUpdateDebounce(symbolId, newSvgSymbol)
+    }
   }
 }

@@ -35,9 +35,14 @@ export default async function scanUsedSvgNames(options: Options) {
       })
     }
     else {
-      const allSvgNames = fg.sync(['**/*.svg'], { cwd: iconDir })
-        .map(n => symbolIdFormatter!(n, prefix!))
-        .sort((a, b) => b.length - a.length)
+      let allSvgNames: string[] = []
+      const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
+
+      for (const iconDir of iconDirs) {
+        allSvgNames = allSvgNames.concat(fg.sync(['**/*.svg'], { cwd: iconDir })
+          .map(n => symbolIdFormatter!(n, prefix!))
+          .sort((a, b) => b.length - a.length))
+      }
 
       const svgNameRE = new RegExp(`(${allSvgNames.join('|')})`, 'gm')
 

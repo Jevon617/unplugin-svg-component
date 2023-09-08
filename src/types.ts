@@ -1,7 +1,7 @@
 import type { OptimizeOptions } from 'svgo'
 
 export interface Options {
-  iconDir: string
+  iconDir: string | string[]
   prefix?: string
   dts?: boolean
   dtsDir?: string

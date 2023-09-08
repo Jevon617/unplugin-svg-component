@@ -98,7 +98,8 @@ const unplugin = createUnplugin<Options>(options => ({
         }
       })
     },
-    transformIndexHtml(html) {
+    async transformIndexHtml(html) {
+      const { svgSpriteDomStr } = await genCode(options, usedSvgNames, false)
       if (html.includes(options.svgSpriteDomId!))
         return html
       return html.replace(/<\/body>/, `${svgSpriteDomStr}</body>`)

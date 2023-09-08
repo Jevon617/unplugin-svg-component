@@ -8,7 +8,6 @@ import createSvgSprite from './sprite'
 import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
 export async function genCode(options: Options, usedSvgNames: string[] | string, hmr: boolean) {
-  const isVue = isVueProject(options)
   const componentCode = await genComponent(options)
   const { svgSpriteDomId } = options
 

@@ -12,13 +12,16 @@ export default async function createSvgSprite(options: Options, usedIcons: strin
   const symbolIds = new Set<string>()
   const symbolCache = new Map<string, { symbolId: string; svgSymbol: string }>()
   const svgCompiler = new SvgCompiler()
+  const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
 
-  const svgNames = fg.sync(['**/*.svg'], { cwd: iconDir })
-  for (const svgName of svgNames) {
-    const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, usedIcons)
-    if (svgSymbol) {
-      symbolIds.add(symbolId)
-      symbols.add(svgSymbol)
+  for (const dir of iconDirs) {
+    const svgNames = fg.sync(['**/*.svg'], { cwd: dir })
+    for (const svgName of svgNames) {
+      const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, usedIcons, dir)
+      if (svgSymbol) {
+        symbolIds.add(symbolId)
+        symbols.add(svgSymbol)
+      }
     }
   }
 
@@ -38,8 +41,9 @@ export async function createSymbol(
   }>,
   svgCompiler: any,
   usedIcons: string[] | string,
+  iconDir: string,
 ) {
-  const { iconDir, prefix = '', preserveColor, symbolIdFormatter, optimizeOptions } = options
+  const { prefix = '', preserveColor, symbolIdFormatter, optimizeOptions } = options
 
   const svgPath = path.resolve(iconDir, svgName)
   const svgContent = await fs.readFile(svgPath)

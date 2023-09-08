@@ -9,7 +9,7 @@ export default defineConfig({
     vue(),
     Inspect(),
     UnpluginSvgComponent({
-      iconDir: path.resolve(__dirname, 'icons'),
+      iconDir: [path.resolve(__dirname, 'icons'), path.resolve(__dirname, 'icons2')],
       dts: true,
       preserveColor: path.resolve(__dirname, 'icons/common'),
       dtsDir: path.resolve(__dirname, 'typing'),

@@ -45,6 +45,7 @@ pnpm install unplugin-svg-component -D
 // vite.config.ts
 import { defineConfig } from 'vite'
 import UnpluginSvgComponent from 'unplugin-svg-component/vite'
+
 export default defineConfig({
   plugins: [
     UnpluginSvgComponent({ /* options */ }),
@@ -126,6 +127,7 @@ build({
 ```ts
 // main.ts
 import SvgIcon from '~virtual/svg-component'
+
 app.component(SvgIcon.name, SvgIcon)
 ```
 
