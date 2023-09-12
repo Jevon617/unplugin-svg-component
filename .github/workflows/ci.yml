@@ -20,13 +20,13 @@ jobs:
           node-version: 16.x
 
       - name: Setup
-        run: npm i -g @antfu/ni
+        run: npm i -g pnpm
 
       - name: Install
-        run: nci
+        run: pnpm install
 
       - name: Lint
-        run: nr lint
+        run: pnpm lint
 
   test:
     runs-on: ${{ matrix.os }}
@@ -45,16 +45,16 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Setup
-        run: npm i -g @antfu/ni
+        run: npm i -g pnpm
 
       - name: Install
-        run: nci
+        run: pnpm install
 
       - name: Build
-        run: nr build
+        run: pnpm build
 
       - name: Test
-        run: nr test
+        run: pnpm test
 
       - name: E2E Test
-        run: nr test:e2e
+        run: pnpm test:e2e
