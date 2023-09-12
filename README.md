@@ -159,7 +159,7 @@ import type { SvgName } from '~virtual/svg-component'
 
 | Parameter             | Type                       | Default                                        | Description                                         |
 | -----------           | ----------------------     | ---------------------                          | ------------                                        |
-| iconDir               | `string`                   | -                                              | the icon folder of the Sprite image                 |
+| iconDir               | `string \| string[]`     | -                                              | the icon folder of the Sprite image                 |
 | projectType           | `vue \| react \| auto`     | auto                                           | the project type, detect automatically              |
 | dts                   | `boolean`                  | -                                              | whether generate d.ts file                          |
 | dtsDir                | `string`                   | -                                              | d.ts location                                       |

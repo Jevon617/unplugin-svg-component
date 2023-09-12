@@ -44,6 +44,7 @@ pnpm install unplugin-svg-component -D
 ```ts
 // vite.config.ts
 import UnpluginSvgComponent from 'unplugin-svg-component/vite'
+
 export default defineConfig({
   plugins: [
     UnpluginSvgComponent({ /* options */ })
@@ -125,6 +126,7 @@ build({
 ```ts
 // main.ts
 import SvgIcon from '~virtual/svg-component'
+
 app.component(SvgIcon.name, SvgIcon)
 ```
 
@@ -155,7 +157,7 @@ import type { SvgName } from '~virtual/svg-component'
 
 | 属性                   | 类型                        | 默认值                                          | 描述                                                |
 | -----------           | ----------------------     | ---------------------                          | ------------                                        |
-| iconDir               | `string`                   | -                                              | 图标文件夹位置                                         |
+| iconDir               | `string \| string[]`     | -                                              | 图标文件夹位置                                         |
 | projectType           | `vue \| react \| auto`     | auto                                           | 项目类型, 默认会自动检测                                |
 | dts                   | `boolean`                  | -                                              | 是否生成d.ts文件                                       |
 | dtsDir                | `string`                   | -                                              | d.ts文件位置                                           |
