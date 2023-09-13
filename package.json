@@ -95,7 +95,7 @@
     "fast-glob": "^3.2.12",
     "local-pkg": "^0.4.3",
     "svg-baker": "^1.7.0",
-    "svgo": "^2.8.0",
+    "svgo": "^3.0.2",
     "unplugin": "^0.10.2"
   },
   "devDependencies": {
@@ -104,7 +104,6 @@
     "@types/debug": "^4.1.8",
     "@types/etag": "^1.8.1",
     "@types/node": "^18.16.18",
-    "@types/svgo": "^2.6.4",
     "@vue/compiler-sfc": "^3.3.4",
     "bumpp": "^8.2.1",
     "debug": "^4.3.4",

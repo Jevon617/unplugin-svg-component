@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import fg from 'fast-glob'
 import { optimize } from 'svgo'
 import SvgCompiler from 'svg-baker'
-import type { OptimizeOptions, OptimizedSvg } from 'svgo'
+import type { Config as OptimizeOptions, Output as OptimizedSvg } from 'svgo'
 import type { Options } from '../types'
 
 export default async function createSvgSprite(options: Options, usedIcons: string[] | string) {
@@ -46,7 +46,7 @@ export async function createSymbol(
   const { prefix = '', preserveColor, symbolIdFormatter, optimizeOptions } = options
 
   const svgPath = path.resolve(iconDir, svgName)
-  const svgContent = await fs.readFile(svgPath)
+  const svgContent = await fs.readFile(svgPath, { encoding: 'utf-8' })
   const symbolId = symbolIdFormatter!(svgName, prefix)
 
   if (Array.isArray(usedIcons) && !usedIcons.includes(symbolId)) {
@@ -75,8 +75,7 @@ export async function createSymbol(
   }
 }
 
-// eslint-disable-next-line n/prefer-global/buffer
-async function optimizeSvg(source: Buffer, preserveColor: boolean, optimizeOptions?: OptimizeOptions) {
+async function optimizeSvg(source: string, preserveColor: boolean, optimizeOptions?: OptimizeOptions) {
   const { data: optimizedSvgContent } = await optimize(source, optimizeOptions) as OptimizedSvg
   if (preserveColor) {
     return optimizedSvgContent

@@ -1,4 +1,4 @@
-import type { OptimizeOptions } from 'svgo'
+import type { Config as OptimizeOptions } from 'svgo'
 
 export interface Options {
   iconDir: string | string[]
