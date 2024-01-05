@@ -63,6 +63,10 @@ export function resolveOptions(options: Options): Options {
 export function transformStyleStrToObject(styleStr: string): Record<string, string> {
   return styleStr.replace(/;$/, '').split(';').reduce((ruleMap: Record<string, string>, ruleString) => {
     const rulePair = ruleString.split(':')
+
+    if (!rulePair[0] || !rulePair[1])
+      return ruleMap
+
     ruleMap[rulePair[0].trim()] = rulePair[1].trim()
     return ruleMap
   }, {})
