@@ -59,11 +59,12 @@ declare module 'vue' {
 export const reactTemplate = `
 import React from 'react';
 
-export default function $component_name({name}) {
+export default function $component_name({name,style,className}) {
   return React.createElement("svg", {
     xmlns: "http://www.w3.org/2000/svg",
     xmlnsXlink: "http://www.w3.org/1999/xlink",
-    style: $component_style
+    style: {...$component_style, ...style},
+    className: className,
   }, React.createElement("use", {
     xlinkHref: "#" + name
   }));
@@ -71,7 +72,11 @@ export default function $component_name({name}) {
 `
 export const reactDts = `
 declare module '${MODULE_NAME}' {
-  const $component_name: ({name}: {name: "$svg_symbolIds"})=> JSX.Element;
+  const $component_name: (props: {
+    name: "$svg_symbolIds",
+    className?:string
+    style?: React.CSSProperties
+  })=> JSX.Element;
   export const svgNames: ["$svg_names"];
   export type SvgName = "$svg_symbolIds";
   export default $component_name;
