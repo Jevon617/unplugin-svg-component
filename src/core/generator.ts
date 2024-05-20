@@ -4,22 +4,14 @@ import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
 import type { Options, VueVersion } from '../types'
 import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
 import { replace, transformStyleStrToObject } from './utils'
-import createSvgSprite from './sprite'
 import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
 
-export async function genCode(options: Options, usedSvgNames: string[] | string, hmr: boolean) {
-  const componentCode = await genComponent(options)
+export async function genCode(options: Options, symbolIds: Set<string>, isDev = false) {
   const { svgSpriteDomId } = options
-
-  const { symbolIds, symbols, symbolCache } = await createSvgSprite(options, usedSvgNames)
-  const xmlns = `xmlns="${XMLNS}"`
-  const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
-  const symbolHtml = Array.from(symbols).join('')
-    .replace(new RegExp(xmlns, 'g'), '')
-    .replace(new RegExp(xmlnsLink, 'g'), '')
+  const componentCode = await genComponentCode(options)
 
   // only generate dts in serve
-  if (options?.dts && !Array.isArray(usedSvgNames))
+  if (options?.dts && isDev)
     genDts(symbolIds, options)
 
   const hmrCode = `
@@ -38,34 +30,34 @@ if (import.meta.hot) {
   })
 }
 `
-
   const symbolIdsCode = `
 export const svgNames = ["${[...symbolIds].join('","')}"]
 `
+  const code = `
+    ${componentCode}
+    ${symbolIdsCode}
+    ${isDev ? hmrCode : ''}
+   `
+  return code
+}
 
-  const svgSpriteDomStr = `
+export async function genSvgDom(options: Options, symbols: Set<string>) {
+  const { svgSpriteDomId } = options
+  const xmlns = `xmlns="${XMLNS}"`
+  const xmlnsLinkReg = `xmlns:xlink="${XMLNS_LINK}"`
+  const symbolHtmlReg = Array.from(symbols).join('')
+    .replace(new RegExp(xmlns, 'g'), '')
+    .replace(new RegExp(xmlnsLinkReg, 'g'), '')
+
+  return `
     <svg 
       id="${svgSpriteDomId}"
       xmlns="${XMLNS}" 
       xmlns:link="${XMLNS_LINK}" 
       style="position: absolute; width: 0px; height: 0px;">
-      ${symbolHtml}
+      ${symbolHtmlReg}
     </svg>
   `
-
-  const code = `
-    ${componentCode}
-    ${symbolIdsCode}
-    ${hmr ? hmrCode : ''}
-   `
-  return {
-    symbolCache,
-    symbolIds,
-    symbols,
-    code,
-    componentCode,
-    svgSpriteDomStr,
-  }
 }
 
 export function genDts(symbolIds: Set<string>, options: Options) {
@@ -88,7 +80,7 @@ export function genDts(symbolIds: Set<string>, options: Options) {
   }
 }
 
-async function genComponent(options: Options) {
+async function genComponentCode(options: Options) {
   const isVue = isVueProject(options)
   const { componentStyle, componentName, vueVersion } = options
   if (!isVue) {
@@ -104,9 +96,9 @@ async function genComponent(options: Options) {
     ? template.replace('v-on="$listeners"', '')
     : template
 
-  const processedTemplate = tempTemplate.replace(/\$component_style/, componentStyle!)
+  const replacedTemplate = tempTemplate.replace(/\$component_style/, componentStyle!)
 
-  let code = await compileVueTemplate(processedTemplate, vueVerison)
+  let code = await compileVueTemplate(replacedTemplate, vueVerison)
 
   code += `
 \nexport default{

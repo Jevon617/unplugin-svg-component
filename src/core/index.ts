@@ -1,32 +1,22 @@
 import cors from 'cors'
 import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
-import type { Options } from '../types'
-import watchIconDir from './watcher'
-import { genCode } from './generator'
-import { MODULE_NAME, PLUGIN_NAME, USED_SVG_NAMES_FLAG } from './constants'
+import type { Options, SvgSpriteInfo } from '../types'
+import { genCode, genSvgDom } from './generator'
+import { MODULE_NAME, PLUGIN_NAME } from './constants'
 import { resolveOptions } from './utils'
-import scanUsedSvgNames from './scan'
+import createSvgSprite from './sprite'
+import watchIconDir from './watcher'
 
 let isBuild = false
-let code = ''
-let svgSpriteDomStr = ''
+let spriteInfo: SvgSpriteInfo
 let transformPluginContext: any
-let usedSvgNames: string[] | string = []
 
 const unplugin = createUnplugin<Options>(options => ({
   name: PLUGIN_NAME,
   async buildStart() {
     options = resolveOptions(options)
-    // only scan used icons in build
-    if (isBuild && options.treeShaking)
-      usedSvgNames = await scanUsedSvgNames(options)
-    else
-      usedSvgNames = USED_SVG_NAMES_FLAG
-
-    const res = await genCode(options, usedSvgNames, false)
-    code = res.code
-    svgSpriteDomStr = res.svgSpriteDomStr
+    spriteInfo = await createSvgSprite(options, isBuild)
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
@@ -36,13 +26,17 @@ const unplugin = createUnplugin<Options>(options => ({
     return id === MODULE_NAME
   },
   async load() {
-    return code
+    if (isBuild) {
+      const code = await genCode(options, spriteInfo.symbolIds)
+      return code
+    }
   },
   webpack(compiler) {
     isBuild = compiler.options.mode === 'production'
-    compiler.hooks.emit.tapAsync(PLUGIN_NAME, (compilation, callback) => {
+    compiler.hooks.emit.tapAsync(PLUGIN_NAME, async (compilation, callback) => {
       const assets = compilation.assets as any
       const originHtml = assets['index.html']._value
+      const svgSpriteDomStr = await genSvgDom(options, spriteInfo.symbols)
       const transformedHtml = originHtml.replace(/<\/body>/, `${svgSpriteDomStr}</body>`)
       assets['index.html'] = {
         source() {
@@ -59,26 +53,26 @@ const unplugin = createUnplugin<Options>(options => ({
     async configResolved(config) {
       isBuild = config.command === 'build'
     },
-    transform(this) {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      transformPluginContext = this
+    transform(context) {
+      transformPluginContext = context
     },
     configureServer(server) {
       server.middlewares.use(cors({ origin: '*' }))
       server.middlewares.use(async (req, res, next) => {
         if (req.url?.endsWith(`/@id/${MODULE_NAME}`)) {
-          const { code, symbols, symbolCache, symbolIds } = await genCode(options, usedSvgNames, true)
-          watchIconDir(options, server, symbols, symbolIds, symbolCache)
+          watchIconDir(options, server, spriteInfo)
+
+          const code = await genCode(options, spriteInfo.symbolIds, true)
 
           const importAnalysisTransform = server.config.plugins.find(
             plugin => plugin.name === 'vite:import-analysis',
           )?.transform as any
 
-          const transformResult = await importAnalysisTransform.apply(
+          const { code: transformedCode } = await importAnalysisTransform.apply(
             transformPluginContext, [code, MODULE_NAME, { ssr: false }],
           )
 
-          const etag = genEtag(transformResult.code, { weak: true })
+          const etag = genEtag(transformedCode, { weak: true })
           const noneMatch = req.headers['if-none-match'] || req.headers['If-None-Match']
 
           if (noneMatch === etag || noneMatch === `W/${etag}` || `W/${noneMatch}` === etag) {
@@ -86,11 +80,11 @@ const unplugin = createUnplugin<Options>(options => ({
             res.end()
           }
           else {
+            res.statusCode = 200
             res.setHeader('ETag', etag)
             res.setHeader('Content-Type', 'application/javascript')
             res.setHeader('Cache-Control', 'no-cache')
-            res.statusCode = 200
-            res.end(transformResult.code)
+            res.end(transformedCode)
           }
         }
         else {
@@ -99,10 +93,10 @@ const unplugin = createUnplugin<Options>(options => ({
       })
     },
     async transformIndexHtml(html) {
-      const { svgSpriteDomStr } = await genCode(options, usedSvgNames, false)
+      const svgSpriteDom = await genSvgDom(options, spriteInfo.symbols)
       if (html.includes(options.svgSpriteDomId!))
         return html
-      return html.replace(/<\/body>/, `${svgSpriteDomStr}</body>`)
+      return html.replace(/<\/body>/, `${svgSpriteDom}</body>`)
     },
   },
 }))

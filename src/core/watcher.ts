@@ -1,7 +1,7 @@
 import { sep } from 'node:path'
 import type { ViteDevServer } from 'vite'
 import SvgCompiler from 'svg-baker'
-import type { Options } from '../types'
+import type { Options, SvgSpriteInfo } from '../types'
 import { debounce } from './utils'
 import { genDts as updateDts } from './generator'
 import { LOAD_EVENT, UPDATE_EVENT, USED_SVG_NAMES_FLAG } from './constants'
@@ -12,19 +12,14 @@ let isWatched = false
 export default function watchIconDir(
   options: Options,
   server: ViteDevServer,
-  symbols: Set<string>,
-  symbolIds: Set<string>,
-  symbolCache: Map<string, {
-    symbolId: string
-    svgSymbol: string
-  }>,
+  SvgSpriteInfo: SvgSpriteInfo,
 ) {
   const delay = 200
   const { watcher } = server
   const { iconDir, dts } = options
   const svgCompiler = new SvgCompiler()
   const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
-
+  const { symbols, symbolCache, symbolIds } = SvgSpriteInfo
   const updateDtsDebounce = debounce(updateDts, delay)
   const notifySpriteReloadDebounce = debounce((symbols: Set<string>, server: ViteDevServer) => {
     const svgSymbolHtml = Array.from(symbols).join('\n')
@@ -57,7 +52,7 @@ export default function watchIconDir(
         continue
 
       const svgName = genSvgName(path, dir)
-      const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, USED_SVG_NAMES_FLAG, dir)
+      const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, dir)
       symbolIds.add(symbolId)
       symbols.add(svgSymbol)
     }

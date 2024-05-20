@@ -4,20 +4,27 @@ import fg from 'fast-glob'
 import { optimize } from 'svgo'
 import SvgCompiler from 'svg-baker'
 import type { Config as OptimizeOptions, Output as OptimizedSvg } from 'svgo'
-import type { Options } from '../types'
+import type { Options, SvgSpriteInfo } from '../types'
+import scanUsedSvgNames from './scan'
 
-export default async function createSvgSprite(options: Options, usedIcons: string[] | string) {
-  const { iconDir } = options
+export default async function createSvgSprite(options: Options, isBuild: boolean): Promise<SvgSpriteInfo> {
+  const { iconDir, treeShaking } = options
   const symbols = new Set<string>()
   const symbolIds = new Set<string>()
   const symbolCache = new Map<string, { symbolId: string; svgSymbol: string }>()
   const svgCompiler = new SvgCompiler()
   const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
 
+  let usedSvgNames: string[] | undefined
+  if (isBuild && treeShaking) // only scan used icons in build
+    usedSvgNames = await scanUsedSvgNames(options)
+
   for (const dir of iconDirs) {
     const svgNames = fg.sync(['**/*.svg'], { cwd: dir })
     for (const svgName of svgNames) {
-      const { svgSymbol, symbolId } = await createSymbol(svgName, options, symbolCache, svgCompiler, usedIcons, dir)
+      const { svgSymbol, symbolId } = await createSymbol(
+        svgName, options, symbolCache, svgCompiler, dir, usedSvgNames
+      )
       if (svgSymbol) {
         symbolIds.add(symbolId)
         symbols.add(svgSymbol)
@@ -40,8 +47,8 @@ export async function createSymbol(
     svgSymbol: string
   }>,
   svgCompiler: any,
-  usedIcons: string[] | string,
   iconDir: string,
+  usedIcons?: string[] | string,
 ) {
   const { prefix = '', preserveColor, symbolIdFormatter, optimizeOptions } = options
 
