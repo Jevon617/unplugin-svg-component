@@ -53,8 +53,9 @@ const unplugin = createUnplugin<Options>(options => ({
     async configResolved(config) {
       isBuild = config.command === 'build'
     },
-    transform(context) {
-      transformPluginContext = context
+    transform() {
+      // eslint-disable-next-line ts/no-this-alias
+      transformPluginContext = this
     },
     configureServer(server) {
       server.middlewares.use(cors({ origin: '*' }))
