@@ -11,7 +11,7 @@ export default async function createSvgSprite(options: Options, isBuild: boolean
   const { iconDir, treeShaking } = options
   const symbols = new Set<string>()
   const symbolIds = new Set<string>()
-  const symbolCache = new Map<string, { symbolId: string; svgSymbol: string }>()
+  const symbolCache = new Map<string, { symbolId: string, svgSymbol: string }>()
   const svgCompiler = new SvgCompiler()
   const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
 
@@ -23,7 +23,12 @@ export default async function createSvgSprite(options: Options, isBuild: boolean
     const svgNames = fg.sync(['**/*.svg'], { cwd: dir })
     for (const svgName of svgNames) {
       const { svgSymbol, symbolId } = await createSymbol(
-        svgName, options, symbolCache, svgCompiler, dir, usedSvgNames
+        svgName,
+        options,
+        symbolCache,
+        svgCompiler,
+        dir,
+        usedSvgNames,
       )
       if (svgSymbol) {
         symbolIds.add(symbolId)

@@ -69,7 +69,8 @@ const unplugin = createUnplugin<Options>(options => ({
           )?.transform as any
 
           const { code: transformedCode } = await importAnalysisTransform.apply(
-            transformPluginContext, [code, MODULE_NAME, { ssr: false }],
+            transformPluginContext,
+            [code, MODULE_NAME, { ssr: false }],
           )
 
           const etag = genEtag(transformedCode, { weak: true })

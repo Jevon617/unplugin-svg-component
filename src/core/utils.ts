@@ -1,3 +1,4 @@
+import process from 'node:process'
 import type { Options } from '../types'
 
 export function debounce(fn: (...args: any) => void, delay: number) {
@@ -7,8 +8,7 @@ export function debounce(fn: (...args: any) => void, delay: number) {
     if (timer)
       clearTimeout(timer)
     timer = setTimeout(() => {
-      // @ts-expect-error: this
-      // eslint-disable-next-line @typescript-eslint/no-invalid-this
+      // @ts-expect-error invalid this
       fn.apply(this, args)
       clearTimeout(timer)
     }, delay)
