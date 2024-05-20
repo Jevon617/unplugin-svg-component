@@ -19,18 +19,6 @@ it('createSprite', async () => {
     },
   }
   const spriteInfo = await createSvgSprite(options, true)
-  const code = await genCode({
-    projectType: 'vue',
-    vueVersion: 3,
-    iconDir: path.resolve(__dirname, './icons'),
-    componentName: 'SvgIcon',
-    svgSpriteDomId: 'sprite-id',
-    symbolIdFormatter(svgName: string, prefix: string) {
-      const nameArr = svgName.split('/')
-      if (prefix)
-        nameArr.unshift(prefix)
-      return nameArr.join('-').replace(/\.svg$/, '')
-    },
-  }, spriteInfo.symbolIds, true)
+  const code = await genCode(options, spriteInfo.symbolIds, true)
   expect(code).matchSnapshot()
 })
