@@ -4,7 +4,7 @@ import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
 import type { Options, VueVersion } from '../types'
 import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
 import { replace, transformStyleStrToObject } from './utils'
-import { LOAD_EVENT, UPDATE_EVENT, XMLNS, XMLNS_LINK } from './constants'
+import { LOAD_EVENT } from './constants'
 
 export async function genCode(options: Options, symbolIds: Set<string>, isDev = false) {
   const { svgSpriteDomId } = options
@@ -16,17 +16,12 @@ export async function genCode(options: Options, symbolIds: Set<string>, isDev = 
 
   const hmrCode = `
 if (import.meta.hot) {
-  var svgDom = document.querySelector('#${svgSpriteDomId}') 
-  import.meta.hot.on("${LOAD_EVENT}", ({svgSymbolHtml}) => {
-    svgDom.innerHTML = svgSymbolHtml
-  })
-
-  import.meta.hot.on("${UPDATE_EVENT}", ({symbolId, newSvgSymbol}) => {
-    var oldSymbolDom = svgDom.querySelector('#' + symbolId)
-    var tempDom = document.createElementNS('${XMLNS}', 'svg');
-    tempDom.innerHTML = newSvgSymbol
-    var newSymbolDom = tempDom.children[0]
-    svgDom.replaceChild(newSymbolDom, oldSymbolDom)
+  import.meta.hot.on("${LOAD_EVENT}", ({ sprite }) => {
+    var svgDom = document.querySelector('#${svgSpriteDomId}');
+    svgDom.remove();
+    var tempDom = document.createElement('div');
+    tempDom.innerHTML = sprite; 
+    document.body.append(tempDom.firstElementChild);
   })
 }
 `
@@ -41,40 +36,23 @@ export const svgNames = ["${[...symbolIds].join('","')}"]
   return code
 }
 
-export async function genSvgDom(options: Options, symbols: Set<string>) {
-  const { svgSpriteDomId } = options
-  const xmlns = `xmlns="${XMLNS}"`
-  const xmlnsLinkReg = `xmlns:xlink="${XMLNS_LINK}"`
-  const symbolHtmlReg = Array.from(symbols).join('')
-    .replace(new RegExp(xmlns, 'g'), '')
-    .replace(new RegExp(xmlnsLinkReg, 'g'), '')
-
-  return `
-    <svg 
-      id="${svgSpriteDomId}"
-      xmlns="${XMLNS}" 
-      xmlns:link="${XMLNS_LINK}" 
-      style="position: absolute; width: 0px; height: 0px;">
-      ${symbolHtmlReg}
-    </svg>
-  `
-}
-
 export function genDts(symbolIds: Set<string>, options: Options) {
   const isVue = isVueProject(options)
+  const dtsPath = path.resolve(options.dtsDir!, './svg-component.d.ts')
+  const globalDtsPath = path.resolve(options.dtsDir!, './svg-component-global.d.ts')
   if (isVue) {
     fs.writeFile(
-      path.resolve(options.dtsDir!, './svg-component.d.ts'),
+      dtsPath,
       replace(dts, symbolIds, options.componentName!),
     )
     fs.writeFile(
-      path.resolve(options.dtsDir!, './svg-component-global.d.ts'),
+      globalDtsPath,
       replace(golbalDts, symbolIds, options.componentName!),
     )
   }
   else {
     fs.writeFile(
-      path.resolve(options.dtsDir!, './svg-component.d.ts'),
+      dtsPath,
       replace(reactDts, symbolIds, options.componentName!),
     )
   }
@@ -116,7 +94,7 @@ async function genComponentCode(options: Options) {
 
 async function compileVueTemplate(template: string, vueVerison: string): Promise<string> {
   const pkgInfo = await getPackageInfo('@vue/compiler-sfc')
-  if (!pkgInfo || pkgInfo?.version[0] !== vueVerison.slice(-1))
+  if (!pkgInfo || pkgInfo?.version?.[0] !== vueVerison.slice(-1))
     throw new Error(`Cannot find module \'@vue/compiler-sfc@${vueVerison.slice(-1)}.x.x\'. Please install it.`)
 
   const pkg = await importModule('@vue/compiler-sfc')
@@ -135,7 +113,7 @@ async function getVueVersion(vueVerison: VueVersion): Promise<'vue2' | 'vue3' | 
       const result = await getPackageInfo('vue')
       if (!result)
         return null
-      return result.version.startsWith('2.') ? 'vue2' : 'vue3'
+      return result.version?.startsWith('2.') ? 'vue2' : 'vue3'
     }
     catch {
       return null

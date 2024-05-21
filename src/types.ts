@@ -21,7 +21,6 @@ export interface Options {
 export type VueVersion = 2 | 3 | 'auto'
 
 export interface SvgSpriteInfo {
-  symbols: Set<string>
+  sprite: string
   symbolIds: Set<string>
-  symbolCache: Map<string, { symbolId: string, svgSymbol: string }>
 }

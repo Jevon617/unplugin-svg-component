@@ -1,5 +1,9 @@
 import process from 'node:process'
-import type { Options } from '../types'
+import path from 'node:path'
+import Sprite from 'svg-sprite'
+import fg from 'fast-glob'
+import type { Options, SvgSpriteInfo } from '../types'
+import { addSymbol } from './sprite'
 
 export function debounce(fn: (...args: any) => void, delay: number) {
   let timer: NodeJS.Timeout
@@ -37,7 +41,7 @@ export function resolveOptions(options: Options): Options {
     svgSpriteDomId: '__svg_sprite__dom__',
     componentStyle: 'width: 1em; height: 1em; fill:currentColor;',
     symbolIdFormatter(svgName: string, prefix: string) {
-      const nameArr = svgName.split('/')
+      const nameArr = svgName.split('\\')
       if (prefix)
         nameArr.unshift(prefix)
       return nameArr.join('-').replace(/\.svg$/, '')

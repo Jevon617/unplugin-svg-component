@@ -2,98 +2,105 @@ import path from 'node:path'
 import fs from 'node:fs/promises'
 import fg from 'fast-glob'
 import { optimize } from 'svgo'
-import SvgCompiler from 'svg-baker'
+import Sprite from 'svg-sprite'
 import type { Config as OptimizeOptions, Output as OptimizedSvg } from 'svgo'
 import type { Options, SvgSpriteInfo } from '../types'
 import scanUsedSvgNames from './scan'
 
 export default async function createSvgSprite(options: Options, isBuild: boolean): Promise<SvgSpriteInfo> {
-  const { iconDir, treeShaking } = options
-  const symbols = new Set<string>()
-  const symbolIds = new Set<string>()
-  const symbolCache = new Map<string, { symbolId: string, svgSymbol: string }>()
-  const svgCompiler = new SvgCompiler()
-  const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
+  // only scan used icons in build
+  const usedSvgNames = isBuild && options.treeShaking
+    ? (await scanUsedSvgNames(options))
+    : undefined
 
-  let usedSvgNames: string[] | undefined
-  if (isBuild && treeShaking) // only scan used icons in build
-    usedSvgNames = await scanUsedSvgNames(options)
+  const svgSpriteInfo = await compileSvgFiles(options, usedSvgNames)
+  return svgSpriteInfo
+}
+
+export async function compileSvgFiles(options: Options, usedSvgNames?: string[]) {
+  const { iconDir } = options
+
+  const svgCompiler = initSvgCompier(options)
+  const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
+  const symbolIds = new Set<string>()
 
   for (const dir of iconDirs) {
     const svgNames = fg.sync(['**/*.svg'], { cwd: dir })
     for (const svgName of svgNames) {
-      const { svgSymbol, symbolId } = await createSymbol(
-        svgName,
-        options,
-        symbolCache,
+      await addSymbol(
         svgCompiler,
+        svgName.replace('/', path.sep),
+        options,
         dir,
+        symbolIds,
         usedSvgNames,
       )
-      if (svgSymbol) {
-        symbolIds.add(symbolId)
-        symbols.add(svgSymbol)
-      }
     }
   }
 
+  const { result: compileResult } = await svgCompiler.compileAsync()
+  const sprite: string = compileResult.symbol.sprite.contents.toString()
   return {
-    symbols,
     symbolIds,
-    symbolCache,
+    sprite,
+  }
+
+  function initSvgCompier(options: Options) {
+    const { svgSpriteDomId, prefix, symbolIdFormatter } = options
+    return new Sprite({
+      mode: {
+        symbol: true,
+      },
+      svg: {
+        xmlDeclaration: false,
+        transform: [
+          (svg) => {
+            const svgStyle = `style="position: absolute; width: 0px; height: 0px;"`
+            return svg.replace(/^<svg/, `<svg id="${svgSpriteDomId}" ${svgStyle}`)
+          },
+        ],
+      },
+      shape: {
+        id: {
+          generator(name) {
+            return symbolIdFormatter!(name.replace(path.sep, '/'), prefix || '')
+          },
+        },
+      },
+    })
   }
 }
 
-export async function createSymbol(
+export async function addSymbol(
+  svgCompiler: Sprite.SVGSpriter,
   svgName: string,
   options: Options,
-  symbolCache: Map<string, {
-    symbolId: string
-    svgSymbol: string
-  }>,
-  svgCompiler: any,
   iconDir: string,
-  usedIcons?: string[] | string,
+  symbolIds: Set<string>,
+  usedSvgNames?: string[] | string,
 ) {
-  const { prefix = '', preserveColor, symbolIdFormatter, optimizeOptions } = options
-
+  const { preserveColor, symbolIdFormatter, optimizeOptions, prefix = '' } = options
   const svgPath = path.resolve(iconDir, svgName)
+  const symbolId = symbolIdFormatter!(svgName.replace(path.sep, '/'), prefix)
   const svgContent = await fs.readFile(svgPath, { encoding: 'utf-8' })
-  const symbolId = symbolIdFormatter!(svgName, prefix)
 
-  if (Array.isArray(usedIcons) && !usedIcons.includes(symbolId)) {
-    return {
-      svgSymbol: null,
-      symbolId: '',
-    }
-  }
+  if (Array.isArray(usedSvgNames) && !usedSvgNames.includes(symbolId))
+    return
 
-  let isPreserveColor = false
-  if (typeof preserveColor === 'string')
-    isPreserveColor = svgPath.startsWith(preserveColor)
-  else if (typeof preserveColor === 'object')
-    isPreserveColor = preserveColor.test(svgPath)
+  const isPreserveColor = typeof preserveColor === 'string'
+    ? svgPath.startsWith(preserveColor)
+    : typeof preserveColor === 'object' && preserveColor.test(svgPath)
 
   const OptimizedSvgContent = await optimizeSvg(svgContent, isPreserveColor, optimizeOptions)
-  const svgSymbol = (await svgCompiler.addSymbol({
-    path: svgPath,
-    content: OptimizedSvgContent,
-    id: symbolId,
-  })).render()
-  symbolCache.set(svgName, { svgSymbol, symbolId })
-  return {
-    svgSymbol,
-    symbolId,
-  }
+  symbolIds.add(symbolId)
+  svgCompiler.add(svgPath, svgName, OptimizedSvgContent)
 }
 
 async function optimizeSvg(source: string, preserveColor: boolean, optimizeOptions?: OptimizeOptions) {
   const { data: optimizedSvgContent } = await optimize(source, optimizeOptions) as OptimizedSvg
-  if (preserveColor) {
-    return optimizedSvgContent
-  }
-  else {
-    return optimizedSvgContent
+  return preserveColor
+    ? optimizedSvgContent
+    : optimizedSvgContent
       .replace(/stroke="[a-zA-Z#0-9]*"/g, 'stroke="currentColor"')
       .replace(/fill="[a-zA-Z#0-9]*"/g, (p: string) => {
         if (p.includes('none'))
@@ -101,5 +108,4 @@ async function optimizeSvg(source: string, preserveColor: boolean, optimizeOptio
         else
           return 'fill="currentColor"'
       })
-  }
 }

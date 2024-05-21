@@ -2,7 +2,8 @@
   "name": "vue3-vite",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite priview"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.2",

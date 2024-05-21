@@ -1,14 +1,16 @@
+/* eslint-disable ts/no-this-alias */
 import cors from 'cors'
 import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
 import type { Options, SvgSpriteInfo } from '../types'
-import { genCode, genSvgDom } from './generator'
+import { genCode } from './generator'
 import { MODULE_NAME, PLUGIN_NAME } from './constants'
 import { resolveOptions } from './utils'
 import createSvgSprite from './sprite'
 import watchIconDir from './watcher'
 
 let isBuild = false
+let isWebpack = false
 let spriteInfo: SvgSpriteInfo
 let transformPluginContext: any
 
@@ -26,18 +28,19 @@ const unplugin = createUnplugin<Options>(options => ({
     return id === MODULE_NAME
   },
   async load() {
-    if (isBuild) {
+    if (isBuild || isWebpack) {
       const code = await genCode(options, spriteInfo.symbolIds)
       return code
     }
   },
   webpack(compiler) {
+    isWebpack = true
     isBuild = compiler.options.mode === 'production'
+
     compiler.hooks.emit.tapAsync(PLUGIN_NAME, async (compilation, callback) => {
       const assets = compilation.assets as any
       const originHtml = assets['index.html']._value
-      const svgSpriteDomStr = await genSvgDom(options, spriteInfo.symbols)
-      const transformedHtml = originHtml.replace(/<\/body>/, `${svgSpriteDomStr}</body>`)
+      const transformedHtml = originHtml.replace(/<\/body>/, `${spriteInfo.sprite}</body>`)
       assets['index.html'] = {
         source() {
           return transformedHtml
@@ -54,7 +57,6 @@ const unplugin = createUnplugin<Options>(options => ({
       isBuild = config.command === 'build'
     },
     transform() {
-      // eslint-disable-next-line ts/no-this-alias
       transformPluginContext = this
     },
     configureServer(server) {
@@ -95,10 +97,9 @@ const unplugin = createUnplugin<Options>(options => ({
       })
     },
     async transformIndexHtml(html) {
-      const svgSpriteDom = await genSvgDom(options, spriteInfo.symbols)
       if (html.includes(options.svgSpriteDomId!))
         return html
-      return html.replace(/<\/body>/, `${svgSpriteDom}</body>`)
+      return html.replace(/<\/body>/, `${spriteInfo.sprite}</body>`)
     },
   },
 }))

@@ -34,17 +34,12 @@ export const svgNames = ["icon-addUser","icon-card2","logo","common-icon-add","c
 
     
 if (import.meta.hot) {
-  var svgDom = document.querySelector('#sprite-id') 
-  import.meta.hot.on("svg-component:reload", ({svgSymbolHtml}) => {
-    svgDom.innerHTML = svgSymbolHtml
-  })
-
-  import.meta.hot.on("svg-component:update", ({symbolId, newSvgSymbol}) => {
-    var oldSymbolDom = svgDom.querySelector('#' + symbolId)
-    var tempDom = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    tempDom.innerHTML = newSvgSymbol
-    var newSymbolDom = tempDom.children[0]
-    svgDom.replaceChild(newSymbolDom, oldSymbolDom)
+  import.meta.hot.on("svg-component:reload", ({ sprite }) => {
+    var svgDom = document.querySelector('#sprite-id');
+    svgDom.remove();
+    var tempDom = document.createElement('div');
+    tempDom.innerHTML = sprite; 
+    document.body.append(tempDom.firstElementChild);
   })
 }
 

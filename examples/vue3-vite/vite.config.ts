@@ -28,4 +28,5 @@ export default defineConfig({
       treeShaking: true,
     }),
   ],
+  base: './',
 })
