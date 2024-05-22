@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { defineConfig, devices } from '@playwright/test'
 
 const config = defineConfig({
@@ -12,7 +13,7 @@ const config = defineConfig({
     timeout: 5000,
   },
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */

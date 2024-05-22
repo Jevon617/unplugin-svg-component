@@ -1,4 +1,6 @@
 name: CI
+env:
+  NO_COLOR: 1
 
 on:
   push:
