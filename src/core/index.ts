@@ -28,10 +28,9 @@ const unplugin = createUnplugin<Options>(options => ({
     return id === MODULE_NAME
   },
   async load() {
-    if (isBuild || isWebpack) {
-      const code = await genCode(options, spriteInfo.symbolIds)
-      return code
-    }
+    return isBuild || isWebpack
+      ? (await genCode(options, spriteInfo.symbolIds))
+      : ''
   },
   webpack(compiler) {
     isWebpack = true

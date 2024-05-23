@@ -75,21 +75,19 @@ async function genComponentCode(options: Options) {
     : template
 
   const replacedTemplate = tempTemplate.replace(/\$component_style/, componentStyle!)
+  const templateCode = await compileVueTemplate(replacedTemplate, vueVerison)
 
-  let code = await compileVueTemplate(replacedTemplate, vueVerison)
-
-  code += `
+  return `${templateCode}
 \nexport default{
-  name: "${componentName}",
-  props: {
-    name: {
-      type: String,
-      required: true
-    }
-  },
-  render
-}`
-  return code
+    name: "${componentName}",
+    props: {
+      name: {
+        type: String,
+        required: true
+      }
+    },
+    render
+  }`
 }
 
 async function compileVueTemplate(template: string, vueVerison: string): Promise<string> {
