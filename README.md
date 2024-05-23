@@ -21,7 +21,7 @@
 * **HMR**: HMR for svg file
 * **Vue & React**: Support Vue&React and automatically detect project types.
 * **Tree-shaking**: Only bundle the icons you really use since **v0.5.0**.
-* **SSR**: Support SSR since **v0.6.0** with `option.domInsertionStrategy = replaceHtml`(default).
+* **SSR**: Support SSR by enabling the `option.domInsertionStrategy = replaceHtml`(default) since **v0.6.0**.
 
 ## Installation
 
