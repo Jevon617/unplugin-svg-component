@@ -11,6 +11,7 @@ import watchIconDir from './watcher'
 
 let isBuild = false
 let isWebpack = false
+let isDynamicStrategy = false
 let spriteInfo: SvgSpriteInfo
 let transformPluginContext: any
 
@@ -19,6 +20,7 @@ const unplugin = createUnplugin<Options>(options => ({
   async buildStart() {
     options = resolveOptions(options)
     spriteInfo = await createSvgSprite(options, isBuild)
+    isDynamicStrategy = options.domInsertionStrategy === 'dynamic'
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
@@ -29,10 +31,13 @@ const unplugin = createUnplugin<Options>(options => ({
   },
   async load() {
     return isBuild || isWebpack
-      ? (await genCode(options, spriteInfo.symbolIds))
+      ? (await genCode(options, spriteInfo))
       : ''
   },
   webpack(compiler) {
+    if (isDynamicStrategy)
+      return
+
     isWebpack = true
     isBuild = compiler.options.mode === 'production'
 
@@ -64,7 +69,7 @@ const unplugin = createUnplugin<Options>(options => ({
         if (req.url?.endsWith(`/@id/${MODULE_NAME}`)) {
           watchIconDir(options, server, spriteInfo)
 
-          const code = await genCode(options, spriteInfo.symbolIds, true)
+          const code = await genCode(options, spriteInfo, true)
 
           const importAnalysisTransform = server.config.plugins.find(
             plugin => plugin.name === 'vite:import-analysis',
@@ -96,7 +101,7 @@ const unplugin = createUnplugin<Options>(options => ({
       })
     },
     async transformIndexHtml(html) {
-      if (html.includes(options.svgSpriteDomId!))
+      if (isDynamicStrategy || html.includes(options.svgSpriteDomId!))
         return html
       return html.replace(/<\/body>/, `${spriteInfo.sprite}</body>`)
     },

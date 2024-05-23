@@ -1,13 +1,18 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
-import type { Options, VueVersion } from '../types'
+import type { Options, SvgSpriteInfo, VueVersion } from '../types'
 import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
 import { replace, transformStyleStrToObject } from './utils'
 import { LOAD_EVENT } from './constants'
 
-export async function genCode(options: Options, symbolIds: Set<string>, isDev = false) {
+export async function genCode(options: Options, spriteInfo: SvgSpriteInfo, isDev = false) {
   const { svgSpriteDomId } = options
+  const { symbolIds, sprite } = spriteInfo
+
+  const isDynamic = options.domInsertionStrategy === 'dynamic'
+
+  const insertSvgCode = isDynamic ? genInsertSvgCode(sprite) : ''
   const componentCode = await genComponentCode(options)
 
   // only generate dts in serve
@@ -28,12 +33,32 @@ if (import.meta.hot) {
   const symbolIdsCode = `
 export const svgNames = ["${[...symbolIds].join('","')}"]
 `
+
   const code = `
     ${componentCode}
     ${symbolIdsCode}
+    ${insertSvgCode}
     ${isDev ? hmrCode : ''}
    `
   return code
+}
+
+export function genInsertSvgCode(sprite: string) {
+  return `
+if (typeof window !== 'undefined') {
+  function mountSvg() {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = '${sprite.trim()}';
+    window.document.body.append(tempDiv.firstElementChild);
+  }
+
+  if(document.readyState === 'loading') {
+    window.document.addEventListener('DOMContentLoaded', mountSvg);
+  } else {
+    mountSvg();
+  }
+}
+`
 }
 
 export function genDts(symbolIds: Set<string>, options: Options) {
@@ -79,15 +104,15 @@ async function genComponentCode(options: Options) {
 
   return `${templateCode}
 \nexport default {
-    name: "${componentName}",
-    props: {
-      name: {
-        type: String,
-        required: true
-      }
-    },
-    render
-  }`
+  name: "${componentName}",
+  props: {
+    name: {
+      type: String,
+      required: true
+    }
+  },
+  render
+}`
 }
 
 async function compileVueTemplate(template: string, vueVerison: string): Promise<string> {

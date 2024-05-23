@@ -1,6 +1,5 @@
 import { sep } from 'node:path'
 import type { ViteDevServer } from 'vite'
-import fg from 'fast-glob'
 import colors from 'picocolors'
 import type { Options, SvgSpriteInfo } from '../types'
 import { debounce } from './utils'

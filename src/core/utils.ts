@@ -1,9 +1,5 @@
 import process from 'node:process'
-import path from 'node:path'
-import Sprite from 'svg-sprite'
-import fg from 'fast-glob'
-import type { Options, SvgSpriteInfo } from '../types'
-import { addSymbol } from './sprite'
+import type { Options } from '../types'
 
 export function debounce(fn: (...args: any) => void, delay: number) {
   let timer: NodeJS.Timeout
@@ -57,6 +53,7 @@ export function resolveOptions(options: Options): Options {
       '**/*.jsx',
     ],
     scanStrategy: 'component',
+    domInsertionStrategy: 'replaceHtml',
   }
   return {
     ...defaultOptions,

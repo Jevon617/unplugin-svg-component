@@ -15,18 +15,15 @@
 ### React
 ![image](./images/intellisense-react.jpg)
 
-
 ## 功能
 
 * **智能提示**: 使用组件时, 配合 Typescript 会提示出 svg 文件名称
 * **热更新**: svg 文件的增删改操作, 都会实时显示于页面上, 无需刷新浏览器
 * **Vue & React 支持**: 自动检测项目类型
 * **Tree-shaking**: 从**v0.5.0**版本开始, 生产环境只会打包你用到的 svg 图标
-* **SSR**: 从**v0.6.0**版本开始支持SSR
+* **SSR**: 从**v0.6.0**版本开始支持SSR, 通过开启 `option.domInsertionStrategy = replaceHtml` 这个选项(默认开启).
 
-
-
-## 安装 
+## 安装
 
 ```shell
 yarn add unplugin-svg-component -D
@@ -52,7 +49,6 @@ export default defineConfig({
 })
 ```
 <br></details>
-
 
 <details>
 <summary>Vue-cli config</summary><br>
@@ -138,7 +134,7 @@ import SvgIcon from '~virtual/svg-component'
 function App() {
   return (
     <div className="logo">
-      <SvgIcon name='icon-react'></SvgIcon>
+      <SvgIcon name="icon-react"></SvgIcon>
     </div>
   )
 }
@@ -172,6 +168,7 @@ import type { SvgName } from '~virtual/svg-component'
 | treeShaking           | `boolean`                  | true                                           | 是否开启tree-shaking                                    |
 | scanGlob            | `string[]`           | [code](./src/core/utils.ts/#L41)                       | 用于 tree-shaking 的模式匹配路径 |
 | scanStrategy            | `text \| component  \| (code: string[], options: Options)=>string[]`           | component                       | 用于 tree-shaking 的模式匹配策略, 未匹配成功则不会打包到最终的产物中去, `text`选项表示按图标名称匹配, 所以你应该保证你图标名称的唯一性(可以考虑用`symbolIdFormatter`选项定制)，以此避免错误的tree-shaking, 而默认值`component`表示的是按组件这一整体进行匹配, 此外你也可以通过传递函数的方式来实现 tree-shaking 策略, 函数的返回值表示用到的 svg 图标合集。|
+| domInsertionStrategy            | `replaceHtml \| dynamic`        | `replaceHtml`                        |  控制注入SVG元素的方法,`replaceHtml（默认）`：在服务端通过替换HTML字符串来注入SVG元素; `dynamic`：在浏览器端,通过JavaScript动态地注入SVG元素。**警告：如果您处于服务器端渲染（ssr）模式，您应该使用`replaceHtml`策略**。|
 
 ## Typescript 支持
 ```json
@@ -195,7 +192,6 @@ import type { SvgName } from '~virtual/svg-component'
 
 ## License
 MIT License © 2022-PRESENT [Jevon617](https://github.com/Jevon617)
-
 
 <!-- Markdown link & img dfn's -->
 [npm-image]: https://img.shields.io/npm/v/unplugin-svg-component.svg?style=flat-square

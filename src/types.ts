@@ -16,6 +16,13 @@ export interface Options {
   treeShaking?: boolean
   scanGlob?: string[]
   scanStrategy?: 'text' | 'component' | ((code: string[], options: Options) => string[])
+  /**
+   * Controls the method of injecting SVG elements. Possible values:
+   * 'replaceHtml'(default): Injects the SVG elements by replacing the HTML string.
+   * 'dynamic': Injects the SVG elements through JavaScript dynamically.
+   * Warning: if you are in ssr mode, you should use 'replaceHtml' strategy.
+   */
+  domInsertionStrategy?: 'replaceHtml' | 'dynamic'
 }
 
 export type VueVersion = 2 | 3 | 'auto'

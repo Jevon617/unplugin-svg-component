@@ -15,18 +15,15 @@
 ### React
 ![image](./images/intellisense-react.jpg)
 
-
 ## Features
 
 * **intelligent**: When using components, the name of the SVG file will be prompted with Typescript
 * **HMR**: HMR for svg file
 * **Vue & React**: Support Vue&React and automatically detect project types.
 * **Tree-shaking**: Only bundle the icons you really use since **v0.5.0**.
-* **SSR**: Support SSR since **v0.6.0**.
+* **SSR**: Support SSR since **v0.6.0** with `option.domInsertionStrategy = replaceHtml`(default).
 
-
-
-## Installation 
+## Installation
 
 ```shell
 yarn add unplugin-svg-component -D
@@ -53,7 +50,6 @@ export default defineConfig({
 })
 ```
 <br></details>
-
 
 <details>
 <summary>Vue-cli config</summary><br>
@@ -139,7 +135,7 @@ import SvgIcon from '~virtual/svg-component'
 function App() {
   return (
     <div className="logo">
-      <SvgIcon name='icon-react'></SvgIcon>
+      <SvgIcon name="icon-react"></SvgIcon>
     </div>
   )
 }
@@ -174,6 +170,7 @@ import type { SvgName } from '~virtual/svg-component'
 | treeShaking           | `boolean`                  | false                                          | whether enable tree-shaking                         |
 | scanGlob            | `string[]`           | [look this way](./src/core/utils.ts/#L41)                        |  the glob pattern used in tree-shaking                                          |
 | scanStrategy            | `text \| component \| (code: string[], options: Options)=>string[]`       | component                        |  the strategy used for tree-shaking will not be bundled into the final bundle if it is not successfully matched. The `text` option indicates matching by svg name, so you should ensure the uniqueness of your svg name (you can consider customizing it with the 'symbolIdFormatter' option) to avoid erroneous tree-shaking, while the default value of the `component` option indicates matching by component as a whole, In addition, you can also implement a tree-shaking strategy by passing a function whose return value represents the set of SVG icons used.                                          |
+| domInsertionStrategy            | `replaceHtml \| dynamic`        | `replaceHtml`                        |  controls the method of injecting SVG elements, `replaceHtml(default)`: Injects the SVG elements by replacing the HTML string in server. `dynamic`: Injects the SVG elements through JavaScript dynamically in client. **Warning: if you are in ssr mode, you should use `replaceHtml` strategy.**|
 
 ## Typescript support
 ```json
@@ -197,7 +194,6 @@ You can refer to [examples](./examples) as required. Note that the configuration
 
 ## License
 MIT License © 2022-PRESENT [Jevon617](https://github.com/Jevon617)
-
 
 <!-- Markdown link & img dfn's -->
 [npm-image]: https://img.shields.io/npm/v/unplugin-svg-component.svg?style=flat-square

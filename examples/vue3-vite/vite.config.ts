@@ -26,6 +26,7 @@ export default defineConfig({
       vueVersion: 3,
       scanStrategy: 'component',
       treeShaking: true,
+      domInsertionStrategy: 'dynamic',
     }),
   ],
   base: './',
