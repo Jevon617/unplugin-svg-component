@@ -1,0 +1,109 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`gen-code > with dynamic option 1`] = `
+"
+    import { createElementVNode as _createElementVNode, openBlock as _openBlock, createElementBlock as _createElementBlock } from "vue"
+
+const _hoisted_1 = {
+  xmlns: "http://www.w3.org/2000/svg",
+  "xmlns:xlink": "http://www.w3.org/1999/xlink",
+  style: {}
+}
+const _hoisted_2 = ["xlink:href"]
+
+ function render(_ctx, _cache) {
+  return (_openBlock(), _createElementBlock("svg", _hoisted_1, [
+    _createElementVNode("use", {
+      "xlink:href": '#' + _ctx.name
+    }, null, 8 /* PROPS */, _hoisted_2)
+  ]))
+}
+
+export default {
+  name: "SvgIcon",
+  props: {
+    name: {
+      type: String,
+      required: true
+    }
+  },
+  render
+}
+    
+export const svgNames = ["icon-addUser","icon-card2","logo","common-icon-add","common-icon-add3","common-icon-addUser","common-icon-addUsers","common-icon-addx","common-icon-apple","common-icon-banner","common-logo"]
+
+    
+if (typeof window !== 'undefined') {
+  function mountSvg() {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = '<svg id="sprite-id" style="position: absolute; width: 0px; height: 0px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><symbol fill="none" viewBox="0 0 32 32" id="common-icon-add" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-linecap="round" stroke-width="2.5" d="M16 22.222V9.778M22.222 16H9.778M30 16c0 7.732-6.268 14-14 14S2 23.732 2 16 8.268 2 16 2s14 6.268 14 14Z"/></symbol><symbol fill="none" viewBox="0 0 32 32" id="common-icon-add3" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M29.846 14.544H17.397V2.407A1.406 1.406 0 0 0 15.994 1a1.406 1.406 0 0 0-1.411 1.407v12.137H2.407A1.405 1.405 0 0 0 1 15.95a1.406 1.406 0 0 0 1.407 1.407h12.176v12.176a1.41 1.41 0 0 0 1.41 1.407 1.405 1.405 0 0 0 1.408-1.407V17.358H29.85a1.406 1.406 0 0 0 1.407-1.407 1.41 1.41 0 0 0-1.41-1.407"/></symbol><symbol fill="none" viewBox="0 0 32 30" id="common-icon-addUser" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M23.69 17.055v5.622m0 0v5.621m0-5.621h5.622m-5.622 0h-5.62m-2.108-5.622H10.34a7.027 7.027 0 0 0-7.027 7.027v2.81h12.649M20.177 7.92a4.919 4.919 0 1 1-9.838 0 4.919 4.919 0 0 1 9.838 0"/></symbol><symbol fill="none" viewBox="0 0 32 32" id="common-icon-addUsers" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-width="2.5" d="M8.534 15.267a2.8 2.8 0 1 1 0-5.6 2.8 2.8 0 0 1 0 5.6Z"/><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8.533 19.934H5.267c-.867 0-1.698.294-2.31.82-.613.525-.957 1.237-.957 1.98v2.8h6.533m16.8-7.467v4.666m0 0V27.4m0-4.667H30m-4.667 0h-4.666m.027-5.105h-3.675c-3.412 0-5.685 2.826-5.685 6.313v2.526h9.36M24.4 9.42a4.5 4.5 0 0 1-.329 1.69 4.4 4.4 0 0 1-.937 1.435c-.402.41-.878.736-1.403.958a4.24 4.24 0 0 1-3.31 0 4.3 4.3 0 0 1-1.402-.958 4.4 4.4 0 0 1-.937-1.434 4.5 4.5 0 0 1-.33-1.691 4.47 4.47 0 0 1 1.267-3.126A4.28 4.28 0 0 1 20.076 5a4.28 4.28 0 0 1 3.058 1.294A4.47 4.47 0 0 1 24.4 9.42"/></symbol><symbol fill="none" viewBox="0 0 32 32" id="common-icon-addx" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M28.592 31H3.407A2.41 2.41 0 0 1 1 28.592V3.408A2.41 2.41 0 0 1 3.407 1h25.18A2.42 2.42 0 0 1 31 3.408v25.184A2.41 2.41 0 0 1 28.592 31M3.407 3.404v25.183h25.18V3.404z"/><path fill="currentColor" d="M23.354 14.81h-6.136V8.674a1.203 1.203 0 0 0-1.204-1.204 1.203 1.203 0 0 0-1.204 1.204v6.136H8.64a1.203 1.203 0 0 0-1.203 1.204 1.203 1.203 0 0 0 1.204 1.204h6.169v6.098a1.203 1.203 0 0 0 1.204 1.204 1.203 1.203 0 0 0 1.204-1.204v-6.098h6.136a1.203 1.203 0 0 0 1.204-1.204 1.203 1.203 0 0 0-1.204-1.204"/></symbol><symbol fill="none" viewBox="0 0 32 32" id="common-icon-apple" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M10.992 31c-1.896 0-3.323-1.794-4.739-3.8a18.7 18.7 0 0 1-2.975-7.231 11.63 11.63 0 0 1 1.03-7.882A7.46 7.46 0 0 1 6.975 9.39a7.7 7.7 0 0 1 3.679-1.065h.078a8.686 8.686 0 0 1 3.09.773 5.9 5.9 0 0 0 1.898.534 6 6 0 0 0 1.835-.527 10.068 10.068 0 0 1 3.55-.874q.225 0 .483.024a7.25 7.25 0 0 1 3.163.84 7.1 7.1 0 0 1 2.445 2.134l-.02.012a6.87 6.87 0 0 0-2.393 2.437 6.7 6.7 0 0 0-.898 3.264 6.5 6.5 0 0 0 1.123 3.635 6.7 6.7 0 0 0 2.985 2.429H28l-.009.028a16.6 16.6 0 0 1-2.115 4.238c-1.195 1.709-2.55 3.646-4.694 3.683h-.097a5.4 5.4 0 0 1-2.279-.561 6.2 6.2 0 0 0-2.69-.631 6.6 6.6 0 0 0-2.818.65 5.9 5.9 0 0 1-2.306.586m-.306-20.564a5.16 5.16 0 0 0-2.556.732 5.6 5.6 0 0 0-1.95 1.972 7.5 7.5 0 0 0-.932 2.954 12.1 12.1 0 0 0 .156 3.508 16.7 16.7 0 0 0 2.624 6.4c.532.801 1.14 1.551 1.818 2.24.3.333.701.56 1.145.648h.024a3.9 3.9 0 0 0 1.44-.41h.01a8.8 8.8 0 0 1 3.654-.818 8.4 8.4 0 0 1 3.548.802c.437.236.924.37 1.422.39h.052a1.8 1.8 0 0 0 1.215-.603 13.7 13.7 0 0 0 1.739-2.165c.474-.684.888-1.408 1.237-2.161a10 10 0 0 1-.966-.807 8.5 8.5 0 0 1-1.962-2.816 8.4 8.4 0 0 1-.677-3.342 8.3 8.3 0 0 1 .608-3.217 8.7 8.7 0 0 1 1.393-2.297c.085-.1.185-.22.294-.335a5 5 0 0 0-.74-.366 5.6 5.6 0 0 0-1.785-.383h-.064l-.064-.007a3 3 0 0 0-.27-.011 8.3 8.3 0 0 0-2.744.722l-.015.006a7.5 7.5 0 0 1-2.63.675 7.6 7.6 0 0 1-2.693-.683 7 7 0 0 0-2.289-.624zM21.623 1a6.94 6.94 0 0 0-4.517 2.267 6.2 6.2 0 0 0-1.247 2.17 6.1 6.1 0 0 0-.277 2.474 5.59 5.59 0 0 0 2.482-.544 5.5 5.5 0 0 0 1.966-1.58A6.5 6.5 0 0 0 21.623 1"/></symbol><symbol fill="none" viewBox="0 0 32 32" id="common-icon-banner" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M5.822 31H3.411A2.413 2.413 0 0 1 1 28.59V3.41A2.413 2.413 0 0 1 3.41 1h2.412a2.41 2.41 0 0 1 2.397 2.144h12.066a2.414 2.414 0 0 1 2.411 2.41V7.43h5.893A2.413 2.413 0 0 1 31 9.839v12.054a2.414 2.414 0 0 1-2.411 2.41h-5.893a2.414 2.414 0 0 1-2.41-2.41v-1.875H8.231v8.572A2.414 2.414 0 0 1 5.822 31M3.411 3.41v25.18h2.411V3.41zm19.285 6.43v12.054h5.893V9.839zM8.234 5.554v12.053h12.053V5.548z"/></symbol><symbol fill="none" viewBox="0 0 24 24" id="common-logo" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#ka)" fill="currentColor"><path d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="12"/><g clip-path="url(#kb)"><path d="M9.808 17.8h4.525L11.04 8.734H6.515zm6.567 0H20.9l-3.295-9.066h-4.523z"/><path d="M12.665 4.2H8.14L6.823 7.827h4.524zm-4.94 13.6H3.2l3.293-9.066h4.525zm6.588 0H9.787l3.295-9.066h4.523z"/></g></g><defs><clipPath id="ka"><path fill="currentColor" d="M0 0h24v24H0z"/></clipPath><clipPath id="kb"><path fill="currentColor" d="M3.2 4.2h17.7v13.6H3.2z"/></clipPath></defs></symbol><symbol fill="none" viewBox="0 0 32 32" id="icon-addUser" xmlns="http://www.w3.org/2000/svg"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M23.69 17.055v5.622m0 0v5.621m0-5.621h5.622m-5.622 0h-5.62m-2.108-5.622H10.34a7.027 7.027 0 0 0-7.027 7.027v2.81h12.649M20.177 7.92a4.919 4.919 0 1 1-9.838 0 4.919 4.919 0 0 1 9.838 0"/></symbol><symbol fill="none" viewBox="0 0 32 32" id="icon-card2" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M29.409 27.917H3.148A2.15 2.15 0 0 1 1 25.769V7.148A2.15 2.15 0 0 1 3.148 5h26.26a2.15 2.15 0 0 1 2.149 2.148v18.621a2.15 2.15 0 0 1-2.148 2.148M3.148 7.147V25.77h26.26V7.148z"/><path fill="currentColor" d="M12.22 24.097H6.97a2.15 2.15 0 0 1-2.15-2.149v-2.627a4.77 4.77 0 0 1 2.102-3.956 3.8 3.8 0 0 1-1.146-2.727 3.824 3.824 0 0 1 3.819-3.82 3.825 3.825 0 0 1 3.524 5.3 3.8 3.8 0 0 1-.85 1.247 4.78 4.78 0 0 1 2.099 3.956v2.627a2.15 2.15 0 0 1-2.146 2.15m-2.625-7.401a2.63 2.63 0 0 0-2.625 2.625v2.477a.15.15 0 0 0 .149.15h4.954a.15.15 0 0 0 .149-.15V19.47a.1.1 0 0 0 0-.03v-.119a2.63 2.63 0 0 0-2.627-2.625m0-5.73a1.673 1.673 0 0 0-1.671 1.672 1.673 1.673 0 0 0 1.67 1.67 1.673 1.673 0 0 0 1.672-1.67 1.67 1.67 0 0 0-1.671-1.672m7.757 6.566h7.4a1.074 1.074 0 1 0 0-2.149h-7.4a1.074 1.074 0 1 0 0 2.149m0 4.894h5.49a1.074 1.074 0 0 0 0-2.149h-5.49a1.074 1.074 0 1 0 0 2.15m0-9.788h9.314a1.074 1.074 0 1 0 0-2.15h-9.314a1.074 1.074 0 1 0 0 2.15"/></symbol><symbol fill="none" viewBox="0 0 24 24" id="logo" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#ca)" fill="currentColor"><path d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="12"/><g clip-path="url(#cb)"><path d="M9.808 17.8h4.525L11.04 8.734H6.515zm6.567 0H20.9l-3.295-9.066h-4.523z"/><path d="M12.665 4.2H8.14L6.823 7.827h4.524zm-4.94 13.6H3.2l3.293-9.066h4.525zm6.588 0H9.787l3.295-9.066h4.523z"/></g></g><defs><clipPath id="ca"><path fill="currentColor" d="M0 0h24v24H0z"/></clipPath><clipPath id="cb"><path fill="currentColor" d="M3.2 4.2h17.7v13.6H3.2z"/></clipPath></defs></symbol></svg>';
+    window.document.body.append(tempDiv.firstElementChild);
+  }
+
+  if(document.readyState === 'loading') {
+    window.document.addEventListener('DOMContentLoaded', mountSvg);
+  } else {
+    mountSvg();
+  }
+}
+
+    
+if (import.meta.hot) {
+  import.meta.hot.on("svg-component:reload", ({ sprite }) => {
+    var svgDom = document.querySelector('#sprite-id');
+    svgDom.remove();
+    var tempDom = document.createElement('div');
+    tempDom.innerHTML = sprite; 
+    document.body.append(tempDom.firstElementChild);
+  })
+}
+
+   "
+`;
+
+exports[`gen-code > with replaceHtml option 1`] = `
+"
+    import { createElementVNode as _createElementVNode, openBlock as _openBlock, createElementBlock as _createElementBlock } from "vue"
+
+const _hoisted_1 = {
+  xmlns: "http://www.w3.org/2000/svg",
+  "xmlns:xlink": "http://www.w3.org/1999/xlink",
+  style: {}
+}
+const _hoisted_2 = ["xlink:href"]
+
+ function render(_ctx, _cache) {
+  return (_openBlock(), _createElementBlock("svg", _hoisted_1, [
+    _createElementVNode("use", {
+      "xlink:href": '#' + _ctx.name
+    }, null, 8 /* PROPS */, _hoisted_2)
+  ]))
+}
+
+export default {
+  name: "SvgIcon",
+  props: {
+    name: {
+      type: String,
+      required: true
+    }
+  },
+  render
+}
+    
+export const svgNames = ["icon-addUser","icon-card2","logo","common-icon-add","common-icon-add3","common-icon-addUser","common-icon-addUsers","common-icon-addx","common-icon-apple","common-icon-banner","common-logo"]
+
+    
+    
+if (import.meta.hot) {
+  import.meta.hot.on("svg-component:reload", ({ sprite }) => {
+    var svgDom = document.querySelector('#sprite-id');
+    svgDom.remove();
+    var tempDom = document.createElement('div');
+    tempDom.innerHTML = sprite; 
+    document.body.append(tempDom.firstElementChild);
+  })
+}
+
+   "
+`;
