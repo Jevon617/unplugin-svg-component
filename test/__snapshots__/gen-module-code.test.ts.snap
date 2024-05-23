@@ -19,16 +19,16 @@ const _hoisted_2 = ["xlink:href"]
   ]))
 }
 
-export default{
-  name: "SvgIcon",
-  props: {
-    name: {
-      type: String,
-      required: true
-    }
-  },
-  render
-}
+export default {
+    name: "SvgIcon",
+    props: {
+      name: {
+        type: String,
+        required: true
+      }
+    },
+    render
+  }
     
 export const svgNames = ["icon-addUser","icon-card2","logo","common-icon-add","common-icon-add3","common-icon-addUser","common-icon-addUsers","common-icon-addx","common-icon-apple","common-icon-banner","common-logo"]
 

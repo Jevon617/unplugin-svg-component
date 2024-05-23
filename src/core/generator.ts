@@ -78,7 +78,7 @@ async function genComponentCode(options: Options) {
   const templateCode = await compileVueTemplate(replacedTemplate, vueVerison)
 
   return `${templateCode}
-\nexport default{
+\nexport default {
     name: "${componentName}",
     props: {
       name: {
