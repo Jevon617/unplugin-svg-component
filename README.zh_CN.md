@@ -21,7 +21,7 @@
 * **热更新**: svg 文件的增删改操作, 都会实时显示于页面上, 无需刷新浏览器
 * **Vue & React 支持**: 自动检测项目类型
 * **Tree-shaking**: 从**v0.5.0**版本开始, 生产环境只会打包你用到的 svg 图标
-* **SSR**: 从**v0.6.0**版本开始支持SSR, 通过开启 `option.domInsertionStrategy = replaceHtml` 这个选项(默认开启).
+* **SSR**: 通过开启 `option.domInsertionStrategy = 'replaceHtml'` 这个选项(默认开启)支持SSR.
 
 ## 安装
 
