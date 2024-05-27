@@ -1,6 +1,8 @@
 import path from 'node:path'
+import process from 'node:process'
 import fs from 'node:fs/promises'
 import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
+import colors from 'picocolors'
 import type { Options, SvgSpriteInfo, VueVersion } from '../types'
 import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
 import { replace, transformStyleStrToObject } from './utils'
@@ -91,16 +93,16 @@ async function genComponentCode(options: Options) {
       .replace(/\$component_style/, JSON.stringify(transformStyleStrToObject(componentStyle!)))
   }
 
-  const vueVerison = await getVueVersion(vueVersion!)
-  if (!vueVerison)
+  const vueMajorVersion = await getVueVersion(vueVersion!)
+  if (!vueMajorVersion)
     return 'export default {}'
 
-  const tempTemplate = vueVerison === 'vue3'
+  const tempTemplate = vueMajorVersion === 'vue3'
     ? template.replace('v-on="$listeners"', '')
     : template
 
   const replacedTemplate = tempTemplate.replace(/\$component_style/, componentStyle!)
-  const templateCode = await compileVueTemplate(replacedTemplate, vueVerison)
+  const templateCode = await compileVueTemplate(replacedTemplate, vueMajorVersion!)
 
   return `${templateCode}
 \nexport default {
@@ -115,18 +117,29 @@ async function genComponentCode(options: Options) {
 }`
 }
 
-async function compileVueTemplate(template: string, vueVerison: string): Promise<string> {
-  const pkgInfo = await getPackageInfo('@vue/compiler-sfc')
-  if (!pkgInfo || pkgInfo?.version?.[0] !== vueVerison.slice(-1))
-    throw new Error(`Cannot find module \'@vue/compiler-sfc@${vueVerison.slice(-1)}.x.x\'. Please install it.`)
+// Vue 3.2.13+ / 2.7.x ships the SFC compiler directly under the `vue` package
+// making it no longer necessary to have @vue/compiler-sfc separately installed.
+async function compileVueTemplate(template: string, vueMajorVersion: 'vue2' | 'vue3'): Promise<string> {
+  const version = (await getPackageInfo('vue'))!.version!
+  const isOldVue = version < '2.7.0'
+  const compilerInVue = version >= '3.2.13' || (vueMajorVersion === 'vue2' && version >= '2.7.0')
 
-  const pkg = await importModule('@vue/compiler-sfc')
+  if (isOldVue)
+    throw new Error(colors.red(`[unpluign-svg-component]: version below Vue@2.7.0 is not supported!`))
+
+  const pkg = compilerInVue
+    ? await importModule('vue/compiler-sfc')
+    : await importModule('@vue/compiler-sfc').catch(() => {
+      throw new Error(colors.red(`[unpluign-svg-component]: @vue/compiler-sfc@${version} is not found, please install it.`))
+    })
+
   const { compileTemplate } = pkg
   const { code } = compileTemplate({
     source: template,
     id: '__svg-component__',
     filename: 'virtual:svg-component.vue',
   })
+
   return code.replace(/export/g, '')
 }
 
