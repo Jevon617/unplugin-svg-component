@@ -125,12 +125,15 @@ async function compileVueTemplate(template: string, vueMajorVersion: 'vue2' | 'v
   const compilerInVue = version >= '3.2.13' || (vueMajorVersion === 'vue2' && version >= '2.7.0')
 
   if (isOldVue)
-    throw new Error(colors.red(`[unpluign-svg-component]: version below Vue@2.7.0 is not supported!`))
+    throw new Error(colors.red(`[unpluign-svg-component]: unpluign-svg-component requires vue (>=2.7.0) to be present in the dependency tree.`))
 
   const pkg = compilerInVue
     ? await importModule('vue/compiler-sfc')
     : await importModule('@vue/compiler-sfc').catch(() => {
-      throw new Error(colors.red(`[unpluign-svg-component]: @vue/compiler-sfc@${version} is not found, please install it.`))
+      throw new Error(
+        colors.red(`[unpluign-svg-component]: Failed to resolve vue/compiler-sfc. 
+        you should install @vue/compiler-sfc@${version} manually or upgrade your vue version to >=3.2.13.`),
+      )
     })
 
   const { compileTemplate } = pkg

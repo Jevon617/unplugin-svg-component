@@ -86,9 +86,6 @@
     "test": "vitest",
     "test:e2e": "pnpm -C playground test"
   },
-  "peerDependencies": {
-    "@vue/compiler-sfc": ">=2.7.0"
-  },
   "dependencies": {
     "cors": "^2.8.5",
     "etag": "^1.8.1",
