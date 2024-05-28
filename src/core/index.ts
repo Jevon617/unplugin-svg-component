@@ -66,7 +66,11 @@ const unplugin = createUnplugin<Options>(options => ({
     configureServer(server) {
       server.middlewares.use(cors({ origin: '*' }))
       server.middlewares.use(async (req, res, next) => {
-        if (req.url?.endsWith(`/@id/${MODULE_NAME}`)) {
+        // close #22
+        const { pathname } = req.url
+          ? new URL(req.url, 'https://example.com')
+          : { pathname: '' }
+        if (pathname.endsWith(`/@id/${MODULE_NAME}`)) {
           watchIconDir(options, server, spriteInfo)
 
           const code = await genCode(options, spriteInfo, true)
