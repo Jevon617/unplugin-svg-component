@@ -1,7 +1,7 @@
 {
   "name": "unplugin-svg-component",
   "type": "module",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "packageManager": "pnpm@9.0.6",
   "description": "generate a vue/react component through svg files, supporting svg file HMR and typescript intelligence prompt.",
   "license": "MIT",
