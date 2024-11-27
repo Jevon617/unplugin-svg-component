@@ -17,10 +17,6 @@ export async function genCode(options: Options, spriteInfo: SvgSpriteInfo, isDev
   const insertSvgCode = isDynamic ? genInsertSvgCode(sprite) : ''
   const componentCode = await genComponentCode(options)
 
-  // only generate dts in serve
-  if (options?.dts && isDev)
-    genDts(symbolIds, options)
-
   const hmrCode = `
 if (import.meta.hot) {
   import.meta.hot.on("${LOAD_EVENT}", ({ sprite }) => {

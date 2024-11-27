@@ -3,7 +3,7 @@ import cors from 'cors'
 import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
 import type { Options, SvgSpriteInfo } from '../types'
-import { genCode } from './generator'
+import { genCode, genDts } from './generator'
 import { MODULE_NAME, PLUGIN_NAME } from './constants'
 import { resolveOptions } from './utils'
 import createSvgSprite from './sprite'
@@ -21,6 +21,9 @@ const unplugin = createUnplugin<Options>(options => ({
     options = resolveOptions(options)
     spriteInfo = await createSvgSprite(options, isBuild)
     isDynamicStrategy = options.domInsertionStrategy === 'dynamic'
+    // only generate dts in serve
+    if (options?.dts && !isBuild)
+      genDts(spriteInfo.symbolIds, options)
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
