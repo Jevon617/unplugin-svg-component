@@ -98,6 +98,10 @@ export async function addSymbol(
 
 async function optimizeSvg(source: string, preserveColor: boolean, optimizeOptions?: OptimizeOptions) {
   const { data: optimizedSvgContent } = await optimize(source, optimizeOptions) as OptimizedSvg
+  if (!optimizedSvgContent) {
+    const emptySvgContent = '<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"></svg>'
+    return emptySvgContent
+  }
   return preserveColor
     ? optimizedSvgContent
     : optimizedSvgContent
