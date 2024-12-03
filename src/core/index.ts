@@ -26,7 +26,7 @@ const unplugin = createUnplugin<Options>(options => ({
     isDynamicStrategy = options.domInsertionStrategy === 'dynamic'
 
     // dts generator
-    if (options?.dts)
+    if (!isBuild && options?.dts)
       genDts(spriteInfo.symbolIds, options)
 
     // svg hmr
