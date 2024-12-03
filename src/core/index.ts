@@ -2,6 +2,7 @@
 import cors from 'cors'
 import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
+import type { ViteDevServer } from 'vite'
 import type { Options, SvgSpriteInfo } from '../types'
 import { genCode, genDts } from './generator'
 import { MODULE_NAME, PLUGIN_NAME } from './constants'
@@ -12,8 +13,10 @@ import watchIconDir from './watcher'
 let isBuild = false
 let isWebpack = false
 let isDynamicStrategy = false
+
 let spriteInfo: SvgSpriteInfo
 let transformPluginContext: any
+let viteDevServer: ViteDevServer
 
 const unplugin = createUnplugin<Options>(options => ({
   name: PLUGIN_NAME,
@@ -21,9 +24,14 @@ const unplugin = createUnplugin<Options>(options => ({
     options = resolveOptions(options)
     spriteInfo = await createSvgSprite(options, isBuild)
     isDynamicStrategy = options.domInsertionStrategy === 'dynamic'
-    // only generate dts in serve
-    if (options?.dts && !isBuild)
+
+    // dts generator
+    if (options?.dts)
       genDts(spriteInfo.symbolIds, options)
+
+    // svg hmr
+    if (!isBuild && viteDevServer && options.hmr)
+      watchIconDir(options, viteDevServer, spriteInfo)
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
@@ -67,6 +75,7 @@ const unplugin = createUnplugin<Options>(options => ({
       transformPluginContext = this
     },
     configureServer(server) {
+      viteDevServer = server
       server.middlewares.use(cors({ origin: '*' }))
       server.middlewares.use(async (req, res, next) => {
         // close #22
@@ -74,8 +83,7 @@ const unplugin = createUnplugin<Options>(options => ({
           ? new URL(req.url, 'https://example.com')
           : { pathname: '' }
         if (pathname.endsWith(`/@id/${MODULE_NAME}`)) {
-          watchIconDir(options, server, spriteInfo)
-
+          spriteInfo = await createSvgSprite(options, isBuild)
           const code = await genCode(options, spriteInfo, true)
           const etag = genEtag(code, { weak: true })
           const noneMatch = req.headers['if-none-match'] || req.headers['If-None-Match']

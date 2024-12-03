@@ -30,6 +30,7 @@ export function replace(dts: string, symbolIds: Set<string>, componentName: stri
 
 export function resolveOptions(options: Options): Options {
   const defaultOptions: Partial<Options> = {
+    hmr: true,
     componentName: 'SvgIcon',
     dtsDir: process.cwd(),
     projectType: 'auto',

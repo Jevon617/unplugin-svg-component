@@ -3,6 +3,7 @@ import type { Config as OptimizeOptions } from 'svgo'
 export interface Options {
   iconDir: string | string[]
   prefix?: string
+  hmr?: boolean
   dts?: boolean
   dtsDir?: string
   svgSpriteDomId?: string

@@ -30,14 +30,6 @@ export default function watchIconDir(
   }
   isWatched = true
 
-  function notifyClientUpdate(sprite: string, { ws, config }: ViteDevServer) {
-    config.logger.info(
-      colors.green(`unplugin-svg-component reload`),
-      { clear: false, timestamp: true },
-    )
-    ws.send(LOAD_EVENT, { sprite })
-  }
-
   function isSvgFile(path: string) {
     const isSvgDir = iconDirs.some(dir => path.startsWith(dir + sep))
     return isSvgDir && path.endsWith('.svg')
@@ -56,4 +48,12 @@ export default function watchIconDir(
       updateDts(svgSpriteInfo.symbolIds, options)
     notifyClientUpdate(svgSpriteInfo.sprite, server)
   }
+}
+
+function notifyClientUpdate(sprite: string, { ws, config }: ViteDevServer) {
+  config.logger.info(
+    colors.green(`unplugin-svg-component reload`),
+    { clear: false, timestamp: true },
+  )
+  ws.send(LOAD_EVENT, { sprite })
 }
