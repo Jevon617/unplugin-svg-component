@@ -14,6 +14,7 @@ export const template = `
     xmlns="http://www.w3.org/2000/svg" 
     xmlns:xlink="http://www.w3.org/1999/xlink" 
     style="$component_style"
+    $component_class
     v-on="$listeners"
   >
     <use :xlink:href="'#' + name" />
@@ -73,7 +74,7 @@ export default function $component_name({name,style,className}) {
     xmlns: "http://www.w3.org/2000/svg",
     xmlnsXlink: "http://www.w3.org/1999/xlink",
     style: {...$component_style, ...style},
-    className: className,
+    className: [className, $component_class || ''].filter(cls=> !!cls).join(" ") || undefined,
   }, React.createElement("use", {
     xlinkHref: "#" + name
   }));

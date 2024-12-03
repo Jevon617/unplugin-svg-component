@@ -9,6 +9,7 @@ export interface Options {
   componentName?: string
   preserveColor?: string | RegExp
   componentStyle?: string
+  componentClass?: string
   symbolIdFormatter?: (name: string, prefix: string) => string
   optimizeOptions?: OptimizeOptions
   projectType?: 'vue' | 'react' | 'auto'

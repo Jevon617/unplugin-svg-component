@@ -81,12 +81,24 @@ export function genDts(symbolIds: Set<string>, options: Options) {
   }
 }
 
+export function addClass(template: string, projectType: 'react' | 'vue', cls?: string) {
+  return projectType === 'vue'
+    ? cls
+      ? template.replace(/\$component_class/, `class="${cls}"`)
+      : template.replace(/\$component_class/, '')
+    : template.replace(/\$component_class/, `"${cls || ''}"`)
+}
+
 async function genComponentCode(options: Options) {
   const isVue = isVueProject(options)
-  const { componentStyle, componentName, vueVersion } = options
+  const { componentStyle, componentName, vueVersion, componentClass } = options
   if (!isVue) {
-    return reactTemplate.replace(/\$component_name/, componentName!)
-      .replace(/\$component_style/, JSON.stringify(transformStyleStrToObject(componentStyle!)))
+    return addClass(
+      reactTemplate.replace(/\$component_name/, componentName!)
+        .replace(/\$component_style/, JSON.stringify(transformStyleStrToObject(componentStyle!))),
+      'react',
+      componentClass,
+    )
   }
 
   const vueMajorVersion = await getVueVersion(vueVersion!)
@@ -97,7 +109,11 @@ async function genComponentCode(options: Options) {
     ? template.replace('v-on="$listeners"', '')
     : template
 
-  const replacedTemplate = tempTemplate.replace(/\$component_style/, componentStyle!)
+  const replacedTemplate = addClass(
+    tempTemplate.replace(/\$component_style/, componentStyle!),
+    'vue',
+    componentClass,
+  )
   const templateCode = await compileVueTemplate(replacedTemplate, vueMajorVersion!)
 
   return `${templateCode}
