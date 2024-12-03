@@ -1,18 +1,16 @@
 import { sep } from 'node:path'
 import type { ViteDevServer } from 'vite'
 import colors from 'picocolors'
-import type { Options, SvgSpriteInfo } from '../types'
+import type { Options } from '../types'
 import { debounce } from './utils'
-import { genDts as updateDts } from './generator'
+import { genSpriteWidthDts, genDts as updateDts } from './generator'
 import { LOAD_EVENT } from './constants'
-import { compileSvgFiles } from './sprite'
 
 let isWatched = false
 
 export default function watchIconDir(
   options: Options,
   server: ViteDevServer,
-  svgSpriteInfo: SvgSpriteInfo,
 ) {
   const delay = 500
   const { watcher } = server
@@ -39,14 +37,11 @@ export default function watchIconDir(
     if (!isSvgFile(path))
       return
 
-    const { symbolIds, sprite } = await compileSvgFiles(options)
-
-    svgSpriteInfo.symbolIds = symbolIds
-    svgSpriteInfo.sprite = sprite
+    const { symbolIds, sprite } = await genSpriteWidthDts(options, false)
 
     if (dts)
-      updateDts(svgSpriteInfo.symbolIds, options)
-    notifyClientUpdate(svgSpriteInfo.sprite, server)
+      updateDts(symbolIds, options)
+    notifyClientUpdate(sprite, server)
   }
 }
 

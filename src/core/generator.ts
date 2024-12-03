@@ -1,14 +1,23 @@
 import path from 'node:path'
-import process from 'node:process'
 import fs from 'node:fs/promises'
 import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
 import colors from 'picocolors'
-import type { Options, SvgSpriteInfo, VueVersion } from '../types'
+import type { Options, VueVersion } from '../types'
 import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
 import { replace, transformStyleStrToObject } from './utils'
 import { LOAD_EVENT } from './constants'
+import createSvgSprite from './sprite'
 
-export async function genCode(options: Options, spriteInfo: SvgSpriteInfo, isDev = false) {
+export async function genSpriteWidthDts(options: Options, isBuild: boolean) {
+  const spriteInfo = await createSvgSprite(options, isBuild)
+  if (!isBuild && options?.dts)
+    genDts(spriteInfo.symbolIds, options)
+
+  return spriteInfo
+}
+
+export async function genCode(options: Options, isDev = false) {
+  const spriteInfo = await genSpriteWidthDts(options, !isDev)
   const { svgSpriteDomId } = options
   const { symbolIds, sprite } = spriteInfo
 

@@ -3,18 +3,15 @@ import cors from 'cors'
 import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
 import type { ViteDevServer } from 'vite'
-import type { Options, SvgSpriteInfo } from '../types'
-import { genCode, genDts } from './generator'
+import type { Options } from '../types'
+import { genCode, genSpriteWidthDts } from './generator'
 import { MODULE_NAME, PLUGIN_NAME } from './constants'
 import { resolveOptions } from './utils'
-import createSvgSprite from './sprite'
 import watchIconDir from './watcher'
 
 let isBuild = false
 let isWebpack = false
-let isDynamicStrategy = false
 
-let spriteInfo: SvgSpriteInfo
 let transformPluginContext: any
 let viteDevServer: ViteDevServer
 
@@ -22,16 +19,10 @@ const unplugin = createUnplugin<Options>(options => ({
   name: PLUGIN_NAME,
   async buildStart() {
     options = resolveOptions(options)
-    spriteInfo = await createSvgSprite(options, isBuild)
-    isDynamicStrategy = options.domInsertionStrategy === 'dynamic'
-
-    // dts generator
-    if (!isBuild && options?.dts)
-      genDts(spriteInfo.symbolIds, options)
 
     // svg hmr
     if (!isBuild && viteDevServer && options.hmr)
-      watchIconDir(options, viteDevServer, spriteInfo)
+      watchIconDir(options, viteDevServer)
   },
   resolveId(id: string) {
     if (id === MODULE_NAME)
@@ -41,21 +32,24 @@ const unplugin = createUnplugin<Options>(options => ({
     return id === MODULE_NAME
   },
   async load() {
-    return isBuild || isWebpack
-      ? (await genCode(options, spriteInfo))
-      : ''
+    return isBuild
+      ? (await genCode(options))
+      : isWebpack
+        ? (await genCode(options, true))
+        : ''
   },
   webpack(compiler) {
-    if (isDynamicStrategy)
-      return
-
     isWebpack = true
     isBuild = compiler.options.mode === 'production'
+
+    if (options.domInsertionStrategy === 'dynamic')
+      return
 
     compiler.hooks.emit.tapAsync(PLUGIN_NAME, async (compilation, callback) => {
       const assets = compilation.assets as any
       const originHtml = assets['index.html']._value
-      const transformedHtml = originHtml.replace(/<\/body>/, `${spriteInfo.sprite}</body>`)
+      const { sprite } = await genSpriteWidthDts(options, isBuild)
+      const transformedHtml = originHtml.replace(/<\/body>/, `${sprite}</body>`)
       assets['index.html'] = {
         source() {
           return transformedHtml
@@ -83,8 +77,7 @@ const unplugin = createUnplugin<Options>(options => ({
           ? new URL(req.url, 'https://example.com')
           : { pathname: '' }
         if (pathname.endsWith(`/@id/${MODULE_NAME}`)) {
-          spriteInfo = await createSvgSprite(options, isBuild)
-          const code = await genCode(options, spriteInfo, true)
+          const code = await genCode(options, true)
           const etag = genEtag(code, { weak: true })
           const noneMatch = req.headers['if-none-match'] || req.headers['If-None-Match']
 
@@ -115,9 +108,13 @@ const unplugin = createUnplugin<Options>(options => ({
       })
     },
     async transformIndexHtml(html) {
-      if (isDynamicStrategy || html.includes(options.svgSpriteDomId!))
+      if (options.domInsertionStrategy === 'dynamic' || html.includes(options.svgSpriteDomId!)) {
         return html
-      return html.replace(/<\/body>/, `${spriteInfo.sprite}</body>`)
+      }
+      else {
+        const { sprite } = await genSpriteWidthDts(options, isBuild)
+        return html.replace(/<\/body>/, `${sprite}</body>`)
+      }
     },
   },
 }))
