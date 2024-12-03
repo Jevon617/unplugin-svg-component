@@ -53,7 +53,7 @@ export function resolveOptions(options: Options): Options {
       '**/*.tsx',
       '**/*.jsx',
     ],
-    scanStrategy: 'component',
+    scanStrategy: 'text',
     domInsertionStrategy: 'replaceHtml',
   }
   return {
