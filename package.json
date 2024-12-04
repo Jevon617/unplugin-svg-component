@@ -84,7 +84,7 @@
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
     "test": "vitest",
-    "test:e2e": "pnpm -C playground test"
+    "test:e2e": "pnpm -C e2e-test test"
   },
   "dependencies": {
     "cors": "^2.8.5",

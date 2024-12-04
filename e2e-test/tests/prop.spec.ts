@@ -1,16 +1,9 @@
 import fs from 'node:fs'
-import path, { dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import path from 'node:path'
 import type { Page } from '@playwright/test'
 import { expect, test } from '@playwright/test'
 import { createViteServer } from '../server'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-function sleep(delay: number) {
-  return new Promise(resolve => setTimeout(resolve, delay))
-}
+import { __dirname, sleep } from './utlis'
 
 test.describe('prop', () => {
   const port = 7071
