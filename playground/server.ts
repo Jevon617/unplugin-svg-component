@@ -1,19 +1,16 @@
 import path, { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import type { ViteDevServer } from 'vite'
 import { createServer } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 import unpluginSvgcomponet from 'unplugin-svg-component/vite'
+import type { Options } from 'unplugin-svg-component'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-// eslint-disable-next-line import/no-mutable-exports
-export let server: ViteDevServer
-
-async function globalSetup() {
-  server = await createServer({
+export async function createViteServer(options: Partial<Options> & { port: number } = { port: 7070 }) {
+  const server = await createServer({
     plugins: [
       vue(),
       unpluginSvgcomponet({
@@ -21,14 +18,15 @@ async function globalSetup() {
         dts: false,
         svgSpriteDomId: 'my-svg-id',
         vueVersion: 3,
+        ...options,
       }),
     ],
     server: {
-      port: 7070,
+      port: options.port,
     },
     root: path.resolve(__dirname, './'),
   })
   server.listen()
-}
 
-export default globalSetup
+  return server
+}

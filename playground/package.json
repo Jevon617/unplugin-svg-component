@@ -6,7 +6,7 @@
     "postinstall": "npx playwright install"
   },
   "dependencies": {
-    "@playwright/test": "^1.33.0",
+    "@playwright/test": "^1.49.0",
     "@vitejs/plugin-vue": "^3.1.2",
     "unplugin-svg-component": "workspace:*",
     "vite": "^3.2.3",

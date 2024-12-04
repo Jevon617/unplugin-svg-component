@@ -33,8 +33,6 @@ const config = defineConfig({
     trace: 'on-first-retry',
     screenshot: 'on',
   },
-  globalSetup: './global-setup',
-  globalTeardown: './global-teardown',
   /* Configure projects for major browsers */
   projects: [
     {
