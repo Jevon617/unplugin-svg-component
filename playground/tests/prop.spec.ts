@@ -23,7 +23,7 @@ test.describe('prop', () => {
       iconDir,
       port,
     })
-
+    await sleep(2000)
     await page.goto(`http://localhost:${port}/`)
 
     const path1 = path.resolve(iconDir, './icon-addUser.svg')
@@ -53,6 +53,7 @@ test.describe('prop', () => {
       iconDir,
       port,
     })
+    await sleep(2000)
     await page.goto(`http://localhost:${port}/`)
     const path1 = path.resolve(iconDir, './icon-addUser.svg')
     const path2 = path.resolve(iconDir, './icon-rename.svg')

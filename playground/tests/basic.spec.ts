@@ -9,12 +9,17 @@ import { createViteServer } from '../server'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+function sleep(delay: number) {
+  return new Promise(resolve => setTimeout(resolve, delay))
+}
+
 test.describe('basic', () => {
   let fileNames: string[]
   let server: ViteDevServer
 
   test.beforeEach(async ({ page }) => {
     server = await createViteServer()
+    await sleep(2000)
     await page.goto('http://localhost:7070/')
     fileNames = fs.readdirSync(path.resolve(__dirname, '../icons'))
       .map(name => path.basename(name, '.svg'))
