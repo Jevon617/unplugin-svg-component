@@ -6,8 +6,6 @@ import { debounce } from './utils'
 import { genSpriteWidthDts, genDts as updateDts } from './generator'
 import { LOAD_EVENT } from './constants'
 
-let isWatched = false
-
 export default function watchIconDir(
   options: Options,
   server: ViteDevServer,
@@ -20,13 +18,10 @@ export default function watchIconDir(
 
   const handleIconFilesChangeDebounce = debounce(handleIconFilesChange, delay)
 
-  if (!isWatched) {
-    watcher
-      .on('add', handleIconFilesChangeDebounce)
-      .on('unlink', handleIconFilesChangeDebounce)
-      .on('change', handleIconFilesChangeDebounce)
-  }
-  isWatched = true
+  watcher
+    .on('add', handleIconFilesChangeDebounce)
+    .on('unlink', handleIconFilesChangeDebounce)
+    .on('change', handleIconFilesChangeDebounce)
 
   function isSvgFile(path: string) {
     const isSvgDir = iconDirs.some(dir => path.startsWith(dir + sep))
@@ -36,7 +31,6 @@ export default function watchIconDir(
   async function handleIconFilesChange(path: string) {
     if (!isSvgFile(path))
       return
-
     const { symbolIds, sprite } = await genSpriteWidthDts(options, false)
 
     if (dts)
