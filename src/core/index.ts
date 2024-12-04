@@ -4,7 +4,7 @@ import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
 import type { ViteDevServer } from 'vite'
 import type { Options } from '../types'
-import { genCode, genSpriteWidthDts } from './generator'
+import { genCode, genSpriteAndDts } from './generator'
 import { MODULE_NAME, PLUGIN_NAME } from './constants'
 import { resolveOptions } from './utils'
 import watchIconDir from './watcher'
@@ -32,11 +32,9 @@ const unplugin = createUnplugin<Options>(options => ({
     return id === MODULE_NAME
   },
   async load() {
-    return isBuild
+    return isBuild || isWebpack
       ? (await genCode(options))
-      : isWebpack
-        ? (await genCode(options, true))
-        : ''
+      : ''
   },
   webpack(compiler) {
     isWebpack = true
@@ -48,7 +46,7 @@ const unplugin = createUnplugin<Options>(options => ({
     compiler.hooks.emit.tapAsync(PLUGIN_NAME, async (compilation, callback) => {
       const assets = compilation.assets as any
       const originHtml = assets['index.html']._value
-      const { sprite } = await genSpriteWidthDts(options, isBuild)
+      const { sprite } = await genSpriteAndDts(options, isBuild)
       const transformedHtml = originHtml.replace(/<\/body>/, `${sprite}</body>`)
       assets['index.html'] = {
         source() {
@@ -112,7 +110,7 @@ const unplugin = createUnplugin<Options>(options => ({
         return html
       }
       else {
-        const { sprite } = await genSpriteWidthDts(options, isBuild)
+        const { sprite } = await genSpriteAndDts(options, isBuild)
         return html.replace(/<\/body>/, `${sprite}</body>`)
       }
     },

@@ -3,7 +3,7 @@ import type { ViteDevServer } from 'vite'
 import colors from 'picocolors'
 import type { Options } from '../types'
 import { debounce } from './utils'
-import { genSpriteWidthDts, genDts as updateDts } from './generator'
+import { genSpriteAndDts, genDts as updateDts } from './generator'
 import { LOAD_EVENT } from './constants'
 
 export default function watchIconDir(
@@ -31,7 +31,7 @@ export default function watchIconDir(
   async function handleIconFilesChange(path: string) {
     if (!isSvgFile(path))
       return
-    const { symbolIds, sprite } = await genSpriteWidthDts(options, false)
+    const { symbolIds, sprite } = await genSpriteAndDts(options, false)
 
     if (dts)
       updateDts(symbolIds, options)

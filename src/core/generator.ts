@@ -8,7 +8,7 @@ import { replace, transformStyleStrToObject } from './utils'
 import { LOAD_EVENT } from './constants'
 import createSvgSprite from './sprite'
 
-export async function genSpriteWidthDts(options: Options, isBuild: boolean) {
+export async function genSpriteAndDts(options: Options, isBuild: boolean) {
   const spriteInfo = await createSvgSprite(options, isBuild)
   if (!isBuild && options?.dts)
     genDts(spriteInfo.symbolIds, options)
@@ -17,7 +17,7 @@ export async function genSpriteWidthDts(options: Options, isBuild: boolean) {
 }
 
 export async function genCode(options: Options, isDev = false) {
-  const spriteInfo = await genSpriteWidthDts(options, !isDev)
+  const spriteInfo = await genSpriteAndDts(options, !isDev)
   const { svgSpriteDomId } = options
   const { symbolIds, sprite } = spriteInfo
 
