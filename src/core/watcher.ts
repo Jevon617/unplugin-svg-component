@@ -1,9 +1,8 @@
-import { sep } from 'node:path'
 import type { ViteDevServer } from 'vite'
 import colors from 'picocolors'
 import type { Options } from '../types'
 import { debounce } from './utils'
-import { genSpriteAndDts, genDts as updateDts } from './generator'
+import { genSpriteAndDts } from './generator'
 import { LOAD_EVENT } from './constants'
 
 export default function watchIconDir(
@@ -12,7 +11,7 @@ export default function watchIconDir(
 ) {
   const delay = 500
   const { watcher } = server
-  const { iconDir, dts } = options
+  const { iconDir } = options
 
   const iconDirs = Array.isArray(iconDir) ? iconDir : [iconDir]
 
@@ -23,18 +22,16 @@ export default function watchIconDir(
     .on('unlink', handleIconFilesChangeDebounce)
     .on('change', handleIconFilesChangeDebounce)
 
-  function isSvgFile(path: string) {
-    const isSvgDir = iconDirs.some(dir => path.startsWith(dir + sep))
+  function isValidSvgFile(path: string) {
+    const isSvgDir = iconDirs.some(dir => path.startsWith(dir))
     return isSvgDir && path.endsWith('.svg')
   }
 
   async function handleIconFilesChange(path: string) {
-    if (!isSvgFile(path))
+    if (!isValidSvgFile(path))
       return
-    const { symbolIds, sprite } = await genSpriteAndDts(options, false)
+    const { sprite } = await genSpriteAndDts(options, false)
 
-    if (dts)
-      updateDts(symbolIds, options)
     notifyClientUpdate(sprite, server)
   }
 }
