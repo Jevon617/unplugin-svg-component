@@ -74,9 +74,22 @@ const unplugin = createUnplugin<Options>(options => ({
         const { pathname } = req.url
           ? new URL(req.url, 'https://example.com')
           : { pathname: '' }
+
         if (pathname.endsWith(`/@id/${MODULE_NAME}`)) {
           const code = await genCode(options, true)
-          const etag = genEtag(code, { weak: true })
+
+          const importAnalysisTransform = server.config.plugins.find(
+            plugin => plugin.name === 'vite:import-analysis',
+          )?.transform as any
+
+          transformPluginContext.ssr = false
+
+          const { code: transformedCode } = await importAnalysisTransform.apply(
+            transformPluginContext,
+            [code, MODULE_NAME, { ssr: false }],
+          )
+
+          const etag = genEtag(transformedCode, { weak: true })
           const noneMatch = req.headers['if-none-match'] || req.headers['If-None-Match']
 
           if (noneMatch === etag || noneMatch === `W/${etag}` || `W/${noneMatch}` === etag) {
@@ -84,15 +97,6 @@ const unplugin = createUnplugin<Options>(options => ({
             res.end()
           }
           else {
-            const importAnalysisTransform = server.config.plugins.find(
-              plugin => plugin.name === 'vite:import-analysis',
-            )?.transform as any
-
-            transformPluginContext.ssr = false
-            const { code: transformedCode } = await importAnalysisTransform.apply(
-              transformPluginContext,
-              [code, MODULE_NAME, { ssr: false }],
-            )
             res.statusCode = 200
             res.setHeader('ETag', etag)
             res.setHeader('Content-Type', 'application/javascript')
