@@ -1,5 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
+import process from 'node:process'
 import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
 import colors from 'picocolors'
 import type { Options, VueVersion } from '../types'
@@ -141,7 +142,10 @@ async function genComponentCode(options: Options) {
 // Vue 3.2.13+ / 2.7.x ships the SFC compiler directly under the `vue` package
 // making it no longer necessary to have @vue/compiler-sfc separately installed.
 async function compileVueTemplate(template: string, vueMajorVersion: 'vue2' | 'vue3'): Promise<string> {
-  const version = (await getPackageInfo('vue'))!.version!
+  // getPackageInfo prioritizes searching from the parent directory of the startup path upwards.
+  // If it finds the package, it returns the result; otherwise, it searches the same-level directory.
+  const searchPath = path.resolve(process.cwd(), './virtual') // close #39
+  const version = (await getPackageInfo('vue', { paths: [searchPath] }))!.version!
   const isOldVue = version < '2.7.0'
   const compilerInVue = version >= '3.2.13' || (vueMajorVersion === 'vue2' && version >= '2.7.0')
 
