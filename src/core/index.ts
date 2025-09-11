@@ -64,7 +64,8 @@ const unplugin = createUnplugin<Options>(options => ({
       isBuild = config.command === 'build'
     },
     transform() {
-      transformPluginContext = this
+      if ((this as any)._activeId === MODULE_NAME)
+        transformPluginContext = this
     },
     configureServer(server) {
       viteDevServer = server
