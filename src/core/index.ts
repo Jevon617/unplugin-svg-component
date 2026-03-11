@@ -62,6 +62,7 @@ const unplugin = createUnplugin<Options>(options => ({
   },
   vite: {
     config() {
+      // avoid refresh loop with @tailwindcss/vite when dts is enabled, close #41
       if (!options.dtsDir)
         return
       return {
