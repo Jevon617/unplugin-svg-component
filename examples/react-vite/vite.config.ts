@@ -1,12 +1,19 @@
-import path from 'path'
+import path from 'node:path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import UnpluginSvgComponent from 'unplugin-svg-component/vite'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    watch: {
+      ignored: [path.resolve(__dirname, './src/assets')],
+    },
+  },
   plugins: [
     react(),
+    tailwindcss(),
     UnpluginSvgComponent({
       projectType: 'react',
       iconDir: path.resolve(__dirname, './src/assets'),
@@ -23,5 +30,6 @@ export default defineConfig({
         return nameArr.join('-').replace(/\.svg$/, '')
       },
       optimizeOptions: undefined,
-    })],
+    }),
+  ],
 })

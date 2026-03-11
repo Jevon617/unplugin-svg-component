@@ -79,7 +79,7 @@
     "dev": "tsdown --watch src",
     "build:fix": "esno scripts/postbuild.ts",
     "lint": "eslint ./src --fix",
-    "play:vite": "pnpm -C examples/vue2-vite dev",
+    "play:vite": "pnpm -C examples/react-vite dev",
     "prepublishOnly": "npm run build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",

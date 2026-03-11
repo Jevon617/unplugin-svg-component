@@ -2,7 +2,7 @@
 import cors from 'cors'
 import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
-import type { ViteDevServer } from 'vite'
+import type { UserConfig, ViteDevServer } from 'vite'
 import type { Options } from '../types'
 import { genCode, genSpriteAndDts } from './generator'
 import { MODULE_NAME, PLUGIN_NAME } from './constants'
@@ -24,6 +24,7 @@ const unplugin = createUnplugin<Options>(options => ({
     if (!isBuild && viteDevServer && options.hmr)
       watchIconDir(options, viteDevServer)
   },
+
   resolveId(id: string) {
     if (id === MODULE_NAME)
       return id
@@ -60,6 +61,17 @@ const unplugin = createUnplugin<Options>(options => ({
     })
   },
   vite: {
+    config() {
+      if (!options.dtsDir)
+        return
+      return {
+        server: {
+          watch: {
+            ignored: [options.dtsDir],
+          },
+        },
+      }
+    },
     async configResolved(config) {
       isBuild = config.command === 'build'
     },
