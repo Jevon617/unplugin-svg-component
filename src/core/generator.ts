@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import fs from 'node:fs/promises'
 import process from 'node:process'
 import { getPackageInfo, importModule, isPackageExists } from 'local-pkg'
@@ -139,27 +140,33 @@ async function genComponentCode(options: Options) {
 }`
 }
 
-// Vue 3.2.13+ / 2.7.x ships the SFC compiler directly under the `vue` package
-// making it no longer necessary to have @vue/compiler-sfc separately installed.
+// getPackageInfo searches from the parent of the startup path upwards; close #39
+const VUE_SEARCH_PATHS = [path.resolve(process.cwd(), './virtual')]
+
+async function getVuePackageInfo() {
+  return getPackageInfo('vue', { paths: VUE_SEARCH_PATHS })
+}
+
+// Vue 3.2.13+ / 2.7.x ship the SFC compiler in the vue package; no need for @vue/compiler-sfc
 async function compileVueTemplate(template: string, vueMajorVersion: 'vue2' | 'vue3'): Promise<string> {
-  // getPackageInfo prioritizes searching from the parent directory of the startup path upwards.
-  // If it finds the package, it returns the result; otherwise, it searches the same-level directory.
-  const searchPath = path.resolve(process.cwd(), './virtual') // close #39
-  const version = (await getPackageInfo('vue', { paths: [searchPath] }))!.version!
+  const pkgInfo = (await getVuePackageInfo())!
+  const version = pkgInfo.version!
   const isOldVue = version < '2.7.0'
   const compilerInVue = version >= '3.2.13' || (vueMajorVersion === 'vue2' && version >= '2.7.0')
 
   if (isOldVue)
     throw new Error(colors.red(`[unpluign-svg-component]: unpluign-svg-component requires vue (>=2.7.0) to be present in the dependency tree.`))
 
-  const pkg = compilerInVue
-    ? await importModule('vue/compiler-sfc')
-    : await importModule('@vue/compiler-sfc').catch(() => {
-      throw new Error(
-        colors.red(`[unpluign-svg-component]: Failed to resolve vue/compiler-sfc. 
-        you should install @vue/compiler-sfc@${version} manually or upgrade your vue version to >=3.2.13.`),
-      )
-    })
+  // ESM import() on Windows requires a file:// URL; otherwise "D:\" is parsed as protocol "d:"
+  const compilerSfcPath = compilerInVue
+    ? pathToFileURL(path.resolve(pkgInfo.rootPath, './compiler-sfc/index.js')).href
+    : '@vue/compiler-sfc'
+  const pkg = await importModule(compilerSfcPath).catch(() => {
+    throw new Error(
+      colors.red(`[unpluign-svg-component]: Failed to resolve vue/compiler-sfc. 
+      you should install @vue/compiler-sfc@${version} manually or upgrade your vue version to >=3.2.13.`),
+    )
+  })
 
   const { compileTemplate } = pkg
   const { code } = compileTemplate({
@@ -171,20 +178,19 @@ async function compileVueTemplate(template: string, vueMajorVersion: 'vue2' | 'v
   return code.replace(/export/g, '')
 }
 
-async function getVueVersion(vueVerison: VueVersion): Promise<'vue2' | 'vue3' | null > {
-  if (vueVerison === 'auto') {
-    try {
-      const result = await getPackageInfo('vue')
-      if (!result)
-        return null
-      return result.version?.startsWith('2.') ? 'vue2' : 'vue3'
-    }
-    catch {
-      return null
-    }
-  }
-  else {
+async function getVueVersion(vueVerison: VueVersion): Promise<'vue2' | 'vue3' | null> {
+  if (vueVerison !== 'auto')
     return `vue${vueVerison}`
+
+  try {
+    const pkgInfo = await getVuePackageInfo()
+    const version = pkgInfo?.version
+    if (!version)
+      return null
+    return version.startsWith('2.') ? 'vue2' : 'vue3'
+  }
+  catch {
+    return null
   }
 }
 
