@@ -7,7 +7,7 @@ import colors from 'picocolors'
 import type { Options, VueVersion } from '../types'
 import { dts, golbalDts, reactDts, reactTemplate, template } from './snippets'
 import { replace, transformStyleStrToObject } from './utils'
-import { LOAD_EVENT } from './constants'
+import { LOAD_EVENT, SVG_COMPONENT_D_TS, SVG_COMPONENT_GLOBAL_D_TS } from './constants'
 import createSvgSprite from './sprite'
 
 export async function genSpriteAndDts(options: Options, isBuild: boolean) {
@@ -72,8 +72,8 @@ if (typeof window !== 'undefined') {
 
 export function genDts(symbolIds: Set<string>, options: Options) {
   const isVue = isVueProject(options)
-  const dtsPath = path.resolve(options.dtsDir!, './svg-component.d.ts')
-  const globalDtsPath = path.resolve(options.dtsDir!, './svg-component-global.d.ts')
+  const dtsPath = path.resolve(options.dtsDir!, SVG_COMPONENT_D_TS)
+  const globalDtsPath = path.resolve(options.dtsDir!, SVG_COMPONENT_GLOBAL_D_TS)
   if (isVue) {
     fs.writeFile(
       dtsPath,

@@ -86,3 +86,7 @@ export function tranfromToKebabCase(str: string) {
   }).join('')
   return result
 }
+
+export function normalizePathForWatch(filePath: string) {
+  return filePath.replaceAll('\\', '/').toLowerCase()
+}

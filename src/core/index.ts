@@ -1,12 +1,13 @@
 /* eslint-disable ts/no-this-alias */
+import path from 'node:path'
 import cors from 'cors'
 import genEtag from 'etag'
 import { createUnplugin } from 'unplugin'
-import type { UserConfig, ViteDevServer } from 'vite'
+import type { ViteDevServer } from 'vite'
 import type { Options } from '../types'
 import { genCode, genSpriteAndDts } from './generator'
-import { MODULE_NAME, PLUGIN_NAME } from './constants'
-import { resolveOptions } from './utils'
+import { MODULE_NAME, PLUGIN_NAME, SVG_COMPONENT_D_TS, SVG_COMPONENT_GLOBAL_D_TS } from './constants'
+import { normalizePathForWatch, resolveOptions } from './utils'
 import watchIconDir from './watcher'
 
 let isBuild = false
@@ -65,10 +66,18 @@ const unplugin = createUnplugin<Options>(options => ({
       // avoid refresh loop with @tailwindcss/vite when dts is enabled, close #41
       if (!options.dtsDir)
         return
+
+      const ignoredDtsFiles = [
+        path.resolve(options.dtsDir, SVG_COMPONENT_GLOBAL_D_TS),
+        path.resolve(options.dtsDir, SVG_COMPONENT_D_TS),
+      ].map(normalizePathForWatch)
+
       return {
         server: {
           watch: {
-            ignored: [options.dtsDir],
+            ignored(watchPath: string) {
+              return ignoredDtsFiles.includes(normalizePathForWatch(watchPath))
+            },
           },
         },
       }

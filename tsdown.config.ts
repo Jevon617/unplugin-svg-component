@@ -1,6 +1,6 @@
 import type { UserConfig } from 'tsdown'
 
-export default <UserConfig>{
+export default {
   entry: [
     'src/*.ts',
   ],
@@ -13,4 +13,4 @@ export default <UserConfig>{
       js: format === 'cjs' ? '.cjs' : '.js',
     }
   },
-}
+} as UserConfig
