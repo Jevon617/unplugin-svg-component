@@ -3,6 +3,8 @@ import { MODULE_NAME } from './constants'
 const dtsComments = `
 /* eslint-disable */
 /* prettier-ignore */
+/* oxlint-disable */
+/* oxfmt-ignore */
 // biome-ignore format: off
 // biome-ignore lint: off
 // @ts-nocheck
